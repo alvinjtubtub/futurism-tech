@@ -1,0 +1,188 @@
+name: Render Tech Explanasyon Film (Stage 7 & 8)
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Film folder slug under films/ (e.g. what-is-an-llm)"
+        required: true
+        type: string
+      lang:
+        description: "Whisper language code for Stage 8 word-sync proof (tl or en)"
+        required: false
+        default: "tl"
+        type: string
+      workers:
+        description: "Number of parallel HyperFrames browser workers"
+        required: false
+        default: "4"
+        type: string
+      upload_to_drive:
+        description: "Upload verified MP4 & upload pack to Google Drive (requires RCLONE_CONFIG_GDRIVE_TOKEN or GDRIVE_SA_JSON secret)"
+        required: false
+        default: true
+        type: boolean
+  push:
+    branches:
+      - main
+    paths:
+      - "films/**/package/*-project.zip"
+      - "films/**/film.json"
+
+jobs:
+  render-and-verify:
+    name: Render 1080p60 & Word-Sync Proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine target film slug
+        id: target
+        run: |
+          if [ -n "${{ github.event.inputs.slug }}" ]; then
+            SLUG="${{ github.event.inputs.slug }}"
+          else
+            # Detect most recently modified film.json or packaged zip under films/
+            SLUG=$(find films -maxdepth 2 -name "film.json" -printf "%T@ %h\n" | sort -nr | head -n1 | awk '{print $2}' | xargs basename)
+          fi
+          if [ -z "$SLUG" ] || [ ! -d "films/$SLUG" ]; then
+            echo "::error::Could not resolve film directory films/$SLUG"
+            exit 1
+          fi
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "lang=${{ github.event.inputs.lang || 'tl' }}" >> "$GITHUB_OUTPUT"
+          echo "workers=${{ github.event.inputs.workers || '4' }}" >> "$GITHUB_OUTPUT"
+          echo "Resolved target film: films/$SLUG"
+
+      - name: Install FFmpeg & Headless Chrome Vulkan/EGL libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ffmpeg \
+            unzip \
+            zip \
+            libnss3 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            libdrm2 \
+            libxkbcommon0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxfixes3 \
+            libxrandr2 \
+            libgbm1 \
+            libasound2t64 || sudo apt-get install -y libasound2 \
+            libpango-1.0-0 \
+            libcairo2 \
+            libegl1 \
+            libgl1 \
+            libvulkan1 \
+            mesa-vulkan-drivers \
+            vulkan-tools \
+            fonts-liberation \
+            rclone
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup Python 3.12 (for Stage 8 faster-whisper Word-Sync Proof)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache Whisper & HyperFrames Browser
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/hyperframes
+            ~/.npm
+          key: kape-hf-whisper-${{ runner.os }}-v1
+
+      - name: Install Python & HyperFrames dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install faster-whisper av==12.3.0 numpy pillow scipy
+          npm install -g hyperframes@0.8.117
+          npx --yes hyperframes@0.8.117 browser ensure
+          mkdir -p ~/.kape-explainer
+          echo '{"python":["python3"],"checked":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > ~/.kape-explainer/config.json
+
+      - name: Unpack <slug>-project.zip if present
+        run: |
+          SLUG="${{ steps.target.outputs.slug }}"
+          ZIP="films/$SLUG/package/${SLUG}-project.zip"
+          if [ -f "$ZIP" ]; then
+            echo "Unpacking $ZIP into films/$SLUG..."
+            unzip -o -q "$ZIP" -d "films/$SLUG"
+          fi
+
+      - name: Stage 7 — Render 1080p60 MP4 via HyperFrames
+        working-directory: films/${{ steps.target.outputs.slug }}
+        run: |
+          SLUG="${{ steps.target.outputs.slug }}"
+          WORKERS="${{ steps.target.outputs.workers }}"
+          mkdir -p renders
+          echo "=== Rendering $SLUG at 60fps ($WORKERS workers) ==="
+          npx --prefer-offline --yes hyperframes@0.8.117 render \
+            --fps 60 \
+            --browser-gpu \
+            --workers "$WORKERS" \
+            -o "renders/${SLUG}-1080p60.mp4" 2>&1 | tee "renders/${SLUG}-1080p60.log"
+          ls -lh "renders/${SLUG}-1080p60.mp4"
+
+      - name: Stage 8 — Run ffprobe + faster-whisper Word-Sync Proof
+        run: |
+          SLUG="${{ steps.target.outputs.slug }}"
+          LANG_CODE="${{ steps.target.outputs.lang }}"
+          node skills/kape-explainer/scripts/verify-render.mjs \
+            "renders/${SLUG}-1080p60.mp4" \
+            --dir "films/$SLUG" \
+            --lang "$LANG_CODE"
+          mkdir -p "films/$SLUG/package"
+          cp "films/$SLUG/renders/${SLUG}-1080p60.mp4" "films/$SLUG/package/"
+          cp "films/$SLUG/.hyperframes/render-proof.json" "films/$SLUG/package/"
+
+      - name: Upload Rendered MP4 & Verified Upload Pack to GitHub Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.target.outputs.slug }}-verified-upload-pack
+          path: |
+            films/${{ steps.target.outputs.slug }}/renders/${{ steps.target.outputs.slug }}-1080p60.mp4
+            films/${{ steps.target.outputs.slug }}/renders/${{ steps.target.outputs.slug }}-1080p60.log
+            films/${{ steps.target.outputs.slug }}/renders/verify-frames/*.png
+            films/${{ steps.target.outputs.slug }}/.hyperframes/render-proof.json
+            films/${{ steps.target.outputs.slug }}/CAPTIONS.srt
+            films/${{ steps.target.outputs.slug }}/SCRIPT.md
+            films/${{ steps.target.outputs.slug }}/UPLOAD-PACK.md
+            films/${{ steps.target.outputs.slug }}/THUMBNAIL.png
+            films/${{ steps.target.outputs.slug }}/TIKTOK-COVER.png
+          retention-days: 14
+
+      - name: Upload Directly to Google Drive (03-Completed-Videos)
+        if: ${{ github.event.inputs.upload_to_drive != 'false' }}
+        env:
+          GDRIVE_FOLDER_ID: "1z5082Iq5JgOC4vYgirMim9vOYMcUhDRe"
+          RCLONE_TOKEN: ${{ secrets.RCLONE_GDRIVE_TOKEN }}
+        run: |
+          SLUG="${{ steps.target.outputs.slug }}"
+          if [ -z "$RCLONE_TOKEN" ]; then
+            echo "::notice::RCLONE_GDRIVE_TOKEN secret not set yet — skipping direct Google Drive upload from runner (use GitHub Artifact or let Gemini sync to Drive)."
+            exit 0
+          fi
+          mkdir -p ~/.config/rclone
+          cat <<EOF > ~/.config/rclone/rclone.conf
+          [gdrive]
+          type = drive
+          scope = drive
+          token = $RCLONE_TOKEN
+          root_folder_id = $GDRIVE_FOLDER_ID
+          EOF
+          rclone copy "films/$SLUG/package/" "gdrive:$SLUG/" --progress
+          echo "Uploaded verified MP4 and Upload Pack to Google Drive -> 03-Completed-Videos/$SLUG/"

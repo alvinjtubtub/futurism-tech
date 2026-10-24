@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="platform.css">
+<style>html,body{width:2000px;height:700px;overflow:hidden}</style></head>
+<body>
+<!--SPRITE-->
+<div id="surface" class="n8" style="width:2000px;height:700px">
+  <svg class="wires" width="2000" height="700" viewBox="0 0 2000 700">
+    <path d="M181 340 C235 340 235 220 289 220"/><path d="M181 340 C235 340 235 460 289 460"/>
+    <path d="M391 220 C445 220 445 318 499 318"/><path d="M391 460 C445 460 445 362 499 362"/>
+    <path d="M601 340 H709"/><path d="M811 340 H919"/><path d="M1021 340 H1129"/>
+    <path d="M1231 320 C1285 320 1285 220 1339 220"/><path d="M1231 360 C1285 360 1285 460 1339 460"/>
+    <path d="M1441 220 C1495 220 1495 318 1549 318"/><path d="M1441 460 C1495 460 1495 362 1549 362"/>
+    <path d="M1651 340 H1759"/><path d="M1861 340 H1898"/>
+    <path class="ar" d="M282 216 L289 220 L282 224Z"/><path class="ar" d="M282 456 L289 460 L282 464Z"/>
+    <path class="ar" d="M492 314 L499 318 L492 322Z"/><path class="ar" d="M492 358 L499 362 L492 366Z"/>
+    <path class="ar" d="M702 336 L709 340 L702 344Z"/><path class="ar" d="M912 336 L919 340 L912 344Z"/><path class="ar" d="M1122 336 L1129 340 L1122 344Z"/>
+    <path class="ar" d="M1332 216 L1339 220 L1332 224Z"/><path class="ar" d="M1332 456 L1339 460 L1332 464Z"/>
+    <path class="ar" d="M1542 314 L1549 318 L1542 322Z"/><path class="ar" d="M1542 358 L1549 362 L1542 366Z"/>
+    <path class="ar" d="M1752 336 L1759 340 L1752 344Z"/>
+  </svg>
+  <span class="n8-bolt" style="left:50px;top:331px"><svg class="i"><use href="#i-bolt"/></svg></span>
+  <div class="n8-node trig" style="left:80px;top:290px"><svg class="i" style="color:#14b8a6"><use href="#i-clock"/></svg><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:130px;top:402px">Schedule Trigger</div>
+
+  <div class="n8-node" style="left:290px;top:170px"><svg class="i" style="color:#4f46e5"><use href="#i-globe"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:340px;top:282px">Get Appointments<small>GET: https://api.northwind.co/appo...</small></div>
+  <div class="n8-node" style="left:290px;top:410px"><svg class="i" style="color:#4f46e5"><use href="#i-globe"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:340px;top:522px">Get Patients<small>GET: https://api.northwind.co/pati...</small></div>
+
+  <span class="n8-in" style="left:452px;top:300px">Input 1</span><span class="n8-in" style="left:452px;top:366px">Input 2</span>
+  <div class="n8-node" style="left:500px;top:290px"><svg class="i" style="color:#22a5b5"><use href="#i-merge"/></svg><i class="ho l" style="top:28%"></i><i class="ho l" style="top:72%"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:550px;top:402px">Merge<small>combine</small></div>
+
+  <div class="n8-node" style="left:710px;top:290px"><svg class="i" style="color:#8b5cf6"><use href="#i-splitout"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:760px;top:402px">Split Out Appointments</div>
+  <div class="n8-node" style="left:920px;top:290px"><svg class="i" style="color:#4338ca"><use href="#i-pen"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:970px;top:402px">Edit Fields<small>manual</small></div>
+
+  <div class="n8-node" style="left:1130px;top:290px"><svg class="i" style="color:#3b82f6"><use href="#i-if"/></svg><i class="ho l"></i><i class="ho r" style="top:30%"></i><i class="ho r" style="top:70%"></i></div>
+  <div class="n8-lbl" style="left:1180px;top:402px">If</div>
+  <span class="n8-in" style="left:1242px;top:296px">true</span><span class="n8-in" style="left:1242px;top:370px">false</span>
+
+  <div class="n8-node" style="left:1340px;top:170px"><svg class="i" style="color:#475569"><use href="#i-mail"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:1390px;top:282px">Send Reminder<small>send: email</small></div>
+  <div class="n8-node" style="left:1340px;top:410px"><svg class="i" style="color:#4338ca"><use href="#i-pen"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:1390px;top:522px">Flag for Front Desk<small>manual</small></div>
+
+  <span class="n8-in" style="left:1502px;top:300px">Input 1</span><span class="n8-in" style="left:1502px;top:366px">Input 2</span>
+  <div class="n8-node" style="left:1550px;top:290px"><svg class="i" style="color:#22a5b5"><use href="#i-merge"/></svg><i class="ho l" style="top:28%"></i><i class="ho l" style="top:72%"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:1600px;top:402px">Merge1<small>combine</small></div>
+  <div class="n8-node" style="left:1760px;top:290px"><svg class="i" style="color:#4338ca"><use href="#i-pen"/></svg><i class="ho l"></i><i class="ho r"></i></div>
+  <div class="n8-lbl" style="left:1810px;top:402px">Mark as Sent<small>manual</small></div>
+  <div style="position:absolute;left:1898px;top:330px;width:20px;height:20px;border:1.5px solid #b5b5b5;border-radius:4px;background:#fff;color:#8a8a8a;font-size:15px;line-height:16px;text-align:center">+</div>
+</div>
+</body></html>

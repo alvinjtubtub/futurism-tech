@@ -1,0 +1,39 @@
+{
+  "_doc": "Narrated film: bpm 60 + 1 beat per bar makes a 'bar' one second, so scene lengths are plain seconds cut in the pauses between sentences (src/timing/vo-words.json). Cue times are scene-local seconds = the storyboard's word-locked hits. vo-master.wav = vo.mp3 loudnormed to -16 LUFS / -1.5 dBTP; bgm-duck.wav = the background bed sidechain-ducked under the voice (~-34 LUFS).",
+  "name": "{{FILM_NAME}}",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "bpm": 60,
+  "beats_per_bar": 1,
+  "ground": "#F6F2EA",
+  "scenes": [
+    ["s01-hook", 7.3], ["s02-question", 6.2], ["s03-parcel", 5.1], ["s04-api", 12.6], ["s05-webhook", 10.1],
+    ["s06-short", 6.0], ["s07-ghl", 15.0], ["s08-together", 4.5], ["s09-when", 10.4], ["s10-close", 7.8]
+  ],
+  "overlays": [{ "id": "m-kape", "track": 2, "z": 5 }, { "id": "m-brand", "track": 3, "z": 6 }],
+  "audio": [{ "id": "vo", "src": "assets/audio/vo-master.wav", "dur": 82.21, "volume": 1, "track": 9 }],
+  "bgm": { "src": "assets/audio/bgm-duck.wav", "volume": 1 },
+  "sfx": {
+    "click": ["click.mp3", 0.45], "pop": ["pop.mp3", 0.30], "ping": ["ping.mp3", 0.40],
+    "whoosh": ["whoosh.mp3", 0.16], "impact": ["impact-bass-1.mp3", 0.10]
+  },
+  "cues": [
+    ["s01-hook", 4.50, "pop"], ["s01-hook", 5.20, "pop", 0.22], ["s01-hook", 5.66, "pop"], ["s01-hook", 6.82, "whoosh"],
+    ["s02-question", 0.20, "pop", 0.20], ["s02-question", 5.30, "whoosh"],
+    ["s03-parcel", 1.22, "pop"], ["s03-parcel", 3.05, "pop", 0.26],
+    ["s04-api", 0.33, "pop", 0.24], ["s04-api", 4.72, "click"], ["s04-api", 4.80, "whoosh", 0.12],
+    ["s04-api", 5.62, "whoosh", 0.10], ["s04-api", 6.44, "click"], ["s04-api", 6.52, "whoosh", 0.12],
+    ["s04-api", 7.36, "whoosh", 0.10], ["s04-api", 7.42, "pop", 0.18],
+    ["s05-webhook", 0.55, "pop", 0.24], ["s05-webhook", 2.98, "whoosh", 0.14], ["s05-webhook", 4.32, "ping"],
+    ["s05-webhook", 8.78, "pop", 0.22],
+    ["s06-short", 1.54, "whoosh", 0.14], ["s06-short", 3.90, "whoosh", 0.14],
+    ["s07-ghl", 0.94, "pop", 0.24], ["s07-ghl", 2.70, "click"], ["s07-ghl", 4.50, "whoosh"], ["s07-ghl", 7.16, "pop", 0.22],
+    ["s07-ghl", 8.48, "whoosh", 0.14], ["s07-ghl", 10.92, "pop", 0.24], ["s07-ghl", 13.44, "pop", 0.24],
+    ["s08-together", 1.28, "whoosh", 0.14], ["s08-together", 3.76, "impact"],
+    ["s09-when", 4.24, "pop"], ["s09-when", 4.26, "impact", 0.07], ["s09-when", 9.28, "pop"], ["s09-when", 9.30, "impact", 0.07],
+    ["s10-close", 1.46, "pop"], ["s10-close", 2.02, "pop", 0.22], ["s10-close", 2.32, "pop"], ["s10-close", 3.28, "whoosh", 0.12], ["s10-close", 3.70, "pop", 0.28], ["s10-close", 4.44, "ping", 0.34]
+  ]
+}

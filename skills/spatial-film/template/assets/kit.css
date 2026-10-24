@@ -1,0 +1,49 @@
+/* Shared film kit. Tokens come from the product's own stylesheet - replace the :root values, never invent.
+   Base components below are product-neutral; append the product's own UI (ported 1:1 from its source CSS,
+   prefixed kit-) at the end. Scale any UI with a .kit-zoom wrapper (--z), never transform scale. */
+@font-face { font-family: 'Poppins'; font-weight: 500; font-style: normal; font-display: block; src: url('fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; font-style: normal; font-display: block; src: url('fonts/poppins-700.woff2') format('woff2'); }
+
+:root {
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --paper: #d6e3ff; --paper-hi: #e7efff; --paper-lo: #c9d8fb; --card: #ffffff; --well: #edf3ff;
+  --ink: #08102b; --ink-soft: #3d4c74; --ink-faint: #505c86;
+  --accent: #0038ff; --good: #0e7a46;
+  --float: 0 2px 4px rgba(8,16,43,.06), 0 12px 28px rgba(8,16,43,.12), 0 40px 80px -20px rgba(8,16,43,.28);
+}
+
+.kit-zoom { zoom: var(--z, 2.5); }
+.kit-ground { position: absolute; inset: 0; background: radial-gradient(110% 80% at 50% 30%, var(--paper-hi) 0%, var(--paper) 62%, var(--paper-lo) 100%); }
+.kit-grain { position: absolute; inset: -50%; pointer-events: none; opacity: .05; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+.kit-chip { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 18px; font: 700 26px/1.2 'Poppins', sans-serif; color: var(--ink);
+  background: rgba(255,255,255,.82); box-shadow: var(--float), inset 0 0 0 1.5px rgba(255,255,255,.9); white-space: nowrap; }
+.kit-chip.ok { color: var(--good); }
+.kit-chip svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.kit-cursor { width: 34px; height: 48px; transform-origin: 3px 2px; }
+.kit-cursor svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.kit-ring { border-radius: 50%; border: 3px solid var(--accent); }
+.kit-key { width: 120px; height: 120px; border-radius: 24px; display: grid; place-items: center; font: 700 58px/1 'Poppins', sans-serif; color: var(--ink);
+  background: linear-gradient(#ffffff, #e9eefb); box-shadow: 0 10px 0 #c3cde6, 0 30px 50px rgba(8,16,43,.25); }
+
+/* corner ticks (viewfinder / scan frame / crop handles): four .kit-ck inside a sized box */
+.kit-ck { position: absolute; width: var(--s, 56px); height: var(--s, 56px); border: 0 solid var(--accent); }
+.kit-ck.tl { left: 0; top: 0; border-left-width: var(--w, 6px); border-top-width: var(--w, 6px); border-top-left-radius: 10px; }
+.kit-ck.tr { right: 0; top: 0; border-right-width: var(--w, 6px); border-top-width: var(--w, 6px); border-top-right-radius: 10px; }
+.kit-ck.bl { left: 0; bottom: 0; border-left-width: var(--w, 6px); border-bottom-width: var(--w, 6px); border-bottom-left-radius: 10px; }
+.kit-ck.br { right: 0; bottom: 0; border-right-width: var(--w, 6px); border-bottom-width: var(--w, 6px); border-bottom-right-radius: 10px; }
+
+/* browser window (1x px; zoom with .kit-zoom). overflow:hidden makes it a LEAF - never nest 3D inside it. */
+.kit-win { position: relative; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: var(--float); }
+.kit-win-bar { height: 34px; background: #eef1f6; display: flex; align-items: center; gap: 7px; padding: 0 14px; font: 500 12px 'Poppins', sans-serif; }
+.kit-win-bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(8,16,43,.18); }
+.kit-win-bar u { text-decoration: none; margin-left: 14px; color: #475467; background: #fff; border-radius: 999px; padding: 3px 16px; }
+.kit-win-view { position: relative; overflow: hidden; background: #f8f9fb; }
+
+/* shimmer sweep for busy states (never a circular spinner): tween the band's xPercent -100 -> 100 */
+.kit-shimmer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.kit-shimmer i { position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); }
+
+/* ---------------- product UI (port 1:1 from the product's source CSS below this line) ---------------- */

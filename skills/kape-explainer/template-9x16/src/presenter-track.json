@@ -1,0 +1,19 @@
+{
+  "_doc": "The presenter track for compositions/m-kape.html (built by {{SKILL}}/scripts/build-presenter.py). Times are GLOBAL seconds = the narration word that cues the pose, minus ~0.1s so the gesture leads the word. 'point' is mirrored so it points into the frame.",
+  "scale": 0.55,
+  "home": { "x": 235, "feet": 1690 },
+  "enter": { "from_x": -320, "at": 0.0, "dur": 0.95 },
+  "poses": [
+    [0.00, "wave"], [2.60, "idle"], [4.40, "present"], [6.85, "idle"], [8.75, "think"], [12.50, "point"],
+    [13.80, "idle"], [18.85, "point"], [26.75, "present"], [30.45, "thumbs-up"], [31.60, "sit"], [41.45, "present"],
+    [47.45, "idle"], [49.90, "point"], [53.10, "present"], [58.10, "idle"], [60.65, "point"], [62.45, "thumbs-up"],
+    [66.90, "think"], [68.35, "point"], [72.05, "present"], [77.40, "idle"], [78.55, "present"], [80.40, "wave"]
+  ],
+  "mirror": ["point"],
+  "fx": [
+    { "sprite": "fx/question", "at": 8.85, "out": 10.7, "dx": 150, "dy": -560, "scale": 0.42 },
+    { "sprite": "fx/sparkle-burst", "at": 63.55, "out": 65.2, "dx": 200, "dy": -690, "scale": 0.5 }
+  ],
+  "bob": { "rate": 15, "y": -9, "squash": 0.016 },
+  "blink": { "every": [3.1, 4.4, 2.7, 3.8, 4.9, 3.3, 2.9, 4.1], "dur": 0.11 }
+}

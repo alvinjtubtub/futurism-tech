@@ -1,0 +1,33 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="platform.css">
+<style>html,body{width:1400px;height:1100px;overflow:hidden}</style></head>
+<body>
+<!--SPRITE-->
+<div id="surface" class="zp" style="width:1400px;height:1100px">
+  <svg class="wires" width="1400" height="1100" viewBox="0 0 1400 1100">
+    <path d="M700 110 V170"/><path d="M700 240 V300"/><path d="M700 370 V430"/><path d="M700 500 V560"/>
+    <path d="M400 560 H1000"/><path d="M400 560 V576"/><path d="M1000 560 V576"/>
+    <path d="M400 603 V650"/><path d="M1000 603 V650"/>
+    <path d="M400 720 V780"/><path d="M400 850 V890"/>
+    <path d="M1000 720 V780"/><path d="M1000 850 V910"/><path d="M1000 980 V1020"/>
+  </svg>
+  <span class="zp-plus" style="left:700px;top:129px">+</span><span class="zp-plus" style="left:700px;top:259px">+</span><span class="zp-plus" style="left:700px;top:389px">+</span>
+  <span class="zp-plus" style="left:400px;top:739px">+</span><span class="zp-plus" style="left:400px;top:879px">+</span>
+  <span class="zp-plus" style="left:1000px;top:739px">+</span><span class="zp-plus" style="left:1000px;top:869px">+</span><span class="zp-plus" style="left:1000px;top:1009px">+</span>
+
+  <div class="zp-step" style="left:550px;top:40px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-hook"/></svg>Webhooks</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>1.</b> Catch Hook</div></div>
+  <div class="zp-step" style="left:550px;top:170px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-text"/></svg>Formatter</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>2.</b> Text</div></div>
+  <div class="zp-step" style="left:550px;top:300px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-funnel"/></svg>Filter</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>3.</b> Only continue if...</div></div>
+  <div class="zp-step" style="left:550px;top:430px"><div class="zp-r1"><span class="zp-chip paths"><svg class="i"><use href="#i-paths"/></svg>Paths</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>4.</b> Split into paths</div></div>
+
+  <span class="zp-path" style="left:400px;top:576px">Path A &#8964; &#8942;</span>
+  <span class="zp-path" style="left:1000px;top:576px">Path B &#8964; &#8942;</span>
+
+  <div class="zp-step" style="left:250px;top:650px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-mail"/></svg>Email by Zapier</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>5.</b> Send Outbound Email</div></div>
+  <div class="zp-step" style="left:250px;top:780px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-hourglass"/></svg>Delay</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>6.</b> Delay For</div></div>
+
+  <div class="zp-step" style="left:850px;top:650px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-hourglass"/></svg>Delay</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>7.</b> Delay For</div></div>
+  <div class="zp-step" style="left:850px;top:780px"><div class="zp-r1"><span class="zp-chip"><svg class="i"><use href="#i-mail"/></svg>Email by Zapier</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>8.</b> Send Outbound Email</div></div>
+  <div class="zp-step empty" style="left:850px;top:910px"><div class="zp-r1"><span class="zp-warn">!</span><span class="zp-act"><svg class="i"><use href="#i-bolt"/></svg>Action</span><span class="zp-kb">&#8942;</span></div><div class="zp-r2"><b>9.</b> <span class="ph">Select the event for your Zap to run</span></div></div>
+</div>
+</body></html>

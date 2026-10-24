@@ -1,0 +1,62 @@
+/* Shared 1x platform styles for the pre-rendered capture surfaces (specs: references/platform-canvases.md) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.wires { position: absolute; inset: 0; overflow: visible; }
+
+/* ---------- GHL ---------- */
+.gh { position: relative; background-color: #f8f9fb; background-image: linear-gradient(#eceef2 1px, transparent 1px), linear-gradient(90deg, #eceef2 1px, transparent 1px); background-size: 20px 20px; }
+.gh .wires path { fill: none; stroke: #c9ced6; stroke-width: 1.4; }
+.gh-card, .gh-trig, .gh-branch, .gh-add { position: absolute; width: 228px; border-radius: 8px; }
+.gh-card, .gh-trig, .gh-branch { background: #fff; border: 1px solid #e4e7ec; box-shadow: 0 1px 2px rgba(16,24,40,.06); color: #344054; font-size: 13px; }
+.gh-card { height: 66px; display: flex; align-items: center; gap: 12px; padding: 0 12px; line-height: 1.35; }
+.gh-ic { flex: none; width: 34px; height: 34px; border-radius: 6px; display: grid; place-items: center; }
+.gh-ic.bu { background: #eff4ff; color: #155eef; } .gh-ic.gr { background: #ecfdf3; color: #067647; } .gh-ic.pu { background: #f4f3ff; color: #6938ef; }
+.gh-dots { margin-left: auto; color: #98a2b3; letter-spacing: 1px; font-size: 14px; }
+.gh-trig { height: 143px; display: flex; flex-direction: column; }
+.gh-th { display: flex; gap: 12px; align-items: center; padding: 12px; }
+.gh-th b { display: block; color: #079455; font-weight: 600; font-size: 13px; }
+.gh-th small { display: block; color: #475467; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.gh-tf { border-top: 1px solid #eaecf0; padding: 12px; font-size: 12.5px; color: #475467; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gh-tb { border-top: 1px solid #eaecf0; display: flex; align-items: center; gap: 10px; padding: 8px 12px; color: #475467; }
+.gh-tb svg.i { width: 15px; height: 15px; }
+.gh-tb span { margin-left: auto; display: flex; align-items: center; gap: 6px; color: #155eef; font-weight: 600; font-size: 13px; }
+.gh-add { height: 66px; border: 1px dashed #84adff; background: #f5f8ff; color: #155eef; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 10px; padding-left: 20px; }
+.gh-plus { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 1px dashed #b4bac4; color: #667085; font-size: 13px; line-height: 15px; text-align: center; }
+.gh-branch { height: 62px; border-bottom: 3px solid #7a5af8; text-align: center; padding-top: 11px; }
+.gh-branch b { display: flex; justify-content: center; align-items: center; gap: 6px; color: #6938ef; font-weight: 600; font-size: 13px; }
+.gh-branch b svg.i { width: 15px; height: 15px; }
+.gh-branch small { display: block; color: #475467; font-size: 12.5px; margin-top: 3px; }
+.gh-end { position: absolute; width: 44px; height: 22px; margin-left: -22px; border-radius: 11px; background: #e4e7ec; color: #475467; font-size: 11px; font-weight: 500; text-align: center; line-height: 22px; }
+
+/* ---------- n8n ---------- */
+.n8 { position: relative; background-color: #f5f5f5; background-image: radial-gradient(#cdcdcd 1.1px, transparent 1.3px); background-size: 20px 20px; }
+.n8 .wires path { fill: none; stroke: #b8b8b8; stroke-width: 1.6; }
+.n8 .wires path.ar { fill: #b8b8b8; stroke: none; }
+.n8-node { position: absolute; width: 100px; height: 100px; background: #fff; border: 1.5px solid #dcdfe6; border-radius: 8px; display: grid; place-items: center; }
+.n8-node svg.i { width: 40px; height: 40px; stroke-width: 1.8; }
+.n8-node.trig { border-radius: 50px 8px 8px 50px; }
+.ho { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 1.5px solid #b5b5b5; top: 50%; margin-top: -6px; }
+.ho.l { left: -7px; } .ho.r { right: -7px; }
+.n8-lbl { position: absolute; width: 220px; margin-left: -110px; text-align: center; font-size: 14px; color: #222; font-weight: 500; }
+.n8-lbl small { display: block; font-size: 12px; color: #9a9a9a; font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.n8-in { position: absolute; font-size: 11px; color: #8a8a8a; }
+.n8-bolt { position: absolute; color: #ff6d5a; } .n8-bolt svg.i { fill: #ff6d5a; width: 18px; height: 18px; }
+
+/* ---------- Zapier ---------- */
+.zp { position: relative; background-color: #f8f6f2; background-image: radial-gradient(#d9d3c7 1.1px, transparent 1.3px); background-size: 16px 16px; color: #2d2e2e; }
+.zp .wires path { fill: none; stroke: #5b4cdb; stroke-width: 1.8; stroke-dasharray: 6 5; }
+.zp-plus { position: absolute; width: 20px; margin-left: -10px; text-align: center; color: #5b4cdb; font-size: 22px; font-weight: 600; line-height: 1; background: #f8f6f2; }
+.zp-step { position: absolute; width: 300px; height: 70px; background: #fffdf9; border: 1px solid #e6e1d6; border-radius: 6px; box-shadow: 0 1px 4px rgba(45,46,46,.08); padding: 10px 12px; }
+.zp-step.empty { border: 2px dotted #2d2e2e; }
+.zp-r1 { display: flex; align-items: center; gap: 8px; }
+.zp-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #e6e1d6; border-radius: 4px; padding: 2px 7px; font-weight: 700; font-size: 13px; background: #fff; }
+.zp-chip svg.i { width: 15px; height: 15px; color: #ff4f00; }
+.zp-chip.paths { border-color: #ff4f00; color: #ff4f00; }
+.zp-act { display: inline-flex; align-items: center; gap: 5px; background: #e9e6df; border: 1px solid #2d2e2e; border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13px; }
+.zp-act svg.i { width: 14px; height: 14px; }
+.zp-warn { width: 18px; height: 18px; border-radius: 50%; border: 1.6px solid #9a8f2a; color: #9a8f2a; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+.zp-kb { margin-left: auto; font-weight: 700; font-size: 18px; line-height: 1; }
+.zp-r2 { font-size: 14px; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .zp-r2 b { font-weight: 700; } .zp-r2 .ph { color: #7a7a7a; }
+.zp-path { position: absolute; transform: translateX(-50%); border: 1.5px solid #6e60f0; color: #4b3fc6; background: #fffdf9; border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 700; white-space: nowrap; }

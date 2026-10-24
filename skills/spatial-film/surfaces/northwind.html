@@ -1,0 +1,141 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=block">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1440px; height: 5400px; overflow: hidden; }
+body { font-family: Inter, sans-serif; color: #1c2321; background: #fbfaf7; -webkit-font-smoothing: antialiased; }
+:root { --ink: #1c2321; --soft-ink: #4b5552; --sage: #2f6f62; --sage-2: #e6efe9; --sand: #f1e9dc; --line: #e4e1da; }
+.serif { font-family: Fraunces, Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+section { height: 900px; position: relative; overflow: hidden; padding: 0 120px; }
+.head { position: absolute; left: 0; right: 0; top: 0; height: 76px; display: flex; align-items: center; padding: 0 120px; border-bottom: 1px solid var(--line); background: rgba(251,250,247,.96); z-index: 2; }
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 19px; }
+.mark { width: 34px; height: 34px; border-radius: 9px; background: var(--ink); display: grid; place-items: center; }
+.nav { margin-left: auto; display: flex; gap: 36px; font-size: 15px; color: var(--soft-ink); align-items: center; }
+.btn { background: var(--sage); color: #fff; border-radius: 999px; padding: 12px 24px; font-weight: 600; font-size: 15px; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.eyebrow { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--sage); font-weight: 600; }
+/* hero */
+.hero h1 { font-size: 96px; line-height: 1.02; margin-top: 22px; width: 640px; }
+.hero p { font-size: 20px; line-height: 1.6; color: var(--soft-ink); width: 520px; margin-top: 26px; }
+.hero .ctas { margin-top: 38px; display: flex; gap: 14px; }
+.art { position: absolute; right: 120px; top: 150px; width: 560px; height: 640px; border-radius: 280px 280px 32px 32px; background: var(--sage-2); overflow: hidden; }
+.art .sun { position: absolute; width: 220px; height: 220px; border-radius: 50%; background: #f3c98b; left: 170px; top: 120px; }
+.art .hill1 { position: absolute; left: -80px; right: -80px; bottom: -120px; height: 380px; border-radius: 50%; background: #a9c8b9; }
+.art .hill2 { position: absolute; left: 160px; right: -160px; bottom: -200px; height: 400px; border-radius: 50%; background: var(--sage); }
+.badge { position: absolute; right: 560px; top: 640px; background: #fff; border-radius: 18px; padding: 18px 22px; box-shadow: 0 18px 40px rgba(28,35,33,.12); display: flex; gap: 14px; align-items: center; font-size: 15px; }
+.badge b { font-size: 26px; font-family: Fraunces, serif; }
+/* services */
+.svc h2, .rev h2, .book h2 { font-size: 64px; line-height: 1.05; margin-top: 18px; }
+.grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: 250px 250px; gap: 20px; margin-top: 56px; }
+.tile { border-radius: 24px; background: #fff; border: 1px solid var(--line); padding: 30px; position: relative; }
+.tile h3 { font-size: 24px; } .tile p { color: var(--soft-ink); font-size: 16px; line-height: 1.55; margin-top: 10px; width: 90%; }
+.tile .ic { width: 52px; height: 52px; border-radius: 14px; background: var(--sage-2); margin-bottom: 22px; display: grid; place-items: center; }
+.tile.big { grid-row: span 2; background: var(--sand); border: 0; }
+.tile.big h3 { font-size: 34px; font-family: Fraunces, serif; font-weight: 500; }
+.tile.big .shape { position: absolute; right: 30px; bottom: 30px; width: 200px; height: 200px; border-radius: 40px; background: #e6d7bf; }
+/* stats */
+.stats { background: var(--ink); color: #f4f1ea; display: flex; flex-direction: column; justify-content: center; }
+.stats .row { display: flex; gap: 0; margin-top: 70px; border-top: 1px solid rgba(244,241,234,.18); }
+.stats .s { flex: 1; padding: 40px 0 0; }
+.stats .s b { display: block; font-family: Fraunces, serif; font-weight: 500; font-size: 110px; line-height: 1; }
+.stats .s span { display: block; margin-top: 16px; font-size: 18px; color: rgba(244,241,234,.7); }
+.stats h2 { font-size: 58px; width: 900px; line-height: 1.1; }
+/* reviews */
+.quotes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 60px; }
+.q { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 34px; height: 380px; display: flex; flex-direction: column; }
+.q .stars { color: #d79b3c; letter-spacing: 4px; font-size: 18px; }
+.q p { font-family: Fraunces, serif; font-size: 25px; line-height: 1.4; margin-top: 18px; flex: 1; }
+.q .who { display: flex; gap: 12px; align-items: center; font-size: 15px; color: var(--soft-ink); }
+.q .av { width: 42px; height: 42px; border-radius: 50%; background: var(--sage-2); display: grid; place-items: center; font-weight: 600; color: var(--sage); }
+/* booking */
+.book { background: var(--sage-2); }
+.bk { display: flex; gap: 60px; margin-top: 56px; }
+.cal { width: 640px; background: #fff; border-radius: 28px; padding: 34px; box-shadow: 0 24px 60px rgba(28,35,33,.08); }
+.cal .top { display: flex; justify-content: space-between; font-weight: 600; font-size: 20px; }
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 26px; text-align: center; font-size: 16px; }
+.days i { font-style: normal; color: var(--soft-ink); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.days span { padding: 13px 0; border-radius: 12px; }
+.days span.on { background: var(--sage); color: #fff; font-weight: 600; }
+.days span.av { background: var(--sage-2); }
+.times { flex: 1; }
+.times h3 { font-size: 22px; } .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.slots span { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 18px; font-weight: 600; font-size: 17px; text-align: center; }
+.slots span.on { border-color: var(--sage); color: var(--sage); }
+/* footer */
+.foot { background: #f4f1ea; }
+.map { position: absolute; right: 120px; top: 110px; width: 620px; height: 440px; border-radius: 28px; background: #e8e4da; overflow: hidden; }
+.map i { position: absolute; background: #fbfaf7; }
+.pin { position: absolute; left: 300px; top: 190px; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--sage); }
+.info { margin-top: 110px; width: 520px; }
+.info h2 { font-size: 64px; line-height: 1.05; }
+.info p { font-size: 18px; color: var(--soft-ink); line-height: 1.7; margin-top: 22px; }
+.links { position: absolute; left: 120px; right: 120px; bottom: 60px; border-top: 1px solid var(--line); padding-top: 30px; display: flex; gap: 40px; font-size: 15px; color: var(--soft-ink); }
+.links .logo { margin-right: auto; color: var(--ink); }
+#stamp { position: absolute; right: 48px; bottom: 44px; display: none; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; background: rgba(255,255,255,.9); opacity: .8; font-weight: 600; font-size: 19px; color: var(--ink); z-index: 5; }
+body.branded #stamp { display: flex; }
+</style></head>
+<body>
+<div id="surface" style="position:relative;width:1440px;height:5400px">
+
+<section class="hero">
+  <div class="head"><div class="logo"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V5l14 14V5"/></svg></span>Northwind Dental</div>
+    <div class="nav"><span>Services</span><span>Our approach</span><span>Reviews</span><span>Visit</span><span class="btn">Book a visit</span></div></div>
+  <div style="padding-top:200px">
+    <div class="eyebrow">Family dentistry · Harbor district</div>
+    <h1 class="serif">A calmer visit, every visit.</h1>
+    <p>Gentle checkups, clear pricing and same-week appointments. We explain every step before we take it.</p>
+    <div class="ctas"><span class="btn">Book a visit</span><span class="btn ghost">See services</span></div>
+  </div>
+  <div class="art"><div class="sun"></div><div class="hill1"></div><div class="hill2"></div></div>
+  <div class="badge"><b>4.9</b><span>from 1,200+<br>patient reviews</span></div>
+</section>
+
+<section class="svc">
+  <div style="padding-top:110px"><div class="eyebrow">What we do</div><h2 class="serif">Care for the whole family</h2></div>
+  <div class="grid">
+    <div class="tile big"><h3>Checkups that don't rush you</h3><p>Forty-five minutes, a full clean and a plain-English plan.</p><div class="shape"></div></div>
+    <div class="tile"><div class="ic"></div><h3>Whitening</h3><p>In-chair or take-home kits.</p></div>
+    <div class="tile"><div class="ic"></div><h3>Clear aligners</h3><p>Straighter teeth, no wires.</p></div>
+    <div class="tile"><div class="ic"></div><h3>Implants</h3><p>Permanent, natural-looking.</p></div>
+    <div class="tile"><div class="ic"></div><h3>Emergency care</h3><p>Same-day slots, every weekday.</p></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="eyebrow" style="color:#9fc7b8">Our approach</div>
+  <h2 class="serif" style="margin-top:18px">Small practice, long appointments, no surprises on the bill.</h2>
+  <div class="row"><div class="s"><b>12</b><span>years in the Harbor district</span></div><div class="s"><b>4.9</b><span>average patient rating</span></div><div class="s"><b>3 days</b><span>typical wait for a visit</span></div></div>
+</section>
+
+<section class="rev">
+  <div style="padding-top:110px"><div class="eyebrow">Reviews</div><h2 class="serif">Patients who stopped dreading it</h2></div>
+  <div class="quotes">
+    <div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>They walked me through every step. First cleaning in years without the nerves.</p><div class="who"><span class="av">MR</span>Maya R. · patient since 2021</div></div>
+    <div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>Booked on Monday, seen on Wednesday. The price matched the quote to the cent.</p><div class="who"><span class="av">DK</span>Daniel K. · aligners</div></div>
+    <div class="q"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p>Our kids actually ask when the next visit is. That says everything.</p><div class="who"><span class="av">SL</span>Sofia L. · family plan</div></div>
+  </div>
+</section>
+
+<section class="book">
+  <div style="padding-top:110px"><div class="eyebrow">Book online</div><h2 class="serif">Pick a time that suits you</h2></div>
+  <div class="bk">
+    <div class="cal"><div class="top"><span>October</span><span style="color:var(--soft-ink)">&#8249; &nbsp; &#8250;</span></div>
+      <div class="days"><i>Mo</i><i>Tu</i><i>We</i><i>Th</i><i>Fr</i><i>Sa</i><i>Su</i>
+        <span>6</span><span class="av">7</span><span class="on">8</span><span class="av">9</span><span>10</span><span>11</span><span>12</span>
+        <span class="av">13</span><span>14</span><span class="av">15</span><span class="av">16</span><span>17</span><span>18</span><span>19</span>
+        <span>20</span><span class="av">21</span><span>22</span><span class="av">23</span><span class="av">24</span><span>25</span><span>26</span></div></div>
+    <div class="times"><h3>Wednesday, Oct 8</h3><div class="slots"><span>9:00</span><span class="on">10:30</span><span>11:15</span><span>1:45</span><span>3:00</span><span>4:30</span></div>
+      <div style="margin-top:28px"><span class="btn">Confirm 10:30</span></div></div>
+  </div>
+</section>
+
+<section class="foot">
+  <div class="info"><div class="eyebrow">Visit us</div><h2 class="serif">1180 Harbor Avenue</h2><p>Mon to Fri, 8:00 to 6:00. Saturday, 9:00 to 1:00. Street parking and a bike rack out front.</p><div style="margin-top:30px"><span class="btn">Get directions</span></div></div>
+  <div class="map"><i style="left:0;right:0;top:120px;height:18px"></i><i style="left:0;right:0;top:300px;height:24px"></i><i style="left:180px;top:0;bottom:0;width:20px"></i><i style="left:420px;top:0;bottom:0;width:16px"></i><span class="pin"></span></div>
+  <div class="links"><div class="logo"><span class="mark" style="width:28px;height:28px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V5l14 14V5"/></svg></span>Northwind Dental</div><span>Services</span><span>Insurance</span><span>Careers</span><span>Privacy</span><span>hello@northwind.co</span></div>
+</section>
+
+<div id="stamp"><span class="mark" style="width:36px;height:36px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V5l14 14V5"/></svg></span>Northwind Dental</div>
+</div>
+</body></html>

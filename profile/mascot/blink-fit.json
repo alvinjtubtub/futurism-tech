@@ -1,0 +1,66 @@
+{
+ "celebrate": {
+  "score": 0.683,
+  "scale": 0.96,
+  "x": 240,
+  "y": 212,
+  "blink": true
+ },
+ "idle": {
+  "score": 0.79,
+  "scale": 0.95,
+  "x": 44,
+  "y": 208,
+  "blink": true
+ },
+ "point": {
+  "score": 0.715,
+  "scale": 0.96,
+  "x": 152,
+  "y": 212,
+  "blink": true
+ },
+ "present": {
+  "score": 0.507,
+  "scale": 0.93,
+  "x": 80,
+  "y": 220,
+  "blink": true
+ },
+ "sit": {
+  "score": 0.54,
+  "scale": 0.93,
+  "x": 72,
+  "y": 224,
+  "blink": true
+ },
+ "think": {
+  "score": 0.395,
+  "scale": 0.99,
+  "x": 80,
+  "y": 205,
+  "blink": true,
+  "adjusted": "x +28, y -35 (mouth alignment; see REPORT.md)"
+ },
+ "thumbs-up": {
+  "score": 0.676,
+  "scale": 0.95,
+  "x": 120,
+  "y": 212,
+  "blink": true
+ },
+ "walk": {
+  "score": 0.482,
+  "scale": 0.9,
+  "x": 100,
+  "y": 224,
+  "blink": true
+ },
+ "wave": {
+  "score": 0.656,
+  "scale": 0.96,
+  "x": 172,
+  "y": 208,
+  "blink": true
+ }
+}

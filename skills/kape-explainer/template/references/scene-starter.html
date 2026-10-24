@@ -1,0 +1,52 @@
+<!-- Scene starter (1920x1080). Copy to compositions/<scene_id>.html, replace every SCENE with the scene id and every
+     DUR with its duration. Keeps: kit link, fonts, ground, the 3-layer camera rig with the kit floor, grain on top,
+     one paused timeline registered last. CANON FLOOR seam: at t=0 and t=DUR the drift and cam layers are at identity
+     and only the ground + floor show - every scene renders that frame identically, so no plate is needed for it. -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; font-family: 'Poppins', sans-serif; }
+.SCENE-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.SCENE-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.SCENE-center { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); }
+</style>
+<div id="root" data-composition-id="SCENE" data-width="1920" data-height="1080">
+  <div id="SCENE-ground" class="clip kit-ground" data-start="0" data-duration="DUR" data-track-index="0"></div>
+  <div id="SCENE-stage" class="clip" data-start="0" data-duration="DUR" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="SCENE-drift" class="SCENE-layer">
+      <div id="SCENE-cam" class="SCENE-layer">
+        <div class="kit-floor"></div>
+        <!-- world objects: a .SCENE-world anchor at frame center, content centered inside it with .SCENE-center -->
+        <div id="SCENE-tile" class="SCENE-world"><div class="SCENE-center kit-tile api">API</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="SCENE-grain" class="clip kit-grain" data-start="0" data-duration="DUR" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var P = 'SCENE-';
+  var $ = function (id) { return '#' + P + id; };
+  var D = DUR;
+  var tl = gsap.timeline({ paused: true });
+
+  // static poses first (gsap.set), then the timeline
+  gsap.set($('tile'), { x: 0, y: -300, z: -300, opacity: 0, force3D: true });
+
+  // drift: identity at both ends (canon floor seam), a slow breath + orbit in between
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0, rotationX: 0 }, { scale: 1.02, rotationY: 1.2, rotationX: -0.6, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: 1.2, rotationX: -0.6 }, { scale: 1, rotationY: 0, rotationX: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // an arrival that lands with a spring (cue words are scene-local seconds: global word time - scene start)
+  tl.fromTo($('tile'), { y: -300, z: -300, opacity: 0 }, { y: -300, z: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.6)', force3D: true }, 0.3);
+
+  // exit before the canon floor seam: gone by D - 0.1 with power2.in (nothing lingers into the next scene)
+  tl.fromTo($('tile'), { z: 0, opacity: 1 }, { z: -260, opacity: 0, duration: 0.45, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.6);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['SCENE'] = tl;
+})();
+</script>
+</template>

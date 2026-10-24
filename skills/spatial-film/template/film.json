@@ -1,0 +1,29 @@
+{
+  "_doc": "The one source of scene timing. scenes = [id, bars]; cue = [scene, time, sfx, volume|null, [kFrom, kTo]?]; time is seconds or an expression in b (beat), bar, k. Values below are an example film - replace them.",
+  "name": "FILM_NAME",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "bpm": 110,
+  "beats_per_bar": 4,
+  "ground": "#d6e3ff",
+  "scenes": [
+    ["s01-click", 2], ["s02-workflows", 6.5], ["s03-editor", 6.5], ["s04-fullpage", 4.5],
+    ["s05-brand", 2.5], ["s06-showcase", 3.5], ["s07-close", 2]
+  ],
+  "bgm": { "src": "assets/audio/bgm-edit.wav", "volume": 0.62 },
+  "sfx": {
+    "click": ["click.mp3", 0.55], "tick": ["click.mp3", 0.28], "pop": ["pop.mp3", 0.45],
+    "whoosh": ["whoosh.mp3", 0.35], "punch": ["whoosh-punch.mp3", 0.40], "impact": ["impact.mp3", 0.35],
+    "stamp": ["stamp.mp3", 0.45], "ping": ["ping.mp3", 0.30], "keys": ["keys-burst.mp3", 0.30]
+  },
+  "cues": [
+    ["s01-click", 1.09, "click"], ["s01-click", "5*b", "click"], ["s01-click", 3.55, "whoosh"],
+    ["s02-workflows", 0.10, "punch"], ["s02-workflows", "4*b", "tick"], ["s02-workflows", "10*b", "pop", 0.35],
+    ["s03-editor", "2*b*k", "click", 0.42, [1, 10]],
+    ["s03-editor", "6*b+0.05", "stamp", 0.35],
+    ["s07-close", 1.70, "impact", 0.30]
+  ]
+}

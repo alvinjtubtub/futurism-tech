@@ -1,0 +1,14 @@
+# Environment & OS files
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# Scratch & heavy unverified render caches
+films/*/.hyperframes/
+films/*/.media/
+films/*/snapshots/
+films/*/renders/
+films/*/*.wav
+films/*/assets/audio/vo-master.wav

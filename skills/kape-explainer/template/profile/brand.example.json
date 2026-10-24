@@ -1,0 +1,14 @@
+{
+  "name": "Sample Studio",
+  "wordmark": ["Sample", "Studio"],
+  "logo": "logo.svg",
+  "logo_has_text": false,
+  "ink": "#1F2937",
+  "accent": "#2563EB",
+  "accent_dark": "#1E40AF",
+  "opener": "explains",
+  "cta": "Follow for more",
+  "presenter": "KAPE",
+  "language": "English",
+  "films_dir": "~/KapeExplainer/films"
+}
