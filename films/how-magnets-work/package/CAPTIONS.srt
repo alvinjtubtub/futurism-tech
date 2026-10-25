@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:02,480
+Bakit tumidikit ang magnet sa ref mo?
+
+2
+00:00:02,980 --> 00:00:06,620
+The answer is an invisible force you cannot see.
+
+3
+00:00:07,300 --> 00:00:12,040
+Inside a magnet, tiny regions called domains act like miniature magnets.
+
+4
+00:00:12,500 --> 00:00:16,880
+Sa ordinaryong bakal, nakakalat sila at nagkakansilahan ang lakas nila,
+
+5
+00:00:17,040 --> 00:00:20,000
+pero sa magnet, halos lahat ay nakahanay.
+
+6
+00:00:20,360 --> 00:00:23,360
+Ang lakas na iyan ay umaabot bilang magnetic field,
+
+7
+00:00:23,740 --> 00:00:27,240
+na sinusunda ng iron filings sa mga kurba sa pagitan ng dalawang pole.
+
+8
+00:00:28,040 --> 00:00:36,340
+Opposite poles attract, like poles repel, at kahit hatiin mo ang magnet, bawat piraso ay may north at south pa rin.
+
+9
+00:00:36,600 --> 00:00:41,280
+Ang earth ay isang giganting magnet at ang field nito ang sinusunda ng compass,
+
+10
+00:00:41,800 --> 00:00:45,420
+at ang current sa isang coil ay lumilikhan ng electromagnet.
+
+11
+00:00:45,780 --> 00:00:47,480
+Kaya ito ang tanong ko sa inyo.
+
+12
+00:00:47,660 --> 00:00:53,680
+Kung makakagawa ka ng pinakamalakas na magnet sa mundo, ano ang una mong bubuhatin gamit ito?
+
+13
+00:00:53,820 --> 00:00:54,620
+Ikoment mo sa baba!
+
+14
+00:00:55,380 --> 00:00:56,780
+Follow me for more Tech Explained.
+
+15
+00:00:56,780 --> 00:00:57,340
+See ya!

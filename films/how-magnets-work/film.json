@@ -1,0 +1,55 @@
+{
+  "_doc": "KAPE narrated explainer (16x9). How Magnets Work. 11 scenes cut in paragraph pauses from src/timing/vo-words.json.",
+  "name": "how-magnets-work",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "bpm": 60,
+  "beats_per_bar": 1,
+  "ground": "#F6F2EA",
+  "scenes": [
+    ["s01-hook", 7.00],
+    ["s02-domains", 5.30],
+    ["s03-cancel", 4.60],
+    ["s04-align", 3.30],
+    ["s05-field", 7.60],
+    ["s06-poles", 3.60],
+    ["s07-split", 5.00],
+    ["s08-earth", 5.10],
+    ["s09-electro", 4.10],
+    ["s10-question", 8.20],
+    ["s11-close", 6.20]
+  ],
+  "overlays": [
+    {
+      "id": "m-kape",
+      "track": 2,
+      "z": 5
+    },
+    {
+      "id": "m-brand",
+      "track": 3,
+      "z": 6
+    }
+  ],
+  "audio": [
+    {
+      "id": "vo",
+      "src": "assets/audio/vo-master.wav",
+      "dur": 60.00,
+      "volume": 1,
+      "track": 9
+    }
+  ],
+  "bgm": null,
+  "sfx": {
+    "click": ["click.mp3", 0.45],
+    "pop": ["pop.mp3", 0.3],
+    "ping": ["ping.mp3", 0.4],
+    "whoosh": ["whoosh.mp3", 0.16],
+    "impact": ["impact-bass-1.mp3", 0.1]
+  },
+  "cues": []
+}
