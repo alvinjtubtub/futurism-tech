@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ai-director.mjs — Autonomous KAPE Scene Director powered by Gemini API.
+ * ai-director.mjs — Autonomous KAPE Scene Director.
  * Reads transcript word timings (vo-words.json) and brand rules (frame.md),
  * then generates:
  * 1. STORYBOARD.md (11 scenes aligned to narration timestamps)
@@ -15,7 +15,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 const flag = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 
@@ -30,36 +29,47 @@ const film = JSON.parse(fs.readFileSync(filmJsonPath, 'utf8'));
 const slug = film.name || path.basename(filmDir);
 const topic = flag('--topic') || slug.replace(/-/g, ' ');
 
-// Read transcript and timings if available
-const voWordsPath = path.join(filmDir, 'src', 'timing', 'vo-words.json');
-let voData = null;
-if (fs.existsSync(voWordsPath)) {
-  try {
-    voData = JSON.parse(fs.readFileSync(voWordsPath, 'utf8'));
-  } catch {}
-}
+// Normalize scenes array (tuples ["s01-hook", 7.0] vs objects {id, duration})
+const scenes = (film.scenes || []).map((s) => {
+  if (Array.isArray(s)) return { id: String(s[0]), duration: Number(s[1]) };
+  return { id: String(s.id), duration: Number(s.duration || s.dur || 5.0) };
+});
 
 console.log(`=== AI Director: Orchestrating Scenes for "${slug}" ===`);
 console.log(`Topic: ${topic}`);
+console.log(`Scenes: ${scenes.length} scenes total (${scenes.reduce((a, b) => a + b.duration, 0).toFixed(1)}s)`);
 
 // Ensure compositions directory exists
 const compDir = path.join(filmDir, 'compositions');
 fs.mkdirSync(compDir, { recursive: true });
 
-// Poses cycle for presenter
+// Mascot poses
 const MASCOT_POSES = ['wave', 'present', 'think', 'point', 'sit', 'celebrate', 'thumbs-up', 'idle'];
 
-// 1. Generate Presenter Track
-const presenterTrack = {
-  version: 1,
-  film: slug,
-  cues: (film.scenes || []).map((s, idx) => ({
-    time: idx === 0 ? 0 : Number((film.scenes.slice(0, idx).reduce((a, b) => a + b.duration, 0)).toFixed(2)),
-    pose: idx === 0 ? 'wave' : (idx === (film.scenes.length - 1) ? 'celebrate' : MASCOT_POSES[idx % MASCOT_POSES.length]),
-    fx: idx === 0 ? 'coffee-ring' : (idx === 10 ? 'sparkle-burst' : null)
-  }))
-};
-fs.writeFileSync(path.join(filmDir, 'src', 'presenter-track.json'), JSON.stringify(presenterTrack, null, 2) + '\n');
+// 1. Generate / Update src/presenter-track.json
+const presenterTrackPath = path.join(filmDir, 'src', 'presenter-track.json');
+let presenterData = {};
+if (fs.existsSync(presenterTrackPath)) {
+  try { presenterData = JSON.parse(fs.readFileSync(presenterTrackPath, 'utf8')); } catch {}
+}
+
+let cumTime = 0;
+const poses = scenes.map((scene, idx) => {
+  const t = idx === 0 ? 0.00 : Number(cumTime.toFixed(2));
+  cumTime += scene.duration;
+  const pose = idx === 0 ? 'wave' : (idx === scenes.length - 1 ? 'celebrate' : MASCOT_POSES[idx % MASCOT_POSES.length]);
+  return [t, pose];
+});
+
+presenterData.scale = presenterData.scale || 0.5;
+presenterData.home = presenterData.home || { x: 330, feet: 1030 };
+presenterData.enter = presenterData.enter || { from_x: -320, at: 0.0, dur: 0.95 };
+presenterData.poses = poses;
+presenterData.mirror = presenterData.mirror || ['point'];
+presenterData.bob = presenterData.bob || { rate: 15, y: -9, squash: 0.016 };
+presenterData.blink = presenterData.blink || { every: [3.1, 4.4, 2.7, 3.8, 4.9, 3.3, 2.9, 4.1], dur: 0.11 };
+
+fs.writeFileSync(presenterTrackPath, JSON.stringify(presenterData, null, 2) + '\n');
 console.log('OK       src/presenter-track.json generated');
 
 // 2. Generate STORYBOARD.md
@@ -68,15 +78,15 @@ storyboardMd += `**Slug:** \`${slug}\`  \n`;
 storyboardMd += `**Standard:** 1920x1080 @ 60fps | KAPE Canon Paper (#F6F2EA)  \n\n`;
 storyboardMd += `## Scene Breakdown\n\n`;
 
-let cumTime = 0;
-(film.scenes || []).forEach((scene, i) => {
-  const sStart = cumTime;
-  const sEnd = cumTime + scene.duration;
-  cumTime = sEnd;
+let cumTime2 = 0;
+scenes.forEach((scene, i) => {
+  const sStart = cumTime2;
+  const sEnd = cumTime2 + scene.duration;
+  cumTime2 = sEnd;
   const sNum = String(i + 1).padStart(2, '0');
   storyboardMd += `### Scene ${sNum} — ${scene.id} (${sStart.toFixed(1)}s – ${sEnd.toFixed(1)}s, ${scene.duration.toFixed(1)}s)\n`;
-  storyboardMd += `- **Headline:** ${scene.id.replace(/^s\d+-/, '').toUpperCase()}\n`;
-  storyboardMd += `- **Presenter Pose:** ${presenterTrack.cues[i]?.pose || 'present'}\n`;
+  storyboardMd += `- **Headline:** ${scene.id.replace(/^s\d+-/, '').replace(/-/g, ' ').toUpperCase()}\n`;
+  storyboardMd += `- **Presenter Pose:** ${poses[i]?.[1] || 'present'}\n`;
   storyboardMd += `- **Stage Layout:** Card container (x: 640-1860, y: 160-920), Poppins typography, WCAG AA contrast\n`;
   storyboardMd += `- **Motion:** GSAP fromTo enter at 0.0s, content exit by ${(scene.duration - 0.08).toFixed(2)}s\n\n`;
 });
@@ -186,10 +196,10 @@ function generateSceneHtml(sceneId, duration, index, totalScenes) {
 </template>`;
 }
 
-(film.scenes || []).forEach((scene, i) => {
+scenes.forEach((scene, i) => {
   const compPath = path.join(compDir, `${scene.id}.html`);
   if (!fs.existsSync(compPath)) {
-    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, film.scenes.length));
+    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, scenes.length));
     console.log(`OK       compositions/${scene.id}.html created`);
   }
 });
