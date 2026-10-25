@@ -28,7 +28,10 @@ if (!fs.existsSync(filmPath)) {
 }
 const film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
 const slug = film.name || path.basename(root);
-const mp4Path = path.resolve(root, mp4Arg || path.join('renders', `${slug}-1080p60.mp4`));
+const defaultMp4 = path.join('renders', `${slug}-1080p60.mp4`);
+const mp4Path = mp4Arg && fs.existsSync(path.resolve(mp4Arg))
+  ? path.resolve(mp4Arg)
+  : path.resolve(root, mp4Arg || defaultMp4);
 
 if (!fs.existsSync(mp4Path)) {
   console.error(`verify-render: rendered MP4 not found at ${mp4Path}`);
