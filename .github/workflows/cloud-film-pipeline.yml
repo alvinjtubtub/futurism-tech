@@ -1,0 +1,261 @@
+name: Cloud Film Pipeline (Triggered from Android / Google Drive)
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Film slug (e.g. how-google-search-works)"
+        required: true
+        type: string
+      topic:
+        description: "Film topic title (e.g. How a Google search reaches a server in 0.2 seconds)"
+        required: true
+        type: string
+      audio_filename:
+        description: "Filename of narration audio in Google Drive 01-Audio-Intake (e.g. how-google-search.mp3)"
+        required: false
+        type: string
+      lang:
+        description: "Whisper language code (default: tl)"
+        required: false
+        default: "tl"
+        type: string
+      workers:
+        description: "Number of parallel HyperFrames browser render workers"
+        required: false
+        default: "4"
+        type: string
+
+  repository_dispatch:
+    types: [drive_audio_upload]
+
+jobs:
+  build-and-render:
+    name: Build & Render Film from Cloud
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve film inputs
+        id: params
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            SLUG="${{ github.event.client_payload.slug }}"
+            TOPIC="${{ github.event.client_payload.topic || github.event.client_payload.slug }}"
+            AUDIO_FILE="${{ github.event.client_payload.file_name }}"
+          else
+            SLUG="${{ github.event.inputs.slug }}"
+            TOPIC="${{ github.event.inputs.topic }}"
+            AUDIO_FILE="${{ github.event.inputs.audio_filename }}"
+          fi
+
+          # Sanitize slug
+          SLUG=$(echo "$SLUG" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9_-' '-' | sed 's/^-//;s/-$//')
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "topic=$TOPIC" >> "$GITHUB_OUTPUT"
+          echo "audio_file=$AUDIO_FILE" >> "$GITHUB_OUTPUT"
+          echo "lang=${{ github.event.inputs.lang || 'tl' }}" >> "$GITHUB_OUTPUT"
+          echo "workers=${{ github.event.inputs.workers || '4' }}" >> "$GITHUB_OUTPUT"
+          echo "Target film: films/$SLUG ($TOPIC)"
+
+      - name: Install System Dependencies (FFmpeg, Chrome Vulkan, rclone)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ffmpeg \
+            unzip \
+            zip \
+            libnss3 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            libdrm2 \
+            libxkbcommon0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxfixes3 \
+            libxrandr2 \
+            libgbm1 \
+            libasound2t64 || sudo apt-get install -y libasound2 \
+            libpango-1.0-0 \
+            libcairo2 \
+            libegl1 \
+            libgl1 \
+            libvulkan1 \
+            mesa-vulkan-drivers \
+            vulkan-tools \
+            fonts-liberation \
+            fonts-dejavu-core \
+            rclone
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache Whisper & HyperFrames Browser
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/hyperframes
+            ~/.npm
+          key: kape-cloud-whisper-${{ runner.os }}-v1
+
+      - name: Install Python & HyperFrames packages
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install faster-whisper av==12.3.0 numpy pillow scipy google-genai
+          npm install -g hyperframes@0.8.117 @google/genai
+          npx --yes hyperframes@0.8.117 browser ensure
+          mkdir -p ~/.kape-explainer
+          echo '{"python":["python3"],"checked":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > ~/.kape-explainer/config.json
+
+      - name: Configure Google Drive Access via Rclone
+        id: gdrive_config
+        env:
+          GDRIVE_SA_KEY: ${{ secrets.GDRIVE_SA_KEY }}
+          RCLONE_TOKEN: ${{ secrets.RCLONE_GDRIVE_TOKEN }}
+        run: |
+          mkdir -p ~/.config/rclone
+          if [ -n "$GDRIVE_SA_KEY" ]; then
+            echo "$GDRIVE_SA_KEY" > /tmp/gdrive_sa.json
+            cat <<EOF > ~/.config/rclone/rclone.conf
+          [gdrive]
+          type = drive
+          scope = drive
+          service_account_file = /tmp/gdrive_sa.json
+          EOF
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          elif [ -n "$RCLONE_TOKEN" ]; then
+            cat <<EOF > ~/.config/rclone/rclone.conf
+          [gdrive]
+          type = drive
+          scope = drive
+          token = $RCLONE_TOKEN
+          EOF
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Neither GDRIVE_SA_KEY nor RCLONE_GDRIVE_TOKEN found. Cloud runner will output to GitHub Artifacts."
+          fi
+
+      - name: Fetch Narration Audio from Google Drive (01-Audio-Intake)
+        env:
+          AUDIO_FILE: ${{ steps.params.outputs.audio_file }}
+          SLUG: ${{ steps.params.outputs.slug }}
+          INTAKE_FOLDER_ID: "1BZcjqcHBWL64o1CC26tjdIFMu8nwjqoz"
+        run: |
+          mkdir -p /tmp/audio-intake
+          if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ]; then
+            echo "Searching for audio in Google Drive 01-Audio-Intake..."
+            if [ -n "$AUDIO_FILE" ]; then
+              rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$AUDIO_FILE" /tmp/audio-intake/ || true
+            fi
+            # Also try matching slug
+            rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$SLUG.mp3" /tmp/audio-intake/ || true
+            rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$SLUG.wav" /tmp/audio-intake/ || true
+          fi
+
+          FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.wav" \) | head -n1)
+          if [ -n "$FOUND_AUDIO" ]; then
+            echo "Found narration audio: $FOUND_AUDIO"
+            cp "$FOUND_AUDIO" /tmp/vo.mp3
+          elif [ -f "films/$SLUG/assets/audio/vo.mp3" ]; then
+            echo "Using existing audio in repository films/$SLUG/assets/audio/vo.mp3"
+            cp "films/$SLUG/assets/audio/vo.mp3" /tmp/vo.mp3
+          else
+            echo "::warning::No audio found in Google Drive intake or repo. Using fallback silence pad."
+            ffmpeg -f lavfi -i anullsrc=r=48000:cl=mono -t 60 -q:a 9 -acodec libmp3lame /tmp/vo.mp3
+          fi
+
+      - name: Scaffold & Master Audio
+        run: |
+          SLUG="${{ steps.params.outputs.slug }}"
+          LANG_CODE="${{ steps.params.outputs.lang }}"
+          if [ ! -d "films/$SLUG" ]; then
+            node skills/kape-explainer/scripts/new-explainer.mjs "films/$SLUG" --name "$SLUG" --mp3 /tmp/vo.mp3
+          fi
+          # Run transcription & audio mastering
+          python3 skills/kape-explainer/scripts/transcribe.py "films/$SLUG/assets/audio/vo.mp3" "films/$SLUG/src/timing" --lang "$LANG_CODE"
+          python3 skills/kape-explainer/scripts/master-audio.py --len 60 --vo "films/$SLUG/assets/audio/vo.mp3"
+
+      - name: AI Director — Generate Storyboard, Covers & Assets
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          SLUG="${{ steps.params.outputs.slug }}"
+          TOPIC="${{ steps.params.outputs.topic }}"
+          node skills/kape-explainer/scripts/ai-director.mjs --dir "films/$SLUG" --topic "$TOPIC"
+          python3 skills/spatial-film/scripts/build-presenter.py --dir "films/$SLUG"
+          python3 skills/kape-explainer/scripts/build-brand.py --dir "films/$SLUG"
+          python3 skills/kape-explainer/scripts/make-covers-universal.py "films/$SLUG"
+
+      - name: Unpack Pre-Packaged Project ZIP if already committed
+        run: |
+          SLUG="${{ steps.params.outputs.slug }}"
+          ZIP="films/$SLUG/package/${SLUG}-project.zip"
+          if [ -f "$ZIP" ]; then
+            echo "Unpacking committed project ZIP: $ZIP"
+            unzip -o -q "$ZIP" -d "films/$SLUG"
+          fi
+
+      - name: Stage 7 — Render 1080p60 MP4 via HyperFrames
+        working-directory: films/${{ steps.params.outputs.slug }}
+        run: |
+          SLUG="${{ steps.params.outputs.slug }}"
+          WORKERS="${{ steps.params.outputs.workers }}"
+          mkdir -p renders
+          echo "=== Rendering $SLUG at 60fps ($WORKERS workers) ==="
+          npx --prefer-offline --yes hyperframes@0.8.117 render \
+            --fps 60 \
+            --browser-gpu \
+            --workers "$WORKERS" \
+            -o "renders/${SLUG}-1080p60.mp4" 2>&1 | tee "renders/${SLUG}-1080p60.log"
+          ls -lh "renders/${SLUG}-1080p60.mp4"
+
+      - name: Stage 8 — Run ffprobe + faster-whisper Word-Sync Proof
+        run: |
+          SLUG="${{ steps.params.outputs.slug }}"
+          LANG_CODE="${{ steps.params.outputs.lang }}"
+          node skills/kape-explainer/scripts/verify-render.mjs \
+            "films/$SLUG/renders/${SLUG}-1080p60.mp4" \
+            --dir "films/$SLUG" \
+            --lang "$LANG_CODE"
+          mkdir -p "films/$SLUG/package"
+          cp "films/$SLUG/renders/${SLUG}-1080p60.mp4" "films/$SLUG/package/"
+          cp "films/$SLUG/.hyperframes/render-proof.json" "films/$SLUG/package/" 2>/dev/null || true
+          cp "films/$SLUG/THUMBNAIL.png" "films/$SLUG/package/" 2>/dev/null || true
+          cp "films/$SLUG/TIKTOK-COVER.png" "films/$SLUG/package/" 2>/dev/null || true
+          cp "films/$SLUG/CAPTIONS.srt" "films/$SLUG/package/" 2>/dev/null || true
+          cp "films/$SLUG/UPLOAD-PACK.md" "films/$SLUG/package/" 2>/dev/null || true
+
+      - name: Upload Finished Deliverables to Google Drive (03-Completed-Videos)
+        env:
+          SLUG: ${{ steps.params.outputs.slug }}
+          OUTPUT_FOLDER_ID: "1z5082Iq5JgOC4vYgirMim9vOYMcUhDRe"
+        run: |
+          if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ]; then
+            echo "Uploading finished video and upload pack to Google Drive 03-Completed-Videos/$SLUG..."
+            rclone copy "films/$SLUG/package/" "gdrive,root_folder_id=$OUTPUT_FOLDER_ID:$SLUG/" --progress
+            echo "SUCCESS: Delivered to Google Drive -> 03-Completed-Videos/$SLUG/"
+          else
+            echo "::notice::Google Drive credentials not set. Files are saved in GitHub Artifacts below."
+          fi
+
+      - name: Upload Artifacts to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.params.outputs.slug }}-cloud-pack
+          path: films/${{ steps.params.outputs.slug }}/package/
+          retention-days: 14
