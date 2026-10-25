@@ -167,10 +167,10 @@ jobs:
             rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$SLUG.wav" /tmp/audio-intake/ || true
           fi
 
-          FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.wav" \) | head -n1)
+          FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.wav" -o -name "*.m4a" \) | head -n1)
           if [ -n "$FOUND_AUDIO" ]; then
-            echo "Found narration audio: $FOUND_AUDIO"
-            cp "$FOUND_AUDIO" /tmp/vo.mp3
+            echo "Found narration audio ($FOUND_AUDIO) — normalizing to /tmp/vo.mp3..."
+            ffmpeg -v error -y -i "$FOUND_AUDIO" -c:a libmp3lame -q:a 2 /tmp/vo.mp3
           elif [ -f "films/$SLUG/assets/audio/vo.mp3" ]; then
             echo "Using existing audio in repository films/$SLUG/assets/audio/vo.mp3"
             cp "films/$SLUG/assets/audio/vo.mp3" /tmp/vo.mp3
