@@ -64,9 +64,10 @@ jobs:
           echo "Target film: films/$SLUG ($TOPIC)"
 
       - name: Install System Dependencies (FFmpeg, Chrome Vulkan, rclone)
+        timeout-minutes: 5
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" install -y --no-install-recommends \
             ffmpeg \
             unzip \
             zip \
@@ -81,7 +82,7 @@ jobs:
             libxfixes3 \
             libxrandr2 \
             libgbm1 \
-            libasound2t64 || sudo apt-get install -y libasound2 \
+            libasound2t64 \
             libpango-1.0-0 \
             libcairo2 \
             libegl1 \
