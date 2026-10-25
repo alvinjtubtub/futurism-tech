@@ -1,0 +1,61 @@
+name: Test Google Drive Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-gdrive:
+    name: Verify Google Drive Token
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Install rclone
+        run: sudo apt-get update && sudo apt-get install -y rclone
+
+      - name: Test Connection to Google Drive
+        env:
+          RCLONE_TOKEN: ${{ secrets.RCLONE_GDRIVE_TOKEN }}
+          GDRIVE_SA_KEY: ${{ secrets.GDRIVE_SA_KEY }}
+          FOLDER_ID: "1z5082Iq5JgOC4vYgirMim9vOYMcUhDRe"
+        run: |
+          mkdir -p ~/.config/rclone
+
+          if [ -n "$GDRIVE_SA_KEY" ]; then
+            echo "Testing Service Account connection..."
+            echo "$GDRIVE_SA_KEY" > /tmp/sa.json
+            cat <<EOF > ~/.config/rclone/rclone.conf
+          [gdrive]
+          type = drive
+          scope = drive
+          service_account_file = /tmp/sa.json
+          root_folder_id = $FOLDER_ID
+          EOF
+          elif [ -n "$RCLONE_TOKEN" ]; then
+            echo "Testing Rclone OAuth Token connection..."
+            cat <<EOF > ~/.config/rclone/rclone.conf
+          [gdrive]
+          type = drive
+          scope = drive
+          token = $RCLONE_TOKEN
+          root_folder_id = $FOLDER_ID
+          EOF
+          else
+            echo "::error::Neither RCLONE_GDRIVE_TOKEN nor GDRIVE_SA_KEY secret was found!"
+            exit 1
+          fi
+
+          echo "Listing contents of Google Drive 03-Completed-Videos folder..."
+          rclone lsd gdrive:
+
+          echo "Creating a quick verification file..."
+          echo "Connection verified at $(date -u)" > /tmp/pipeline-connected.txt
+          rclone copy /tmp/pipeline-connected.txt gdrive:
+          
+          echo "Listing folder files:"
+          rclone ls gdrive:
+
+          echo ""
+          echo "=========================================================="
+          echo " SUCCESS: Google Drive is 100% connected and working! 🎉"
+          echo "=========================================================="
