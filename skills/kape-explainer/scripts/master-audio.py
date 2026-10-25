@@ -10,12 +10,20 @@ import argparse, os, re, subprocess
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--len", type=float, required=True)
+ap.add_argument("--dir", default=".")
 ap.add_argument("--vo", default="assets/audio/vo.mp3")
 ap.add_argument("--bed", default="assets/audio/bgm-edit.wav")
 ap.add_argument("--bed-gain", type=float, default=-12)
 a = ap.parse_args()
-VO, BED = "assets/audio/vo-master.wav", "assets/audio/bgm-duck.wav"
-os.makedirs(".media", exist_ok=True)  # a fresh scaffold has no .media/ - ffmpeg failed on mix-check.wav
+
+root = os.path.abspath(a.dir)
+vo_input = a.vo if os.path.isabs(a.vo) or os.path.exists(a.vo) else os.path.join(root, a.vo)
+bed_input = a.bed if os.path.isabs(a.bed) or os.path.exists(a.bed) else os.path.join(root, a.bed)
+
+VO = os.path.join(root, "assets", "audio", "vo-master.wav")
+BED = os.path.join(root, "assets", "audio", "bgm-duck.wav")
+os.makedirs(os.path.join(root, "assets", "audio"), exist_ok=True)
+os.makedirs(os.path.join(root, ".media"), exist_ok=True)
 
 def ff(*x): subprocess.run(["ffmpeg", "-v", "error", "-y", *x], check=True)
 def lufs(p):
@@ -24,14 +32,15 @@ def lufs(p):
     i, pk = re.findall(r"I:\s+(-?[\d.]+) LUFS", o), re.findall(r"Peak:\s+(-?[\d.]+) dBFS", o)
     return f"{i[-1] if i else '?'} LUFS, peak {pk[-1] if pk else '?'} dBFS"
 
-ff("-i", a.vo, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000", "-ar", "48000", VO)
-if a.bed and os.path.exists(a.bed):
-    ff("-i", a.bed, "-i", VO, "-filter_complex",
+ff("-i", vo_input, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000", "-ar", "48000", VO)
+if a.bed and os.path.exists(bed_input):
+    ff("-i", bed_input, "-i", VO, "-filter_complex",
        f"[0:a]aresample=48000,volume={a.bed_gain}dB[bed];[1:a]aresample=48000,apad[key];"
        "[bed][key]sidechaincompress=threshold=0.02:ratio=5:attack=25:release=400:makeup=1[o]",
        "-map", "[o]", "-t", str(a.len), "-ar", "48000", BED)
-    ff("-i", VO, "-i", BED, "-filter_complex", "amix=inputs=2:normalize=0", "-t", str(a.len), ".media/mix-check.wav")
-    print(f"voice {lufs(VO)} | bed {lufs(BED)} | mix {lufs('.media/mix-check.wav')}")
+    mix_path = os.path.join(root, ".media", "mix-check.wav")
+    ff("-i", VO, "-i", BED, "-filter_complex", "amix=inputs=2:normalize=0", "-t", str(a.len), mix_path)
+    print(f"voice {lufs(VO)} | bed {lufs(BED)} | mix {lufs(mix_path)}")
     print('film.json: "audio": [{"id": "vo", "src": "assets/audio/vo-master.wav", ...}], "bgm": {"src": "assets/audio/bgm-duck.wav", "volume": 1}')
 else:
     print(f"voice {lufs(VO)} | bed none (narration-only)")

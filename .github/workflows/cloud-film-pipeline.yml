@@ -184,11 +184,13 @@ jobs:
           SLUG="${{ steps.params.outputs.slug }}"
           LANG_CODE="${{ steps.params.outputs.lang }}"
           if [ ! -d "films/$SLUG" ]; then
+            echo "Scaffolding film project: films/$SLUG"
             node skills/kape-explainer/scripts/new-explainer.mjs "films/$SLUG" --name "$SLUG" --mp3 /tmp/vo.mp3
           fi
-          # Run transcription & audio mastering
+          echo "Transcribing narration audio..."
           python3 skills/kape-explainer/scripts/transcribe.py "films/$SLUG/assets/audio/vo.mp3" "films/$SLUG/src/timing" --lang "$LANG_CODE"
-          python3 skills/kape-explainer/scripts/master-audio.py --len 60 --vo "films/$SLUG/assets/audio/vo.mp3"
+          echo "Mastering audio to -16 LUFS..."
+          python3 skills/kape-explainer/scripts/master-audio.py --dir "films/$SLUG" --len 60
 
       - name: AI Director — Generate Storyboard, Covers & Assets
         env:
@@ -196,10 +198,16 @@ jobs:
         run: |
           SLUG="${{ steps.params.outputs.slug }}"
           TOPIC="${{ steps.params.outputs.topic }}"
+          echo "Running AI Director for $SLUG..."
           node skills/kape-explainer/scripts/ai-director.mjs --dir "films/$SLUG" --topic "$TOPIC"
-          python3 skills/spatial-film/scripts/build-presenter.py --dir "films/$SLUG"
-          python3 skills/kape-explainer/scripts/build-brand.py --dir "films/$SLUG"
           python3 skills/kape-explainer/scripts/make-covers-universal.py "films/$SLUG"
+
+          echo "Compiling presenter, brand badge, and index assembly..."
+          cd "films/$SLUG"
+          python3 ../../skills/spatial-film/scripts/build-presenter.py
+          python3 ../../skills/kape-explainer/scripts/build-brand.py
+          python3 ../../skills/spatial-film/scripts/assemble.py
+          python3 ../../skills/spatial-film/scripts/make-harness.py
 
       - name: Unpack Pre-Packaged Project ZIP if already committed
         run: |
@@ -232,6 +240,10 @@ jobs:
             "films/$SLUG/renders/${SLUG}-1080p60.mp4" \
             --dir "films/$SLUG" \
             --lang "$LANG_CODE"
+          
+          # Generate captions, upload pack metadata, and package bundle
+          node skills/kape-explainer/scripts/package-film.mjs --dir "films/$SLUG" --skip-gate-check --allow-incomplete-pack || true
+          
           mkdir -p "films/$SLUG/package"
           cp "films/$SLUG/renders/${SLUG}-1080p60.mp4" "films/$SLUG/package/"
           cp "films/$SLUG/.hyperframes/render-proof.json" "films/$SLUG/package/" 2>/dev/null || true

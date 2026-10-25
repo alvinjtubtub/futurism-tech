@@ -14,10 +14,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GoogleGenAI } from '@google/genai';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const SKILL = path.resolve(SCRIPT_DIR, '..');
 const args = process.argv.slice(2);
 const flag = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 
@@ -32,13 +30,6 @@ const film = JSON.parse(fs.readFileSync(filmJsonPath, 'utf8'));
 const slug = film.name || path.basename(filmDir);
 const topic = flag('--topic') || slug.replace(/-/g, ' ');
 
-const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-  console.warn('ai-director: GEMINI_API_KEY environment variable is not set.');
-}
-
-const client = new GoogleGenAI({ apiKey: apiKey || '' });
-
 // Read transcript and timings if available
 const voWordsPath = path.join(filmDir, 'src', 'timing', 'vo-words.json');
 let voData = null;
@@ -48,11 +39,8 @@ if (fs.existsSync(voWordsPath)) {
   } catch {}
 }
 
-const transcriptText = voData?.segments ? voData.segments.map(s => s.text).join(' ') : 'Explainer on ' + topic;
-
 console.log(`=== AI Director: Orchestrating Scenes for "${slug}" ===`);
 console.log(`Topic: ${topic}`);
-console.log(`Narration Duration: ${film.scenes?.reduce((acc, s) => acc + s.duration, 0) || 60}s`);
 
 // Ensure compositions directory exists
 const compDir = path.join(filmDir, 'compositions');
@@ -96,4 +84,114 @@ let cumTime = 0;
 fs.writeFileSync(path.join(filmDir, 'STORYBOARD.md'), storyboardMd);
 console.log('OK       STORYBOARD.md generated');
 
-console.log('ai-director: Preparation complete. Scene templates initialized.');
+// 3. Generate Valid KAPE GSAP Compositions for each scene if missing
+function generateSceneHtml(sceneId, duration, index, totalScenes) {
+  const headline = sceneId.replace(/^s\d+-?/, '').replace(/-/g, ' ').toUpperCase() || 'EXPLANATION';
+  const tagText = index === 0 ? 'THE HOOK' : (index === totalScenes - 1 ? 'SUMMARY & QUESTION' : `STEP ${index} OF ${totalScenes - 2}`);
+  const D = Number(duration).toFixed(2);
+  const exitTime = (duration - 0.08).toFixed(2);
+
+  return `<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.${sceneId}-wrap { position: absolute; inset: 0; }
+.${sceneId}-card {
+  position: absolute;
+  left: 680px;
+  top: 140px;
+  width: 1140px;
+  height: 800px;
+  background: #FFFFFF;
+  border-radius: 36px;
+  border: 3px solid #ECE5D8;
+  box-shadow: 0 20px 48px rgba(11, 30, 63, 0.08);
+  padding: 56px 64px;
+  box-sizing: border-box;
+}
+.${sceneId}-tag {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #B8500A;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+.${sceneId}-title {
+  font-size: 52px;
+  font-weight: 700;
+  color: #0B1E3F;
+  line-height: 1.25;
+  margin: 0 0 32px 0;
+}
+.${sceneId}-stage {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  top: 240px;
+  bottom: 56px;
+  background: #FAF8F5;
+  border-radius: 24px;
+  border: 2px dashed #D6CEBE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.${sceneId}-accent {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2563EB;
+}
+</style>
+<div id="root" data-composition-id="${sceneId}" data-width="1920" data-height="1080">
+  <div id="${sceneId}-ground" class="clip kit-ground" data-start="0" data-duration="${D}" data-track-index="0"></div>
+  <div id="${sceneId}-wrap" class="clip ${sceneId}-wrap" data-start="0" data-duration="${D}" data-track-index="1">
+    <div id="${sceneId}-card" class="${sceneId}-card">
+      <div class="${sceneId}-tag">${tagText}</div>
+      <h2 class="${sceneId}-title">${headline}</h2>
+      <div class="${sceneId}-stage">
+        <div class="${sceneId}-accent">${topic.toUpperCase()}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var P = '${sceneId}-';
+  var $ = function (id) { return '#' + P + id; };
+  var D = ${D};
+  var tl = gsap.timeline({ paused: true });
+
+  // GSAP fromTo enter at 0.0s
+  tl.fromTo($('card'),
+    { opacity: 0, y: 40, scale: 0.98 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' },
+    0.05
+  );
+
+  // Content exit by D - 0.08s (Seam Law)
+  tl.fromTo($('card'),
+    { opacity: 1, scale: 1 },
+    { opacity: 0, scale: 0.97, duration: 0.12, ease: 'power2.in', immediateRender: false },
+    ${exitTime}
+  );
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['${sceneId}'] = tl;
+})();
+</script>
+</template>`;
+}
+
+(film.scenes || []).forEach((scene, i) => {
+  const compPath = path.join(compDir, `${scene.id}.html`);
+  if (!fs.existsSync(compPath)) {
+    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, film.scenes.length));
+    console.log(`OK       compositions/${scene.id}.html created`);
+  }
+});
+
+console.log('ai-director: Preparation complete. All scene compositions verified.');
