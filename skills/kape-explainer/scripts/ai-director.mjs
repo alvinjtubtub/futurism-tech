@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 /**
  * ai-director.mjs — Autonomous KAPE Scene Director.
- * Reads transcript word timings (vo-words.json) and brand rules (frame.md),
- * then generates:
- * 1. STORYBOARD.md (11 scenes aligned to narration timestamps)
- * 2. 11 GSAP HTML compositions (compositions/s01-hook.html ... s11-close.html)
- * 3. src/presenter-track.json (mascot poses aligned to narration)
+ * Reads transcript word timings (vo-words.json) and audio duration,
+ * updates film.json (scenes, audio dur, bgm: null if no bgm-duck.wav),
+ * and generates:
+ * 1. film.json (clean 11-scene timing map & audio config)
+ * 2. STORYBOARD.md (11 scenes aligned to narration timestamps)
+ * 3. 11 GSAP HTML compositions (compositions/s01-hook.html ... s11-close.html)
+ * 4. src/presenter-track.json (mascot poses aligned to narration)
  *
  * Usage:
  *   node skills/kape-explainer/scripts/ai-director.mjs --dir films/<slug> [--topic "<topic>"]
  */
 
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 const args = process.argv.slice(2);
 const flag = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
@@ -29,7 +31,91 @@ const film = JSON.parse(fs.readFileSync(filmJsonPath, 'utf8'));
 const slug = film.name || path.basename(filmDir);
 const topic = flag('--topic') || slug.replace(/-/g, ' ');
 
-// Normalize scenes array (tuples ["s01-hook", 7.0] vs objects {id, duration})
+// Probe actual audio duration of vo-master.wav or vo.mp3
+function probeDuration(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  const res = spawnSync('ffprobe', [
+    '-v', 'error',
+    '-show_entries', 'format=duration',
+    '-of', 'csv=p=0',
+    filePath
+  ], { encoding: 'utf8' });
+  const val = parseFloat((res.stdout || '').trim());
+  return Number.isFinite(val) && val > 0 ? Number(val.toFixed(2)) : null;
+}
+
+const voMasterPath = path.join(filmDir, 'assets', 'audio', 'vo-master.wav');
+const voMp3Path = path.join(filmDir, 'assets', 'audio', 'vo.mp3');
+const voDur = probeDuration(voMasterPath) || probeDuration(voMp3Path) || 57.5;
+
+// Read transcript segments if available
+const voWordsPath = path.join(filmDir, 'src', 'timing', 'vo-words.json');
+let voSegments = [];
+if (fs.existsSync(voWordsPath)) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(voWordsPath, 'utf8'));
+    voSegments = Array.isArray(raw) ? raw : (raw.segments || []);
+  } catch {}
+}
+
+// Check if film.json still has the default worked-example template scenes (s03-parcel, s07-ghl)
+const isTemplateScaffold = Array.isArray(film.scenes) && film.scenes.some((s) => {
+  const id = Array.isArray(s) ? s[0] : s?.id;
+  return id === 's03-parcel' || id === 's07-ghl';
+});
+
+if (isTemplateScaffold) {
+  const totalFilmDur = Math.max(60.0, Number((voDur + 2.4).toFixed(1)));
+  const sceneNames = [
+    's01-hook',
+    's02-overview',
+    's03-problem',
+    's04-mechanism',
+    's05-process',
+    's06-comparison',
+    's07-deep-dive',
+    's08-real-world',
+    's09-application',
+    's10-question',
+    's11-close'
+  ];
+
+  // Distribute totalFilmDur across 11 scenes
+  const count = sceneNames.length;
+  const baseDur = Math.floor((totalFilmDur / count) * 10) / 10;
+  let rem = Number((totalFilmDur - baseDur * (count - 1)).toFixed(2));
+  film.scenes = sceneNames.map((id, idx) => [
+    id,
+    idx === count - 1 ? rem : Number(baseDur.toFixed(2))
+  ]);
+
+  // Remove old template compositions if any
+  const compDir = path.join(filmDir, 'compositions');
+  if (fs.existsSync(compDir)) {
+    for (const f of fs.readdirSync(compDir)) {
+      if (f.startsWith('s') && f.endsWith('.html') && !sceneNames.includes(f.replace('.html', ''))) {
+        fs.rmSync(path.join(compDir, f), { force: true });
+      }
+    }
+  }
+}
+
+// Ensure audio dur, bgm, and cues are valid so assemble.py and hyperframes never fail on missing bgm-duck.wav
+if (Array.isArray(film.audio) && film.audio.length > 0) {
+  film.audio[0].dur = voDur;
+}
+const bgmDuckPath = path.join(filmDir, 'assets', 'audio', 'bgm-duck.wav');
+if (!fs.existsSync(bgmDuckPath)) {
+  film.bgm = null;
+}
+if (isTemplateScaffold) {
+  film.cues = [];
+}
+
+fs.writeFileSync(filmJsonPath, JSON.stringify(film, null, 2) + '\n');
+console.log(`OK       film.json updated (voDur=${voDur}s, bgm=${film.bgm ? 'yes' : 'null'})`);
+
+// Normalize scenes array
 const scenes = (film.scenes || []).map((s) => {
   if (Array.isArray(s)) return { id: String(s[0]), duration: Number(s[1]) };
   return { id: String(s.id), duration: Number(s.duration || s.dur || 5.0) };
@@ -66,6 +152,7 @@ presenterData.home = presenterData.home || { x: 330, feet: 1030 };
 presenterData.enter = presenterData.enter || { from_x: -320, at: 0.0, dur: 0.95 };
 presenterData.poses = poses;
 presenterData.mirror = presenterData.mirror || ['point'];
+presenterData.fx = [];
 presenterData.bob = presenterData.bob || { rate: 15, y: -9, squash: 0.016 };
 presenterData.blink = presenterData.blink || { every: [3.1, 4.4, 2.7, 3.8, 4.9, 3.3, 2.9, 4.1], dur: 0.11 };
 
@@ -95,11 +182,12 @@ fs.writeFileSync(path.join(filmDir, 'STORYBOARD.md'), storyboardMd);
 console.log('OK       STORYBOARD.md generated');
 
 // 3. Generate Valid KAPE GSAP Compositions for each scene if missing
-function generateSceneHtml(sceneId, duration, index, totalScenes) {
+function generateSceneHtml(sceneId, duration, index, totalScenes, segText) {
   const headline = sceneId.replace(/^s\d+-?/, '').replace(/-/g, ' ').toUpperCase() || 'EXPLANATION';
-  const tagText = index === 0 ? 'THE HOOK' : (index === totalScenes - 1 ? 'SUMMARY & QUESTION' : `STEP ${index} OF ${totalScenes - 2}`);
+  const tagText = index === 0 ? 'THE HOOK' : (index === totalScenes - 1 ? 'TECH EXPLANASYON' : `KEY INSIGHT ${index}`);
   const D = Number(duration).toFixed(2);
-  const exitTime = (duration - 0.08).toFixed(2);
+  const exitTime = Math.max(0.2, duration - 0.12).toFixed(2);
+  const displaySub = segText ? segText.slice(0, 110) : topic;
 
   return `<template>
 <link rel="stylesheet" href="assets/kit.css">
@@ -133,27 +221,37 @@ function generateSceneHtml(sceneId, duration, index, totalScenes) {
   font-size: 52px;
   font-weight: 700;
   color: #0B1E3F;
-  line-height: 1.25;
-  margin: 0 0 32px 0;
+  line-height: 1.35;
+  margin: 0 0 28px 0;
 }
 .${sceneId}-stage {
   position: absolute;
   left: 64px;
   right: 64px;
-  top: 240px;
+  top: 250px;
   bottom: 56px;
   background: #FAF8F5;
   border-radius: 24px;
-  border: 2px dashed #D6CEBE;
+  border: 2px solid #E5DEC9;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 40px;
+  text-align: center;
 }
 .${sceneId}-accent {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
   color: #2563EB;
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+.${sceneId}-sub {
+  font-size: 24px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.45;
 }
 </style>
 <div id="root" data-composition-id="${sceneId}" data-width="1920" data-height="1080">
@@ -164,6 +262,7 @@ function generateSceneHtml(sceneId, duration, index, totalScenes) {
       <h2 class="${sceneId}-title">${headline}</h2>
       <div class="${sceneId}-stage">
         <div class="${sceneId}-accent">${topic.toUpperCase()}</div>
+        <div class="${sceneId}-sub">${displaySub}</div>
       </div>
     </div>
   </div>
@@ -182,10 +281,10 @@ function generateSceneHtml(sceneId, duration, index, totalScenes) {
     0.05
   );
 
-  // Content exit by D - 0.08s (Seam Law)
+  // Content exit by D - 0.12s (Seam Law)
   tl.fromTo($('card'),
     { opacity: 1, scale: 1 },
-    { opacity: 0, scale: 0.97, duration: 0.12, ease: 'power2.in', immediateRender: false },
+    { opacity: 0, scale: 0.97, duration: 0.1, ease: 'power2.in', immediateRender: false },
     ${exitTime}
   );
 
@@ -199,7 +298,8 @@ function generateSceneHtml(sceneId, duration, index, totalScenes) {
 scenes.forEach((scene, i) => {
   const compPath = path.join(compDir, `${scene.id}.html`);
   if (!fs.existsSync(compPath)) {
-    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, scenes.length));
+    const segText = voSegments[i]?.text || '';
+    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, scenes.length, segText));
     console.log(`OK       compositions/${scene.id}.html created`);
   }
 });
