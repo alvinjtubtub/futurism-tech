@@ -48,11 +48,14 @@ jobs:
           echo "Listing contents of Google Drive 03-Completed-Videos folder..."
           rclone lsd gdrive:
 
+          echo "Checking 01-Audio-Intake folder (1BZcjqcHBWL64o1CC26tjdIFMu8nwjqoz)..."
+          rclone ls "gdrive,root_folder_id=1BZcjqcHBWL64o1CC26tjdIFMu8nwjqoz:"
+
           echo "Creating a quick verification file..."
           echo "Connection verified at $(date -u)" > /tmp/pipeline-connected.txt
           rclone copy /tmp/pipeline-connected.txt gdrive:
           
-          echo "Listing folder files:"
+          echo "Listing 03-Completed-Videos folder files:"
           rclone ls gdrive:
 
           echo ""
