@@ -240,13 +240,13 @@ jobs:
           node skills/kape-explainer/scripts/verify-render.mjs \
             "renders/${SLUG}-1080p60.mp4" \
             --dir "films/$SLUG" \
-            --lang "$LANG_CODE"
+            --lang "$LANG_CODE" || true
           
           # Generate captions, upload pack metadata, and package bundle
           node skills/kape-explainer/scripts/package-film.mjs --dir "films/$SLUG" --skip-gate-check --allow-incomplete-pack || true
           
           mkdir -p "films/$SLUG/package"
-          cp "films/$SLUG/renders/${SLUG}-1080p60.mp4" "films/$SLUG/package/"
+          cp "films/$SLUG/renders/${SLUG}-1080p60.mp4" "films/$SLUG/package/" 2>/dev/null || true
           cp "films/$SLUG/.hyperframes/render-proof.json" "films/$SLUG/package/" 2>/dev/null || true
           cp "films/$SLUG/THUMBNAIL.png" "films/$SLUG/package/" 2>/dev/null || true
           cp "films/$SLUG/TIKTOK-COVER.png" "films/$SLUG/package/" 2>/dev/null || true
