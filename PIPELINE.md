@@ -43,38 +43,36 @@ Not included (recreate locally, see Setup): the Python venv (platform-specific b
 ## The workflow
 
 ### Phase 0 — Script (Baet writes, Alvin approves)
-One paragraph per scene (11 scenes is the house shape). Rules:
+One paragraph per scene (9 scenes is the 70s–100s vertical house shape). Rules:
+- 9:16 Vertical format (1080x1920) at 60fps.
+- Target duration: **70s–100s** (~210–250 words total).
 - English-dominant Taglish: English carries the technical explanation; Tagalog carries the
   hook, transitions, emphasis, local color, and the closing question.
 - No exclamation marks anywhere. Periods are pacing marks.
-- Scene 1 opens with a 5-second hook; the final paragraph is: recap → **Tagalog closing
+- Scene 1 opens with a 5-second hook (displayed on-screen as text and spoken); the final paragraph is: recap → **Tagalog closing
   question** (invites comments) → the sign-off, word for word:
   "Follow me for more tech explained. See yah."
 
 ### Phase 1 — Narration (Alvin records, never an API)
-Alvin generates the voice himself (ElevenLabs voice "Zia" for the recent films) and hands
-over the MP3. The pipeline never synthesizes narration by API.
+Alvin generates the voice himself (ElevenLabs or Gemini TTS Kira or mic) and hands
+over the WAV/MP3. The pipeline never synthesizes narration by API.
 
 ### Phase 2 — Intake
-1. Scaffold: `node skills/kape-explainer/scripts/new-explainer.mjs --name <slug> --mp3 <file>`
-   (copies the profile — brand + full mascot with all talk variants — into the project).
-2. Transcribe: `~/.kape-explainer/venv/bin/python skills/kape-explainer/scripts/transcribe.py assets/audio/vo.mp3 src/timing --prompt "<domain terms>" --lang tl`
+1. Scaffold: `node skills/kape-explainer/scripts/new-explainer.mjs films/<slug> --name <slug> --format 9x16 --mp3 <file>`
+   (copies the profile — brand + full Carla mascot with all talk variants — into the project).
+2. Transcribe: `python3 skills/kape-explainer/scripts/transcribe.py films/<slug>/assets/audio/vo.mp3 films/<slug>/src/timing --lang tl`
    → `src/timing/vo-words.json` (word-level timings; the authoritative narration check).
-3. Master: `python3 skills/kape-explainer/scripts/master-audio.py --len <total> --vo assets/audio/vo.mp3`
-   → target **−16 LUFS / −1.5 dBTP** (verify with ffmpeg loudnorm analysis).
-4. Scene map: cut in the pauses between paragraphs; film total = narration end + ~2.7s tail hold.
-   Written into `film.json` (narration-only films: `bgm: null`, `cues: []`).
+3. Master: `python3 skills/kape-explainer/scripts/master-audio.py --dir films/<slug> --len <probed_dur>`
+   → target **−16 LUFS / −1.5 dBTP** at 48kHz stereo.
+4. Duration check: enforce 70s–100s duration band.
 
 ### Phase 3 — Design law + storyboard (Alvin approves before any build)
-- `STORYBOARD.md`: one block per scene — headline (English), blueprint (a real file from
-  `skills/hyperframes-animation/blueprints/`), beats keyed to narration words.
-- `frame.md` is the project's design truth: colour law, layout zones (presenter x 40–620 /
-  stage x 640–1860 / headline band ~x 1050 / logo corner x>1500, y<150), shared prop specs,
-  and the **seam law** (below).
-- Presenter: `src/presenter-track.json` (poses keyed to narration words, blink cadence, FX)
-  → `python3 skills/spatial-film/scripts/build-presenter.py` → `compositions/m-kape.html`.
-  Blinks every ~2.7–4.9s; the mouth flaps from the narration envelope and rests in pauses.
-- Brand overlay: `build-brand.py` → `compositions/m-brand.html` (floating Tech Explanasyon badge).
+- Locked 9:16 layout:
+  * **Carla Mascot**: scale `0.30`, feet pinned at `y1540`, home `x245`. Natural blinks (`2.2s–3.4s` cadence) and voice-envelope mouth flap.
+  * **Captions**: pinned at `y1500` (growing upward to `y1280` to clear Reels UI).
+  * **Headlines**: pinned at `y268` (center `x540`, width `880px`, Poppins 700).
+  * **3D Spatial Stage**: `x60–960`, `y470–1180` (with 25px headroom above Carla's head).
+  * **Floating Badge**: `Tech Explanasyon` top-center.
 
 ### Phase 4 — Scene builds
 - Packets: `node skills/general-video/scripts/frame-packets.mjs STORYBOARD.md` → `.hyperframes/frame-packets/`.

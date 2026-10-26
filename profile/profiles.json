@@ -190,22 +190,22 @@
       },
       "duration_s": {
         "target": [
-          95,
-          115
+          70,
+          100
         ],
         "warn_outside": [
-          90,
-          120
+          65,
+          105
         ],
         "rework_outside": [
-          85,
-          125
+          60,
+          110
         ]
       },
       "script": {
         "words": [
-          255,
-          305
+          200,
+          260
         ],
         "language": "English-dominant Taglish (English carries the technical explanation; Tagalog carries hook, transitions, emphasis, local color, closing question)",
         "lane": "Evergreen mechanisms - invisible processes, how systems work; no expiry",
@@ -344,12 +344,12 @@
       "gates": {
         "duration": {
           "warn_outside": [
-            90,
-            120
+            65,
+            105
           ],
           "fail_outside": [
-            85,
-            125
+            60,
+            110
           ]
         },
         "brand_leakage": {
