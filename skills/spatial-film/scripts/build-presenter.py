@@ -75,7 +75,7 @@ mouth_changes = []
 if HAS_TALK:
     import random
     rng = random.Random(20261021)
-    on_th, off_th = 0.22, 0.12
+    on_th, off_th = 0.16, 0.08
     speaking = False; open_ = False; next_flip = 0.0; quiet = 0
     for i, e in enumerate(env):
         t = i / rate

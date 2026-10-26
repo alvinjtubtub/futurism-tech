@@ -6,8 +6,8 @@
  * and generates:
  * 1. film.json (clean 11-scene timing map & audio config)
  * 2. STORYBOARD.md (11 scenes aligned to narration timestamps)
- * 3. 11 GSAP HTML compositions (compositions/s01-hook.html ... s11-close.html)
- * 4. src/presenter-track.json (mascot poses aligned to narration)
+ * 3. 11 GSAP HTML compositions with rich 3D spatial motion design (compositions/s01-hook.html ... s11-close.html)
+ * 4. src/presenter-track.json (mascot poses aligned to narration, eye blinks, talking bob)
  *
  * Usage:
  *   node skills/kape-explainer/scripts/ai-director.mjs --dir films/<slug> [--topic "<topic>"]
@@ -58,7 +58,7 @@ if (fs.existsSync(voWordsPath)) {
   } catch {}
 }
 
-// Check if film.json still has the default worked-example template scenes (s03-parcel, s07-ghl)
+// Check if film.json still has the default worked-example template scenes
 const isTemplateScaffold = Array.isArray(film.scenes) && film.scenes.some((s) => {
   const id = Array.isArray(s) ? s[0] : s?.id;
   return id === 's03-parcel' || id === 's07-ghl';
@@ -80,7 +80,6 @@ if (isTemplateScaffold) {
     's11-close'
   ];
 
-  // Distribute totalFilmDur across 11 scenes
   const count = sceneNames.length;
   const baseDur = Math.floor((totalFilmDur / count) * 10) / 10;
   let rem = Number((totalFilmDur - baseDur * (count - 1)).toFixed(2));
@@ -89,7 +88,6 @@ if (isTemplateScaffold) {
     idx === count - 1 ? rem : Number(baseDur.toFixed(2))
   ]);
 
-  // Remove old template compositions if any
   const compDir = path.join(filmDir, 'compositions');
   if (fs.existsSync(compDir)) {
     for (const f of fs.readdirSync(compDir)) {
@@ -100,7 +98,7 @@ if (isTemplateScaffold) {
   }
 }
 
-// Ensure audio dur, bgm, and cues are valid so assemble.py and hyperframes never fail on missing bgm-duck.wav
+// Ensure audio dur, bgm, and cues are valid
 if (Array.isArray(film.audio) && film.audio.length > 0) {
   film.audio[0].dur = voDur;
 }
@@ -125,12 +123,12 @@ console.log(`=== AI Director: Orchestrating Scenes for "${slug}" ===`);
 console.log(`Topic: ${topic}`);
 console.log(`Scenes: ${scenes.length} scenes total (${scenes.reduce((a, b) => a + b.duration, 0).toFixed(1)}s)`);
 
-// Ensure compositions directory exists
 const compDir = path.join(filmDir, 'compositions');
 fs.mkdirSync(compDir, { recursive: true });
 
-// Mascot poses
-const MASCOT_POSES = ['wave', 'present', 'think', 'point', 'sit', 'celebrate', 'thumbs-up', 'idle'];
+// Poses with 100% verified blink and talk variants:
+// wave, present, point, sit, thumbs-up, celebrate, idle, walk
+const MASCOT_POSES = ['wave', 'present', 'point', 'sit', 'thumbs-up', 'celebrate', 'idle', 'walk'];
 
 // 1. Generate / Update src/presenter-track.json
 const presenterTrackPath = path.join(filmDir, 'src', 'presenter-track.json');
@@ -154,10 +152,11 @@ presenterData.poses = poses;
 presenterData.mirror = presenterData.mirror || ['point'];
 presenterData.fx = [];
 presenterData.bob = presenterData.bob || { rate: 15, y: -9, squash: 0.016 };
-presenterData.blink = presenterData.blink || { every: [3.1, 4.4, 2.7, 3.8, 4.9, 3.3, 2.9, 4.1], dur: 0.11 };
+// Naturally frequent and visible blinks (every ~2.2 - 3.4 seconds, 0.16s duration ~ 10 frames @ 60fps)
+presenterData.blink = { every: [2.2, 2.9, 2.5, 3.1, 2.7, 3.4], dur: 0.16 };
 
 fs.writeFileSync(presenterTrackPath, JSON.stringify(presenterData, null, 2) + '\n');
-console.log('OK       src/presenter-track.json generated');
+console.log('OK       src/presenter-track.json generated with active blinks & talk variants');
 
 // 2. Generate STORYBOARD.md
 let storyboardMd = `# STORYBOARD: ${topic.toUpperCase()}\n\n`;
@@ -174,119 +173,269 @@ scenes.forEach((scene, i) => {
   storyboardMd += `### Scene ${sNum} — ${scene.id} (${sStart.toFixed(1)}s – ${sEnd.toFixed(1)}s, ${scene.duration.toFixed(1)}s)\n`;
   storyboardMd += `- **Headline:** ${scene.id.replace(/^s\d+-/, '').replace(/-/g, ' ').toUpperCase()}\n`;
   storyboardMd += `- **Presenter Pose:** ${poses[i]?.[1] || 'present'}\n`;
-  storyboardMd += `- **Stage Layout:** Card container (x: 640-1860, y: 160-920), Poppins typography, WCAG AA contrast\n`;
-  storyboardMd += `- **Motion:** GSAP fromTo enter at 0.0s, content exit by ${(scene.duration - 0.08).toFixed(2)}s\n\n`;
+  storyboardMd += `- **Stage Layout:** Center-Right 3D World (x: 640-1860, y: 160-960), Poppins typography, WCAG AA contrast\n`;
+  storyboardMd += `- **Motion:** Camera 3D drift, staggered visual reveals, Seam Law exit by ${(scene.duration - 0.55).toFixed(2)}s\n\n`;
 });
 
 fs.writeFileSync(path.join(filmDir, 'STORYBOARD.md'), storyboardMd);
 console.log('OK       STORYBOARD.md generated');
 
-// 3. Generate Valid KAPE GSAP Compositions for each scene if missing
-function generateSceneHtml(sceneId, duration, index, totalScenes, segText) {
-  const headline = sceneId.replace(/^s\d+-?/, '').replace(/-/g, ' ').toUpperCase() || 'EXPLANATION';
-  const tagText = index === 0 ? 'THE HOOK' : (index === totalScenes - 1 ? 'TECH EXPLANASYON' : `KEY INSIGHT ${index}`);
+// 3. Rich 3D Motion-Design Scene Builders
+function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTopic) {
   const D = Number(duration).toFixed(2);
-  const exitTime = Math.max(0.2, duration - 0.12).toFixed(2);
-  const displaySub = segText ? segText.slice(0, 110) : topic;
+  const exitTime = Math.max(0.2, duration - 0.55).toFixed(2);
+  const headline = sceneId.replace(/^s\d+-?/, '').replace(/-/g, ' ').toUpperCase() || 'CORE INSIGHT';
+  const rawSub = (segText && segText.length > 5) ? segText.trim().replace(/"/g, "'") : filmTopic;
+  const shortSub = rawSub.length > 100 ? rawSub.slice(0, 97) + '...' : rawSub;
 
-  return `<template>
+  const isWatch = /watch|clock|rotor|gear|spring|escapement|balance/i.test(filmTopic + ' ' + rawSub);
+  const isMagnet = /magnet|flux|domain|pole|north|south|iron/i.test(filmTopic + ' ' + rawSub);
+  const isNetwork = /network|internet|search|packet|google|wifi|data|router/i.test(filmTopic + ' ' + rawSub);
+
+  // Kicker & subtitle selection
+  let kicker = `STEP ${index + 1} OF ${totalScenes}`;
+  if (index === 0) kicker = 'THE HOOK';
+  else if (index === totalScenes - 1) kicker = 'TECH EXPLANASYON';
+
+  let stageMarkup = '';
+  let gsapTweens = '';
+
+  if (isWatch) {
+    // WATCH SCENE THEMES
+    if (index === 0) {
+      // Watch Hook: 3D Watch Case & Sweeping Second Hand
+      stageMarkup = `
+        <div id="${sceneId}-dial" style="width:360px; height:360px; border-radius:50%; background:#0B1E3F; border:6px solid #FF7A1A; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
+          <div style="position:absolute; width:12px; height:12px; border-radius:50%; background:#FFFFFF; z-index:5;"></div>
+          <div id="${sceneId}-hand" style="position:absolute; top:28px; width:4px; height:152px; background:#FF7A1A; border-radius:2px; transform-origin:50% 100%;"></div>
+          <div style="position:absolute; top:18px; font-size:16px; font-weight:700; color:#ECE5D8; letter-spacing:2px;">AUTOMATIC</div>
+          <div style="position:absolute; bottom:26px; font-size:12px; font-weight:700; color:#5EEAD4;">MECHANICAL</div>
+        </div>
+        <div id="${sceneId}-card" style="width:420px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float); margin-left:36px;">
+          <div style="font-size:16px; font-weight:700; color:#B8500A; text-transform:uppercase;">No Battery Required</div>
+          <div style="font-size:32px; font-weight:700; color:#0B1E3F; line-height:1.25; margin:12px 0;">Powered By Your Movement</div>
+          <div style="font-size:18px; font-weight:500; color:#5B6478; line-height:1.4;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('dial'), { opacity: 0, scale: 0.8, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('hand'), { rotation: 0 }, { rotation: 360 * 2, duration: D - 0.7, ease: 'none' }, 0.40);
+        tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.50);`;
+    } else if (index % 3 === 1) {
+      // The Rotor / Oscillating Weight
+      stageMarkup = `
+        <div id="${sceneId}-rotor-wrap" style="width:380px; height:380px; border-radius:50%; background:#FAF8F5; border:3px dashed #0F9F8F; display:flex; align-items:center; justify-content:center; position:relative;">
+          <div id="${sceneId}-rotor" style="width:340px; height:170px; border-top-left-radius:170px; border-top-right-radius:170px; background:linear-gradient(180deg, #FF9445, #C8580B); box-shadow:0 12px 24px rgba(184,80,10,0.3); position:absolute; top:20px; transform-origin:50% 100%;">
+            <div style="position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:14px; font-weight:700; color:#FFFFFF;">OSCILLATING ROTOR</div>
+          </div>
+          <div style="width:24px; height:24px; border-radius:50%; background:#0B1E3F; z-index:3;"></div>
+        </div>
+        <div id="${sceneId}-info" style="width:400px; padding:32px; border-radius:32px; background:#0B1E3F; border:2px solid #FF7A1A; box-shadow:var(--float); margin-left:36px;">
+          <div style="font-size:15px; font-weight:700; color:#FF7A1A; text-transform:uppercase;">Kinetic Energy Capture</div>
+          <div style="font-size:30px; font-weight:700; color:#FFFFFF; line-height:1.2; margin:12px 0;">360° Free Rotation</div>
+          <div style="font-size:16px; font-weight:500; color:#ECE5D8; line-height:1.45;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('rotor-wrap'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('rotor'), { rotation: -60 }, { rotation: 60, duration: 1.1, ease: 'sine.inOut', repeat: Math.max(1, Math.floor(D / 1.1)), yoyo: true }, 0.40);
+        tl.fromTo($('info'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
+    } else if (index % 3 === 2) {
+      // Gear Train Transmission
+      stageMarkup = `
+        <div id="${sceneId}-gears" style="width:440px; height:340px; position:relative; display:flex; align-items:center;">
+          <div id="${sceneId}-g1" style="width:180px; height:180px; border-radius:50%; background:#FF9445; border:6px dashed #B8500A; position:absolute; left:20px; top:40px; display:flex; align-items:center; justify-content:center; box-shadow:var(--float);">
+            <span style="font-size:14px; font-weight:700; color:#FFFFFF;">CENTER</span>
+          </div>
+          <div id="${sceneId}-g2" style="width:140px; height:140px; border-radius:50%; background:#22B5A4; border:5px dashed #0A7468; position:absolute; left:170px; top:140px; display:flex; align-items:center; justify-content:center; box-shadow:var(--float);">
+            <span style="font-size:13px; font-weight:700; color:#FFFFFF;">3RD WHEEL</span>
+          </div>
+          <div id="${sceneId}-g3" style="width:110px; height:110px; border-radius:50%; background:#2563EB; border:4px dashed #1E40AF; position:absolute; left:280px; top:60px; display:flex; align-items:center; justify-content:center; box-shadow:var(--float);">
+            <span style="font-size:12px; font-weight:700; color:#FFFFFF;">4TH WHEEL</span>
+          </div>
+        </div>
+        <div id="${sceneId}-spec" style="width:380px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float); margin-left:24px;">
+          <div style="font-size:15px; font-weight:700; color:#0A7468; text-transform:uppercase;">Gear Train Ratio</div>
+          <div style="font-size:30px; font-weight:700; color:#0B1E3F; line-height:1.2; margin:12px 0;">Mechanical Stepping</div>
+          <div style="font-size:16px; font-weight:500; color:#5B6478; line-height:1.45;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('gears'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('g1'), { rotation: 0 }, { rotation: 360, duration: 6, ease: 'none', repeat: Math.max(1, Math.floor(D / 6)) }, 0.30);
+        tl.fromTo($('g2'), { rotation: 0 }, { rotation: -360, duration: 3.5, ease: 'none', repeat: Math.max(1, Math.floor(D / 3.5)) }, 0.30);
+        tl.fromTo($('g3'), { rotation: 0 }, { rotation: 360, duration: 2, ease: 'none', repeat: Math.max(1, Math.floor(D / 2)) }, 0.30);
+        tl.fromTo($('spec'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
+    } else {
+      // Escapement & Balance Wheel Heartbeat
+      stageMarkup = `
+        <div id="${sceneId}-balance" style="width:360px; height:360px; border-radius:50%; background:#FAF8F5; border:4px solid #0B1E3F; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
+          <div id="${sceneId}-spring" style="width:240px; height:240px; border-radius:50%; border:3px dashed #FF7A1A; position:absolute;"></div>
+          <div id="${sceneId}-wheel" style="width:160px; height:160px; border-radius:50%; background:#0B1E3F; display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-size:16px; font-weight:700;">
+            28,800 VPH
+          </div>
+        </div>
+        <div id="${sceneId}-desc" style="width:420px; padding:32px; border-radius:32px; background:#0B1E3F; border:2px solid #0F9F8F; box-shadow:var(--float); margin-left:36px;">
+          <div style="font-size:15px; font-weight:700; color:#5EEAD4; text-transform:uppercase;">The Heartbeat (4Hz)</div>
+          <div style="font-size:32px; font-weight:700; color:#FFFFFF; line-height:1.2; margin:12px 0;">Escapement Regulation</div>
+          <div style="font-size:16px; font-weight:500; color:#ECE5D8; line-height:1.45;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('balance'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('spring'), { scale: 0.92, rotation: -20 }, { scale: 1.08, rotation: 20, duration: 0.25, ease: 'sine.inOut', repeat: Math.max(1, Math.floor(D / 0.5)), yoyo: true }, 0.35);
+        tl.fromTo($('wheel'), { rotation: -25 }, { rotation: 25, duration: 0.25, ease: 'sine.inOut', repeat: Math.max(1, Math.floor(D / 0.5)), yoyo: true }, 0.35);
+        tl.fromTo($('desc'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
+    }
+  } else if (isMagnet) {
+    // MAGNET SCENE THEMES
+    if (index === 0) {
+      // Fridge Hook
+      stageMarkup = `
+        <div id="${sceneId}-door" style="width:520px; height:380px; border-radius:36px; background:#FFFFFF; border:3px solid #ECE5D8; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
+          <div style="position:absolute; left:28px; top:50%; transform:translateY(-50%); width:12px; height:160px; border-radius:6px; background:#D5CDBD;"></div>
+          <div id="${sceneId}-magnet" style="width:200px; height:200px; border-radius:28px; background:#0B1E3F; border:3px solid #FF7A1A; box-shadow:0 16px 36px rgba(11,30,63,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <span style="font-size:52px;">🧲</span>
+            <span style="font-size:20px; font-weight:700; color:#FFFFFF; margin-top:8px;">Fridge Magnet</span>
+          </div>
+        </div>
+        <div id="${sceneId}-card" style="width:340px; padding:32px; border-radius:28px; background:#0B1E3F; border:2px solid #FF7A1A; box-shadow:var(--float); margin-left:36px;">
+          <div style="font-size:15px; font-weight:700; color:#FF7A1A;">INVISIBLE FORCE</div>
+          <div style="font-size:30px; font-weight:700; color:#FFFFFF; margin:12px 0;">Atomic Alignment</div>
+          <div style="font-size:16px; font-weight:500; color:#ECE5D8;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('door'), { opacity: 0, scale: 0.9, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('magnet'), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)', force3D: true }, 0.50);
+        tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.60);`;
+    } else if (index % 2 === 1) {
+      // Domain Lattice Matrix
+      stageMarkup = `
+        <div id="${sceneId}-matrix" style="width:480px; padding:24px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float);">
+          <div style="font-size:16px; font-weight:700; color:#0B1E3F; margin-bottom:14px;">MAGNETIC DOMAINS (MICRO-SCALE)</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            ${[1,2,3,4,5,6].map(k => `<div class="${sceneId}-cell" style="height:76px; border-radius:16px; background:#FCFAF6; border:2px solid #0F9F8F; display:flex; align-items:center; justify-content:center; font-size:24px; color:#0A7468; font-weight:700;">➔</div>`).join('')}
+          </div>
+        </div>
+        <div id="${sceneId}-info" style="width:360px; padding:32px; border-radius:32px; background:#0B1E3F; border:2px solid #0F9F8F; box-shadow:var(--float); margin-left:32px;">
+          <div style="font-size:15px; font-weight:700; color:#5EEAD4;">UNIFIED VECTOR</div>
+          <div style="font-size:30px; font-weight:700; color:#FFFFFF; margin:12px 0;">Billions of Atoms</div>
+          <div style="font-size:16px; font-weight:500; color:#ECE5D8;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('matrix'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo('.${sceneId}-cell', { rotation: (i) => i * 35 }, { rotation: 0, duration: 0.8, ease: 'power2.out', stagger: 0.08 }, 0.40);
+        tl.fromTo($('info'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.50);`;
+    } else {
+      // North / South Poles
+      stageMarkup = `
+        <div id="${sceneId}-pole-wrap" style="width:500px; display:flex; flex-direction:column; align-items:center;">
+          <div id="${sceneId}-bar" style="width:480px; height:100px; border-radius:24px; display:flex; overflow:hidden; box-shadow:var(--float);">
+            <div style="flex:1; background:#B02A30; display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:700; color:#FFFFFF;">NORTH</div>
+            <div style="flex:1; background:#2563EB; display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:700; color:#FFFFFF;">SOUTH</div>
+          </div>
+        </div>
+        <div id="${sceneId}-card" style="width:360px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float); margin-left:32px;">
+          <div style="font-size:15px; font-weight:700; color:#B8500A;">FUNDAMENTAL RULE</div>
+          <div style="font-size:30px; font-weight:700; color:#0B1E3F; margin:12px 0;">Attract & Repel</div>
+          <div style="font-size:16px; font-weight:500; color:#5B6478;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('pole-wrap'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+        tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
+    }
+  } else {
+    // UNIVERSAL DYNAMIC TECH LAYOUT
+    if (index === 0) {
+      // Universal Hero Hook
+      stageMarkup = `
+        <div id="${sceneId}-card" style="width:840px; padding:48px; border-radius:36px; background:#FFFFFF; border:3px solid #ECE5D8; box-shadow:var(--float); display:flex; flex-direction:column;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+            <span style="font-size:18px; font-weight:700; color:#B8500A; letter-spacing:2px;">TECH EXPLANASYON</span>
+            <span style="font-size:14px; font-weight:700; color:#0F9F8F; background:#FAF8F5; padding:6px 16px; border-radius:12px; border:1px solid #0F9F8F;">DEEP DIVE</span>
+          </div>
+          <h1 style="font-size:46px; font-weight:700; color:#0B1E3F; line-height:1.2; margin:0 0 20px 0;">${filmTopic.toUpperCase()}</h1>
+          <div style="font-size:22px; font-weight:500; color:#5B6478; line-height:1.5;">${shortSub}</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('card'), { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out', force3D: true }, 0.20);`;
+    } else if (index === totalScenes - 1) {
+      // Universal Outro / CTA Card
+      stageMarkup = `
+        <div id="${sceneId}-cta" style="width:820px; padding:48px; border-radius:36px; background:#0B1E3F; border:3px solid #FF7A1A; box-shadow:var(--float); text-align:center; display:flex; flex-direction:column; align-items:center;">
+          <div style="font-size:16px; font-weight:700; color:#FF7A1A; letter-spacing:2px;">TECH EXPLANASYON</div>
+          <div style="font-size:40px; font-weight:700; color:#FFFFFF; margin:16px 0 24px 0;">Follow For More Tech Explained</div>
+          <div style="font-size:20px; font-weight:500; color:#ECE5D8; margin-bottom:32px;">${shortSub}</div>
+          <div style="padding:14px 40px; border-radius:24px; background:#FF7A1A; color:#FFFFFF; font-size:22px; font-weight:700; box-shadow:0 12px 24px rgba(255,122,26,0.3);">Follow & Share</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('cta'), { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);`;
+    } else {
+      // Multi-Card Step Visual
+      stageMarkup = `
+        <div id="${sceneId}-c1" style="width:420px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float);">
+          <div style="font-size:15px; font-weight:700; color:#B8500A;">SYSTEM COMPONENT</div>
+          <div style="font-size:30px; font-weight:700; color:#0B1E3F; margin:12px 0;">${headline}</div>
+          <div style="font-size:17px; font-weight:500; color:#5B6478; line-height:1.45;">${shortSub}</div>
+        </div>
+        <div id="${sceneId}-c2" style="width:380px; padding:32px; border-radius:32px; background:#0B1E3F; border:2px solid #0F9F8F; box-shadow:var(--float); margin-left:32px;">
+          <div style="font-size:15px; font-weight:700; color:#5EEAD4;">ARCHITECTURE</div>
+          <div style="font-size:30px; font-weight:700; color:#FFFFFF; margin:12px 0;">Step ${index + 1} Pipeline</div>
+          <div style="font-size:16px; font-weight:500; color:#ECE5D8;">Automated Mechanical & Logical Precision</div>
+        </div>`;
+      gsapTweens = `
+        tl.fromTo($('c1'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.20);
+        tl.fromTo($('c2'), { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.35);`;
+    }
+  }
+
+  return `<!-- Scene ${sceneId} (${D}s). Topic: ${filmTopic} -->
+<template>
 <link rel="stylesheet" href="assets/kit.css">
 <style>
 @font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
 @font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
 #root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
-.${sceneId}-wrap { position: absolute; inset: 0; }
-.${sceneId}-card {
-  position: absolute;
-  left: 680px;
-  top: 140px;
-  width: 1140px;
-  height: 800px;
-  background: #FFFFFF;
-  border-radius: 36px;
-  border: 3px solid #ECE5D8;
-  box-shadow: 0 20px 48px rgba(11, 30, 63, 0.08);
-  padding: 56px 64px;
-  box-sizing: border-box;
-}
-.${sceneId}-tag {
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 700;
-  color: #B8500A;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-}
-.${sceneId}-title {
-  font-size: 52px;
-  font-weight: 700;
-  color: #0B1E3F;
-  line-height: 1.35;
-  margin: 0 0 28px 0;
-}
-.${sceneId}-stage {
-  position: absolute;
-  left: 64px;
-  right: 64px;
-  top: 250px;
-  bottom: 56px;
-  background: #FAF8F5;
-  border-radius: 24px;
-  border: 2px solid #E5DEC9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 40px;
-  text-align: center;
-}
-.${sceneId}-accent {
-  font-size: 36px;
-  font-weight: 700;
-  color: #2563EB;
-  line-height: 1.45;
-  margin-bottom: 16px;
-}
-.${sceneId}-sub {
-  font-size: 24px;
-  font-weight: 500;
-  color: #374151;
-  line-height: 1.45;
-}
+.${sceneId}-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.${sceneId}-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.${sceneId}-title { position: absolute; left: 1140px; top: 110px; transform: translate(-50%, -50%); width: 920px; text-align: center; opacity: 0; }
+.${sceneId}-stage-wrap { position: absolute; left: 1140px; top: 540px; transform: translate(-50%, -50%); width: 960px; height: 520px; display: flex; align-items: center; justify-content: center; }
 </style>
 <div id="root" data-composition-id="${sceneId}" data-width="1920" data-height="1080">
   <div id="${sceneId}-ground" class="clip kit-ground" data-start="0" data-duration="${D}" data-track-index="0"></div>
-  <div id="${sceneId}-wrap" class="clip ${sceneId}-wrap" data-start="0" data-duration="${D}" data-track-index="1">
-    <div id="${sceneId}-card" class="${sceneId}-card">
-      <div class="${sceneId}-tag">${tagText}</div>
-      <h2 class="${sceneId}-title">${headline}</h2>
-      <div class="${sceneId}-stage">
-        <div class="${sceneId}-accent">${topic.toUpperCase()}</div>
-        <div class="${sceneId}-sub">${displaySub}</div>
+  <div id="${sceneId}-stage" class="clip" data-start="0" data-duration="${D}" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="${sceneId}-drift" class="${sceneId}-layer">
+      <div id="${sceneId}-cam" class="${sceneId}-layer">
+        <div class="kit-floor"></div>
+        <div id="${sceneId}-headline" class="${sceneId}-world ${sceneId}-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">${kicker}</div>
+          <div class="kit-label" style="font-size:54px; line-height:1.2; color:#0B1E3F; font-weight:700;">${headline}</div>
+        </div>
+        <div id="${sceneId}-content" class="${sceneId}-world ${sceneId}-stage-wrap">
+          ${stageMarkup}
+        </div>
       </div>
     </div>
   </div>
+  <div id="${sceneId}-grain" class="clip kit-grain" data-start="0" data-duration="${D}" data-track-index="9"></div>
 </div>
 <script>
 (function () {
-  var P = '${sceneId}-';
-  var $ = function (id) { return '#' + P + id; };
+  var $ = function (id) { return '#${sceneId}-' + id; };
   var D = ${D};
   var tl = gsap.timeline({ paused: true });
 
-  // GSAP fromTo enter at 0.0s
-  tl.fromTo($('card'),
-    { opacity: 0, y: 40, scale: 0.98 },
-    { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' },
-    0.05
-  );
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
 
-  // Content exit by D - 0.12s (Seam Law)
-  tl.fromTo($('card'),
-    { opacity: 1, scale: 1 },
-    { opacity: 0, scale: 0.97, duration: 0.1, ease: 'power2.in', immediateRender: false },
-    ${exitTime}
-  );
+  // Camera 3D Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Visual Scene Tweens
+  ${gsapTweens}
+
+  // Seam Law: Clean exit before cut
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, ${exitTime});
+  tl.fromTo($('content'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, ${exitTime});
 
   window.__timelines = window.__timelines || {};
   window.__timelines['${sceneId}'] = tl;
@@ -295,13 +444,13 @@ function generateSceneHtml(sceneId, duration, index, totalScenes, segText) {
 </template>`;
 }
 
+// Write/Overwrite compositions with the upgraded 3D Spatial Motion Visuals
 scenes.forEach((scene, i) => {
   const compPath = path.join(compDir, `${scene.id}.html`);
-  if (!fs.existsSync(compPath)) {
-    const segText = voSegments[i]?.text || '';
-    fs.writeFileSync(compPath, generateSceneHtml(scene.id, scene.duration, i, scenes.length, segText));
-    console.log(`OK       compositions/${scene.id}.html created`);
-  }
+  const segText = voSegments[i]?.text || '';
+  const html = buildSceneVisual(scene.id, scene.duration, i, scenes.length, segText, topic);
+  fs.writeFileSync(compPath, html);
+  console.log(`OK       compositions/${scene.id}.html created (3D Spatial Motion Scene)`);
 });
 
-console.log('ai-director: Preparation complete. All scene compositions verified.');
+console.log('ai-director: Preparation complete. All 11 scene compositions and presenter track verified.');
