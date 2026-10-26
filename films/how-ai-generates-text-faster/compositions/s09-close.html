@@ -1,0 +1,64 @@
+<!-- Scene s09-close (14.20s). Topic: How AI Generates Text 3x Faster -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s09-close-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s09-close-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s09-close-title { position: absolute; left: 540px; top: 268px; transform: translate(-50%, -50%); width: 880px; text-align: center; opacity: 0; }
+.s09-close-stage-wrap { position: absolute; left: 540px; top: 825px; transform: translate(-50%, -50%); width: 900px; height: 710px; display: flex; align-items: center; justify-content: center; }
+</style>
+<div id="root" data-composition-id="s09-close" data-width="1080" data-height="1920">
+  <div id="s09-close-ground" class="clip kit-ground" data-start="0" data-duration="14.20" data-track-index="0"></div>
+  <div id="s09-close-stage" class="clip" data-start="0" data-duration="14.20" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s09-close-drift" class="s09-close-layer">
+      <div id="s09-close-cam" class="s09-close-layer">
+        <div class="kit-floor"></div>
+        <div id="s09-close-headline" class="s09-close-world s09-close-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">TECH EXPLANASYON</div>
+          <div class="kit-label" style="font-size:60px; line-height:1.2; color:#0B1E3F; font-weight:700;">CLOSE</div>
+        </div>
+        <div id="s09-close-content" class="s09-close-world s09-close-stage-wrap">
+          
+        <div id="s09-close-cta" style="width:820px; padding:48px; border-radius:36px; background:#0B1E3F; border:3px solid #FF7A1A; box-shadow:var(--float); text-align:center; display:flex; flex-direction:column; align-items:center;">
+          <div style="font-size:16px; font-weight:700; color:#FF7A1A; letter-spacing:2px;">TECH EXPLANASYON</div>
+          <div style="font-size:40px; font-weight:700; color:#FFFFFF; margin:16px 0 24px 0;">Follow For More Tech Explained</div>
+          <div style="font-size:20px; font-weight:500; color:#ECE5D8; margin-bottom:32px;">Para lutasi nito, inimbento ang speculative decoding. Nagdadagdag sila ng isang maliit at ultra-f...</div>
+          <div style="padding:14px 40px; border-radius:24px; background:#FF7A1A; color:#FFFFFF; font-size:22px; font-weight:700; box-shadow:0 12px 24px rgba(255,122,26,0.3);">Follow & Share</div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s09-close-grain" class="clip kit-grain" data-start="0" data-duration="14.20" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s09-close-' + id; };
+  var D = 14.20;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+
+  // Camera 3D Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Visual Scene Tweens
+  
+        tl.fromTo($('cta'), { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);
+
+  // Seam Law: Clean exit before cut
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, 13.65);
+  tl.fromTo($('content'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, 13.65);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s09-close'] = tl;
+})();
+</script>
+</template>

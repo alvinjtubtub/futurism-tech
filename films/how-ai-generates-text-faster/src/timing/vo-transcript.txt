@@ -1,0 +1,21 @@
+[   0.00] How does AI generate text three times faster without losing quality?
+[   5.52] Sa chat GPT, minsan napapansin mong biglang lumilipad ang bilis ng mga salita.
+[  10.86] Akala na marami, pinalakas lang ang GPU, pero may matalinong trick sa likod nito.
+[  16.22] Standard AI models are auto-regressive.
+[  19.08] Bago mailabas ang susunod na salita, binabasa ang lahat ng naunang salita.
+[  23.98] Isa-isang token lang ang kalkulasyon, kaya mabagal kung isa-isa lang lalabas.
+[  28.38] Dito nagkakaroon ng bottleneck, ang isang 70 billion parameter model ay kailangan magload ng bilyong-bilyong numero mula memory bawat salita.
+[  38.26] Halos idle ang chip kakahintay ng data transfer.
+[  41.75] Para lutasi nito, inimbento ang speculative decoding. Nagdadagdag sila ng isang maliit at ultra-fast draft model na assistant.
+[  50.67] Napakabilis ng draft model. Sa loob ng ilang milliseconds,
+[  54.23] hinuhulaan agad nito ang susunod na apat hanggang limang salita bago kumilos ang malaking AI.
+[  60.35] Dahil designed ang GPU sa parallel computing,
+[  63.29] sinusuri ng malaking AI ang limang salita ng sabay-sabay sa E1 pass,
+[  68.23] kasing bilis ng pag-check sa E1 salita.
+[  71.18] Kapagtama ang hula, sabay-sabay itong tinatanggap.
+[  74.24] Kung may mali, agad itong itatama ng malaking model ng walang bawa sa talino.
+[  78.38] Dahil ang malaking AI pa rin ang humahatol, mathematically identical ang sagot.
+[  84.08] Walang bawas sa quality, pero 3 times faster ang bilis, umaabot sa 80 tokens per second.
+[  90.70] Ang bilis ng modern AI ay dahil sa matalinong algorithms, hindi lang mas malalaking chips.
+[  96.42] Ikaw, napansin mo ba ang pagbilis ng AI ngayon?
+[  99.28] Ikoment mo sa baba. Follow me for more tech explained. See ya!

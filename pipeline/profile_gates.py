@@ -92,6 +92,10 @@ TAGALOG_QUESTION_WORDS = [
     # this phrase (or another listed interrogative) in a sentence
     # ending with '?'.
     "kaya mo bang",
+    # "napansin mo ba" / "mo ba" (did you notice / do you) standard Tagalog
+    # question construction. Added 2026-10-26 for conversational engagement questions.
+    "napansin mo ba",
+    "mo ba",
 ]
 
 # Safe-zone containment tolerance (px). profiles.json's own canonical layout

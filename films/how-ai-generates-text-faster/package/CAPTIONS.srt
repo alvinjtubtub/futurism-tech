@@ -1,0 +1,83 @@
+1
+00:00:00,000 --> 00:00:04,700
+How does AI generate text three times faster without losing quality?
+
+2
+00:00:05,520 --> 00:00:10,170
+Sa chat GPT, minsan napapansin mong biglang lumilipad ang bilis ng mga salita.
+
+3
+00:00:10,860 --> 00:00:15,230
+Akala na marami, pinalakas lang ang GPU, pero may matalinong trick sa likod nito.
+
+4
+00:00:16,220 --> 00:00:18,700
+Standard AI models are auto-regressive.
+
+5
+00:00:19,080 --> 00:00:23,380
+Bago mailabas ang susunod na salita, binabasa ang lahat ng naunang salita.
+
+6
+00:00:23,980 --> 00:00:28,380
+Isa-isang token lang ang kalkulasyon, kaya mabagal kung isa-isa lang lalabas.
+
+7
+00:00:28,380 --> 00:00:37,820
+Dito nagkakaroon ng bottleneck, ang isang 70 billion parameter model ay kailangan magload ng bilyong-bilyong numero mula memory bawat salita.
+
+8
+00:00:38,260 --> 00:00:40,940
+Halos idle ang chip kakahintay ng data transfer.
+
+9
+00:00:41,750 --> 00:00:49,870
+Para lutasi nito, inimbento ang speculative decoding. Nagdadagdag sila ng isang maliit at ultra-fast draft model na assistant.
+
+10
+00:00:50,670 --> 00:00:53,790
+Napakabilis ng draft model. Sa loob ng ilang milliseconds,
+
+11
+00:00:54,230 --> 00:00:59,590
+hinuhulaan agad nito ang susunod na apat hanggang limang salita bago kumilos ang malaking AI.
+
+12
+00:01:00,350 --> 00:01:02,890
+Dahil designed ang GPU sa parallel computing,
+
+13
+00:01:03,290 --> 00:01:07,930
+sinusuri ng malaking AI ang limang salita ng sabay-sabay sa E1 pass,
+
+14
+00:01:08,230 --> 00:01:10,470
+kasing bilis ng pag-check sa E1 salita.
+
+15
+00:01:11,180 --> 00:01:14,120
+Kapagtama ang hula, sabay-sabay itong tinatanggap.
+
+16
+00:01:14,240 --> 00:01:18,380
+Kung may mali, agad itong itatama ng malaking model ng walang bawa sa talino.
+
+17
+00:01:18,380 --> 00:01:23,900
+Dahil ang malaking AI pa rin ang humahatol, mathematically identical ang sagot.
+
+18
+00:01:24,080 --> 00:01:29,960
+Walang bawas sa quality, pero 3 times faster ang bilis, umaabot sa 80 tokens per second.
+
+19
+00:01:30,700 --> 00:01:35,800
+Ang bilis ng modern AI ay dahil sa matalinong algorithms, hindi lang mas malalaking chips.
+
+20
+00:01:36,420 --> 00:01:38,840
+Ikaw, napansin mo ba ang pagbilis ng AI ngayon?
+
+21
+00:01:39,280 --> 00:01:42,740
+Ikoment mo sa baba. Follow me for more tech explained. See ya!

@@ -1,0 +1,181 @@
+/* Shared film kit - KAPE explainer. Tokens are the KAPE whiteboard family:
+   navy ink, orange = API, teal = webhook, gray = "not yet" reply, red = the one struck word.
+   Scale UI with a .kit-zoom wrapper (--z), never transform scale. Kit classes are used as-is in every scene. */
+@font-face { font-family: 'Poppins'; font-weight: 500; font-style: normal; font-display: block; src: url('fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; font-style: normal; font-display: block; src: url('fonts/poppins-700.woff2') format('woff2'); }
+
+:root {
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --paper: #F6F2EA; --paper-hi: #FCFAF6; --paper-lo: #ECE5D8; --card: #ffffff; --well: #F3EEE5;
+  --ink: #0B1E3F; --ink-soft: #33435F; --ink-faint: #5B6478;
+  --api: #FF7A1A; --api-hi: #FF9445; --api-lo: #C8580B; --api-ink: #B8500A;
+  --wh: #0F9F8F; --wh-hi: #22B5A4; --wh-lo: #0A7064; --wh-ink: #0A7468;
+  --reply: #8B93A7; --reply-lo: #6B7387;
+  --bad: #E5484D;
+  --grid: #CFE3D8;
+  --brand-ink: #1F2937; --brand-accent: #2563EB; --brand-accent-dark: #1E40AF;
+  --float: 0 2px 4px rgba(11,30,63,.06), 0 12px 28px rgba(11,30,63,.12), 0 40px 80px -20px rgba(11,30,63,.28);
+}
+
+.kit-zoom { zoom: var(--z, 2.5); }
+.kit-ground { position: absolute; inset: 0; background: radial-gradient(120% 70% at 50% 28%, var(--paper-hi) 0%, var(--paper) 60%, var(--paper-lo) 100%); }
+.kit-grain { position: absolute; inset: -50%; pointer-events: none; opacity: .05; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+.kit-chip { display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px; border-radius: 20px; font: 700 30px/1.2 'Poppins', sans-serif; color: var(--ink);
+  background: rgba(255,255,255,.92); box-shadow: var(--float), inset 0 0 0 1.5px rgba(255,255,255,.9); white-space: nowrap; }
+.kit-chip svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.kit-chip.api { color: var(--api-ink); } .kit-chip.wh { color: var(--wh-ink); } .kit-chip.reply { color: var(--reply-lo); }
+
+.kit-cursor { width: 44px; height: 62px; transform-origin: 4px 3px; }
+.kit-cursor svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.kit-ring { border-radius: 50%; border: 4px solid var(--api); }
+
+/* shimmer sweep for busy states (never a circular spinner): tween the band's xPercent -100 -> 100 */
+.kit-shimmer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.kit-shimmer i { position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); }
+
+/* ================= KAPE film kit ================= */
+
+/* FLOOR - the KAPE plus-dot grid seen in perspective. Place it as the FIRST child of #<id>-cam and never tween or
+   gsap.set it: its CSS transform IS the canonical floor. At the canonical camera (cam + drift at identity) every
+   scene shows this exact floor, which is what makes the "canon floor" seam frame identical across scenes. */
+.kit-floor { position: absolute; left: 50%; top: 50%; width: 4200px; height: 4200px; margin: -2100px 0 0 -2100px;
+  transform: translate3d(0px, 760px, -1400px) rotateX(80deg); transform-origin: 50% 50%;
+  background-color: transparent; background-size: 150px 150px; background-position: 75px 75px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg stroke='%2394C2AD' stroke-width='3.5' stroke-linecap='round'%3E%3Cpath d='M48 38v20M38 48h20'/%3E%3C/g%3E%3Cg fill='%23A9CFBE'%3E%3Ccircle cx='0' cy='0' r='3'/%3E%3Ccircle cx='96' cy='0' r='3'/%3E%3Ccircle cx='0' cy='96' r='3'/%3E%3Ccircle cx='96' cy='96' r='3'/%3E%3Ccircle cx='48' cy='0' r='2'/%3E%3Ccircle cx='0' cy='48' r='2'/%3E%3Ccircle cx='96' cy='48' r='2'/%3E%3Ccircle cx='48' cy='96' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-image: radial-gradient(closest-side, #000 30%, rgba(0,0,0,.55) 62%, transparent 100%);
+          mask-image: radial-gradient(closest-side, #000 30%, rgba(0,0,0,.55) 62%, transparent 100%); }
+
+/* contact shadow under anything that floats above the floor (a leaf; scale/opacity it with its owner) */
+.kit-shadow { position: absolute; width: 320px; height: 70px; margin: -35px 0 0 -160px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(11,30,63,.22), rgba(11,30,63,0)); }
+
+/* TITLE TILE - thick extruded word block (API / vs / WEBHOOK) */
+.kit-tile { display: grid; place-items: center; height: 210px; padding: 0 60px; border-radius: 40px; white-space: nowrap;
+  font: 700 128px/1 'Poppins', sans-serif; letter-spacing: -.02em; color: #fff;
+  background: linear-gradient(180deg, var(--c-hi), var(--c)); box-shadow: 0 20px 0 var(--c-lo), 0 60px 80px -16px rgba(11,30,63,.38); }
+.kit-tile.api { --c: var(--api); --c-hi: var(--api-hi); --c-lo: var(--api-lo); }
+.kit-tile.wh { --c: var(--wh); --c-hi: var(--wh-hi); --c-lo: var(--wh-lo); }
+.kit-tile.vs { --c: var(--ink); --c-hi: #1C3360; --c-lo: #050E22; height: 120px; padding: 0 34px; border-radius: 30px; font-size: 64px; box-shadow: 0 12px 0 var(--c-lo), 0 40px 60px -14px rgba(11,30,63,.38); }
+
+/* FILM TYPE */
+.kit-kicker { font: 700 28px/1 'Poppins', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
+.kit-label { font: 700 84px/1.04 'Poppins', sans-serif; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
+.kit-label.sm { font-size: 60px; }
+.kit-label .api { color: var(--api-ink); } .kit-label .wh { color: var(--wh-ink); }
+.kit-caption { font: 700 46px/1.15 'Poppins', sans-serif; color: var(--ink); text-align: center; }
+.kit-caption .api { color: var(--api-ink); } .kit-caption .wh { color: var(--wh-ink); }
+
+/* CARD + NODE (an actor in the story: You / Other app / Courier) */
+.kit-card { position: relative; border-radius: 30px; background: var(--card); box-shadow: var(--float); }
+.kit-node { width: 300px; padding: 34px 0 30px; border-radius: 34px; background: var(--card); box-shadow: var(--float);
+  display: flex; flex-direction: column; align-items: center; gap: 18px; font: 700 36px/1 'Poppins', sans-serif; color: var(--ink); }
+.kit-node .ico { width: 132px; height: 132px; border-radius: 34px; display: grid; place-items: center; background: var(--well); color: var(--ink); overflow: hidden; }
+.kit-node .ico svg { width: 72px; height: 72px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.kit-node .ico img { width: 150%; max-width: none; margin: -40% 0 0 -25%; display: block; }  /* the Kape face: eyes + glasses centred in the tile */
+.kit-node.you .ico { background: #FBE3CF; border-radius: 50%; }
+.kit-node small { font: 500 24px/1 'Poppins', sans-serif; color: var(--ink-faint); }
+
+/* PACKET - the spine. Orange goes OUT from Kape (API), teal comes IN (webhook), gray is the "not yet" answer */
+.kit-packet { width: 74px; height: 74px; margin: -37px 0 0 -37px; border-radius: 20px; background: linear-gradient(160deg, var(--p-hi), var(--p));
+  box-shadow: 0 8px 0 var(--p-lo), 0 22px 34px -8px rgba(11,30,63,.4); }
+.kit-packet::after { content: ''; position: absolute; left: 22px; top: 18px; width: 30px; height: 12px; border-radius: 6px; background: rgba(255,255,255,.55); }
+.kit-packet.api { --p: var(--api); --p-hi: var(--api-hi); --p-lo: var(--api-lo); }
+.kit-packet.wh { --p: var(--wh); --p-hi: var(--wh-hi); --p-lo: var(--wh-lo); }
+.kit-packet.reply { --p: var(--reply); --p-hi: #A3AABB; --p-lo: var(--reply-lo); }
+
+/* SPEECH BUBBLE riding with a packet ("Is it there yet?" / "Not yet.") */
+.kit-bubble { display: inline-block; padding: 18px 28px; border-radius: 26px; background: #fff; white-space: nowrap;
+  font: 700 38px/1.1 'Poppins', sans-serif; color: var(--ink); box-shadow: var(--float), inset 0 0 0 4px var(--b, var(--ink)); }
+.kit-bubble.api { --b: var(--api); color: var(--api-ink); } .kit-bubble.wh { --b: var(--wh); color: var(--wh-ink); } .kit-bubble.reply { --b: var(--reply); color: var(--reply-lo); }
+
+/* ARROW LANE - an SVG path; draw it with strokeDashoffset (length from getTotalLength at build time) */
+.kit-arrow { overflow: visible; }
+.kit-arrow path { fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+.kit-arrow.api path { stroke: var(--api); } .kit-arrow.wh path { stroke: var(--wh); } .kit-arrow.reply path { stroke: var(--reply); }
+.kit-arrow .dash { stroke-dasharray: 2 26; stroke-width: 12; }
+
+/* PHONE - 1x 440x900; the screen is a LEAF (overflow hidden) - only 2D content inside it */
+.kit-phone { position: relative; width: 440px; height: 900px; border-radius: 70px; background: var(--ink); padding: 16px;
+  box-shadow: 0 2px 0 #24385E inset, var(--float); }
+.kit-phone-screen { position: relative; width: 100%; height: 100%; border-radius: 56px; overflow: hidden; background: #fff; }
+.kit-phone-screen::before { content: ''; position: absolute; left: 50%; top: 18px; width: 120px; height: 34px; margin-left: -60px; border-radius: 20px; background: var(--ink); z-index: 3; }
+
+/* NOTIFICATION (iOS-like banner) - 1x 380 wide */
+.kit-notif { display: flex; gap: 18px; align-items: flex-start; width: 380px; padding: 20px 22px; border-radius: 28px;
+  background: rgba(255,255,255,.97); box-shadow: 0 1px 0 rgba(11,30,63,.06), 0 18px 40px -10px rgba(11,30,63,.35); font-family: 'Poppins', sans-serif; }
+.kit-notif .app { width: 60px; height: 60px; flex: none; border-radius: 16px; background: var(--wh); display: grid; place-items: center; color: #fff; }
+.kit-notif .app svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.kit-notif b { display: block; font: 700 24px/1.2 'Poppins', sans-serif; color: var(--ink); }
+.kit-notif span { display: block; margin-top: 4px; font: 500 24px/1.3 'Poppins', sans-serif; color: var(--ink-soft); }
+
+/* PARCEL - a real 3D cardboard cube. The wrapper needs transform-style: preserve-3d (set here) and every ancestor
+   up to the cam must preserve 3D too (no opacity/filter/overflow on them). Rotate the wrapper, never the faces. */
+.kit-parcel { position: absolute; width: var(--s, 150px); height: var(--s, 150px); margin: calc(var(--s, 150px) / -2) 0 0 calc(var(--s, 150px) / -2); transform-style: preserve-3d; }
+.kit-parcel i { position: absolute; inset: 0; border-radius: 8px; background: #C89B6A; box-shadow: inset 0 0 0 3px rgba(90,58,26,.25); backface-visibility: hidden; }
+.kit-parcel i.ft { transform: translateZ(calc(var(--s, 150px) / 2)); background: linear-gradient(90deg, #C89B6A 0 42%, #E9D7B5 42% 58%, #C89B6A 58%); }
+.kit-parcel i.bk { transform: rotateY(180deg) translateZ(calc(var(--s, 150px) / 2)); background: #B88B5C; }
+.kit-parcel i.rt { transform: rotateY(90deg) translateZ(calc(var(--s, 150px) / 2)); background: #B4875A; }
+.kit-parcel i.lt { transform: rotateY(-90deg) translateZ(calc(var(--s, 150px) / 2)); background: #BC8F60; }
+.kit-parcel i.tp { transform: rotateX(90deg) translateZ(calc(var(--s, 150px) / 2)); background: linear-gradient(90deg, #DDB585 0 42%, #F1E2C4 42% 58%, #DDB585 58%); }
+.kit-parcel i.bt { transform: rotateX(-90deg) translateZ(calc(var(--s, 150px) / 2)); background: #A57A4E; }
+
+/* CLOCK - tween .kit-clock-h / .kit-clock-m rotation (transformOrigin set here) */
+.kit-clock { position: relative; width: 150px; height: 150px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 8px var(--ink), var(--float); }
+.kit-clock i { position: absolute; left: 50%; bottom: 50%; border-radius: 6px; background: var(--ink); transform-origin: 50% 100%; }
+.kit-clock .kit-clock-h { width: 10px; height: 38px; margin-left: -5px; }
+.kit-clock .kit-clock-m { width: 7px; height: 54px; margin-left: -3.5px; background: var(--api); }
+.kit-clock::after { content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--ink); }
+
+/* STAMP - lands with back.out; set rotation -6deg with gsap.set */
+.kit-stamp { display: inline-block; padding: 10px 30px; border-radius: 20px; border: 7px solid currentColor; font: 700 68px/1.1 'Poppins', sans-serif; letter-spacing: .04em; text-transform: uppercase; background: rgba(255,255,255,.9); }
+.kit-stamp.api { color: var(--api-ink); } .kit-stamp.wh { color: var(--wh-ink); } .kit-stamp.bad { color: var(--bad); }
+
+/* ICON wrapper for inline Lucide paths */
+.kit-ico { width: 64px; height: 64px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- GHL hosted form (visual rebuild, fictional data, no logo) - 1x 520 wide, wrap in .kit-zoom ---- */
+.kit-ghl-form { width: 520px; padding: 30px 30px 32px; border-radius: 14px; background: #fff; border: 1px solid #e4e7ec;
+  box-shadow: 0 1px 2px rgba(16,24,40,.06), 0 24px 48px -12px rgba(16,24,40,.22); font-family: 'Poppins', sans-serif; }
+.kit-ghl-form .tag { display: inline-block; padding: 4px 10px; border-radius: 6px; background: #eff4ff; color: #155eef; font: 600 12px/1.4 'Poppins', sans-serif; }
+.kit-ghl-form h4 { margin: 12px 0 18px; font: 700 24px/1.2 'Poppins', sans-serif; color: #101828; }
+.kit-ghl-form label { display: block; margin: 0 0 6px; font: 500 14px/1.3 'Poppins', sans-serif; color: #344054; }
+.kit-ghl-form .in { height: 44px; margin-bottom: 16px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; border: 1px solid #d0d5dd; font: 500 16px/1 'Poppins', sans-serif; color: #101828; }
+.kit-ghl-form .btn { height: 48px; margin-top: 6px; border-radius: 8px; background: #155eef; color: #fff; display: grid; place-items: center; font: 600 17px/1 'Poppins', sans-serif; }
+
+/* ---- n8n canvas (visual rebuild, light theme, core nodes only) - 1x 560x260, wrap in .kit-zoom ---- */
+.kit-n8n { position: relative; width: 560px; height: 260px; border-radius: 14px; background-color: #f5f5f5;
+  background-image: radial-gradient(#cfcfcf 1.5px, transparent 1.6px); background-size: 20px 20px; box-shadow: 0 24px 48px -12px rgba(16,24,40,.22); overflow: hidden; }
+.kit-n8n .bar { position: absolute; left: 0; right: 0; top: 0; height: 36px; background: #fff; border-bottom: 1px solid #e6e6e6; display: flex; align-items: center; padding: 0 14px; font: 600 13px/1 'Poppins', sans-serif; color: #222; }
+.kit-n8n-node { position: absolute; width: 100px; height: 100px; border-radius: 8px; background: #fff; border: 1.5px solid #dcdfe6; display: grid; place-items: center; }
+.kit-n8n-node.trigger { border-radius: 36px 8px 8px 36px; }
+.kit-n8n-node svg { width: 44px; height: 44px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.kit-n8n-node .h { position: absolute; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: #fff; border: 1.5px solid #b5b5b5; }
+.kit-n8n-node .h.l { left: -7px; } .kit-n8n-node .h.r { right: -7px; }
+.kit-n8n-node b { position: absolute; top: 108px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 500 14px/1.2 'Poppins', sans-serif; color: #222; text-align: center; }
+.kit-n8n-node b em { display: block; font-style: normal; font-size: 12px; color: #9a9a9a; }
+.kit-n8n-bolt { position: absolute; width: 20px; height: 20px; color: #ff6d5a; }
+
+/* ---- contact card (what the API call fetches) - 1x 460 wide ---- */
+.kit-contact { width: 460px; padding: 26px 28px; border-radius: 22px; background: #fff; box-shadow: var(--float); font-family: 'Poppins', sans-serif; }
+.kit-contact .top { display: flex; gap: 16px; align-items: center; margin-bottom: 18px; }
+.kit-contact .av { width: 64px; height: 64px; border-radius: 50%; background: #FBE3CF; color: var(--api-ink); display: grid; place-items: center; font: 700 24px/1 'Poppins', sans-serif; }
+.kit-contact .nm { font: 700 28px/1.1 'Poppins', sans-serif; color: var(--ink); }
+.kit-contact .row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid #EEF0F4; font: 500 19px/1.2 'Poppins', sans-serif; color: var(--ink-faint); }
+.kit-contact .row b { font-weight: 700; color: var(--ink); }
+.kit-contact .pill { display: inline-block; margin-left: 6px; padding: 3px 12px; border-radius: 999px; background: var(--well); color: var(--ink-soft); font: 600 16px/1.4 'Poppins', sans-serif; }
+
+/* ---- Brand logo: colours come only from the three brand vars (new-explainer appends the film's own values to the end of this file) ----
+   Size it with --h (image height); the wordmark scales from it. Markup: references/brand-snippet.html. */
+@font-face { font-family: 'Montserrat'; font-weight: 700; font-style: normal; font-display: block; src: url('brand/montserrat-700.woff2') format('woff2'); }
+.kit-logo { display: inline-flex; align-items: center; gap: calc(var(--h, 120px) * 0.16); white-space: nowrap; }
+.kit-logo img { height: var(--h, 120px); width: auto; display: block; }
+.kit-logo b { font: 700 calc(var(--h, 120px) * 0.62)/1 'Montserrat', sans-serif; letter-spacing: -0.02em; color: var(--brand-ink); }
+.kit-logo b i { font-style: normal; color: var(--brand-accent); }
+.kit-cta { display: inline-flex; align-items: center; gap: 22px; padding: 26px 48px; border-radius: 999px; background: var(--brand-accent); color: #fff;
+  font: 700 64px/1 'Montserrat', sans-serif; letter-spacing: -0.01em;
+  box-shadow: 0 14px 0 var(--brand-accent-dark), 0 40px 70px -14px color-mix(in srgb, var(--brand-accent-dark) 45%, transparent); }
+
+/* brand (from brand.json) */
+:root { --brand-ink: #1F2937; --brand-accent: #2563EB; --brand-accent-dark: #1146BB; }

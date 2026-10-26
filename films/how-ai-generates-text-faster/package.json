@@ -1,0 +1,10 @@
+{
+  "name": "how-ai-generates-text-faster",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --prefer-offline --yes hyperframes@0.8.117 preview",
+    "check": "npx --prefer-offline --yes hyperframes@0.8.117 check",
+    "render": "npx --prefer-offline --yes hyperframes@0.8.117 render --fps 60 --browser-gpu --workers 6"
+  }
+}

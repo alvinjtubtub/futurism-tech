@@ -1,0 +1,71 @@
+{
+  "_doc": "The presenter track for compositions/m-kape.html. Locked vertical coordinates: Carla 0.30, feet pinned at y1540, home x245.",
+  "scale": 0.3,
+  "home": {
+    "x": 245,
+    "feet": 1540
+  },
+  "enter": {
+    "from_x": -320,
+    "at": 0,
+    "dur": 0.95
+  },
+  "poses": [
+    [
+      0,
+      "wave"
+    ],
+    [
+      15.7,
+      "present"
+    ],
+    [
+      29,
+      "point"
+    ],
+    [
+      41.35,
+      "sit"
+    ],
+    [
+      50.25,
+      "thumbs-up"
+    ],
+    [
+      60,
+      "celebrate"
+    ],
+    [
+      70.8,
+      "idle"
+    ],
+    [
+      78.9,
+      "walk"
+    ],
+    [
+      90.3,
+      "celebrate"
+    ]
+  ],
+  "mirror": [
+    "point"
+  ],
+  "fx": [],
+  "bob": {
+    "rate": 15,
+    "y": -9,
+    "squash": 0.016
+  },
+  "blink": {
+    "every": [
+      2.2,
+      2.9,
+      2.5,
+      3.1,
+      2.7,
+      3.4
+    ],
+    "dur": 0.16
+  }
+}

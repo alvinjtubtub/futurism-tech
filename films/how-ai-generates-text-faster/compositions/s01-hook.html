@@ -1,0 +1,66 @@
+<!-- Scene s01-hook (15.70s). Topic: How AI Generates Text 3x Faster -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s01-hook-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s01-hook-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s01-hook-title { position: absolute; left: 540px; top: 268px; transform: translate(-50%, -50%); width: 880px; text-align: center; opacity: 0; }
+.s01-hook-stage-wrap { position: absolute; left: 540px; top: 825px; transform: translate(-50%, -50%); width: 900px; height: 710px; display: flex; align-items: center; justify-content: center; }
+</style>
+<div id="root" data-composition-id="s01-hook" data-width="1080" data-height="1920">
+  <div id="s01-hook-ground" class="clip kit-ground" data-start="0" data-duration="15.70" data-track-index="0"></div>
+  <div id="s01-hook-stage" class="clip" data-start="0" data-duration="15.70" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s01-hook-drift" class="s01-hook-layer">
+      <div id="s01-hook-cam" class="s01-hook-layer">
+        <div class="kit-floor"></div>
+        <div id="s01-hook-headline" class="s01-hook-world s01-hook-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">THE HOOK</div>
+          <div class="kit-label" style="font-size:60px; line-height:1.2; color:#0B1E3F; font-weight:700;">HOOK</div>
+        </div>
+        <div id="s01-hook-content" class="s01-hook-world s01-hook-stage-wrap">
+          
+        <div id="s01-hook-card" style="width:840px; padding:48px; border-radius:36px; background:#FFFFFF; border:3px solid #ECE5D8; box-shadow:var(--float); display:flex; flex-direction:column;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+            <span style="font-size:18px; font-weight:700; color:#B8500A; letter-spacing:2px;">TECH EXPLANASYON</span>
+            <span style="font-size:14px; font-weight:700; color:#0F9F8F; background:#FAF8F5; padding:6px 16px; border-radius:12px; border:1px solid #0F9F8F;">DEEP DIVE</span>
+          </div>
+          <h1 style="font-size:46px; font-weight:700; color:#0B1E3F; line-height:1.2; margin:0 0 20px 0;">HOW AI GENERATES TEXT 3X FASTER</h1>
+          <div style="font-size:22px; font-weight:500; color:#5B6478; line-height:1.5;">How does AI generate text three times faster without losing quality?</div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s01-hook-grain" class="clip kit-grain" data-start="0" data-duration="15.70" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s01-hook-' + id; };
+  var D = 15.70;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+
+  // Camera 3D Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Visual Scene Tweens
+  
+        tl.fromTo($('card'), { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out', force3D: true }, 0.20);
+
+  // Seam Law: Clean exit before cut
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, 15.15);
+  tl.fromTo($('content'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, 15.15);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s01-hook'] = tl;
+})();
+</script>
+</template>
