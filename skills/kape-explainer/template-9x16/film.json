@@ -13,7 +13,37 @@
     ["s01-hook", 7.3], ["s02-question", 6.2], ["s03-parcel", 5.1], ["s04-api", 12.6], ["s05-webhook", 10.1],
     ["s06-short", 6.0], ["s07-ghl", 15.0], ["s08-together", 4.5], ["s09-when", 10.4], ["s10-close", 6.0]
   ],
-  "overlays": [{ "id": "m-kape", "track": 2, "z": 5 }],
+  "overlays": [
+    { "id": "m-kape", "track": 2, "z": 5 },
+    { "id": "m-brand", "track": 3, "z": 6 }
+  ],
+  "layout": {
+    "stage": {
+      "x": 60,
+      "y": 470,
+      "w": 900,
+      "h": 710
+    },
+    "headline_band": {
+      "x": 60,
+      "y": 210,
+      "w": 872,
+      "h": 230
+    },
+    "presenter_zone": {
+      "x": 24,
+      "y": 1205,
+      "w": 361,
+      "h": 335,
+      "feet_y": 1540
+    },
+    "caption_band": {
+      "x": 486,
+      "y": 1280,
+      "w": 446,
+      "h": 240
+    }
+  },
   "audio": [{ "id": "vo", "src": "assets/audio/vo-master.wav", "dur": 82.21, "volume": 1, "track": 9 }],
   "bgm": { "src": "assets/audio/bgm-duck.wav", "volume": 1 },
   "sfx": {

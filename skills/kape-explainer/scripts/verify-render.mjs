@@ -80,6 +80,28 @@ const audioOk = aStream.codec_name === 'aac';
 const durDiff = Math.abs(dur - expectedTotal);
 const durOk = durDiff <= 0.25;
 
+// Strict audio loudness and volume detection check (eliminates silent renders)
+const volRes = spawnSync(
+  'ffmpeg',
+  ['-i', mp4Path, '-af', 'volumedetect', '-vn', '-sn', '-dn', '-f', 'null', '/dev/null'],
+  { encoding: 'utf8' }
+);
+const volOut = (volRes.stderr || '') + (volRes.stdout || '');
+const meanMatch = volOut.match(/mean_volume:\s+(-?[\d.]+)\s+dB/);
+const maxMatch = volOut.match(/max_volume:\s+(-?[\d.]+)\s+dB/);
+const samplesMatches = [...volOut.matchAll(/n_samples:\s+(\d+)/g)];
+const samples = samplesMatches.length > 0 ? parseInt(samplesMatches[samplesMatches.length - 1][1], 10) : 0;
+const meanVol = meanMatch ? parseFloat(meanMatch[1]) : -99;
+const maxVol = maxMatch ? parseFloat(maxMatch[1]) : -99;
+const hasAudibleSound = samples > 0 && meanVol > -40.0 && maxVol > -10.0;
+
+proof.audio_volume = {
+  n_samples: samples,
+  mean_volume_db: meanVol,
+  max_volume_db: maxVol,
+  audible: hasAudibleSound,
+};
+
 proof.ffprobe = {
   video_codec: vStream.codec_name,
   width: vStream.width,
@@ -88,14 +110,15 @@ proof.ffprobe = {
   audio_codec: aStream.codec_name,
   duration: dur,
   expected_duration: expectedTotal,
-  passed: codecOk && resOk && fpsOk && audioOk && durOk,
+  passed: codecOk && resOk && fpsOk && audioOk && durOk && hasAudibleSound,
 };
 
 if (proof.ffprobe.passed) {
-  console.log(`PASS  [1/3 ffprobe] ${vStream.codec_name} ${vStream.width}x${vStream.height} @ ${vStream.r_frame_rate} + ${aStream.codec_name}, dur ${dur.toFixed(2)}s (expected ${expectedTotal.toFixed(2)}s)`);
+  console.log(`PASS  [1/3 ffprobe] ${vStream.codec_name} ${vStream.width}x${vStream.height} @ ${vStream.r_frame_rate} + ${aStream.codec_name} (mean: ${meanVol}dB, peak: ${maxVol}dB), dur ${dur.toFixed(2)}s (expected ${expectedTotal.toFixed(2)}s)`);
 } else {
   failures++;
-  console.error(`FAIL  [1/3 ffprobe] got ${vStream.codec_name} ${vStream.width}x${vStream.height} @ ${vStream.r_frame_rate} + ${aStream.codec_name || 'no-audio'}, dur ${dur.toFixed(2)}s (expected h264 ${wantW}x${wantH} @ ${wantFps} + aac, ${expectedTotal.toFixed(2)}s)`);
+  const audioErr = !hasAudibleSound ? ` [SILENT/MUTED AUDIO: mean=${meanVol}dB, peak=${maxVol}dB, samples=${samples}]` : '';
+  console.error(`FAIL  [1/3 ffprobe] got ${vStream.codec_name} ${vStream.width}x${vStream.height} @ ${vStream.r_frame_rate} + ${aStream.codec_name || 'no-audio'}${audioErr}, dur ${dur.toFixed(2)}s (expected h264 ${wantW}x${wantH} @ ${wantFps} + aac, ${expectedTotal.toFixed(2)}s)`);
 }
 
 // 2. Word-sync proof (transcribe render -> sync-check.py against src/timing/vo-words.json)

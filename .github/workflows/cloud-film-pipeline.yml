@@ -139,6 +139,7 @@ jobs:
           fi
 
       - name: Fetch Narration Audio from Google Drive (01-Audio-Intake)
+        id: fetch_audio
         env:
           AUDIO_FILE: ${{ steps.params.outputs.audio_file }}
           SLUG: ${{ steps.params.outputs.slug }}
@@ -146,7 +147,7 @@ jobs:
         run: |
           mkdir -p /tmp/audio-intake
           if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ]; then
-            echo "Fetching all narration audio from Google Drive 01-Audio-Intake..."
+            echo "Fetching narration audio from Google Drive 01-Audio-Intake..."
             rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:" /tmp/audio-intake/ \
               --include "*.wav" --include "*.mp3" --include "*.m4a" --max-depth 1 --progress || true
           fi
@@ -154,44 +155,60 @@ jobs:
           echo "Files retrieved from 01-Audio-Intake:"
           ls -la /tmp/audio-intake/
 
-          # Prioritize matching SLUG.wav, then any .wav, then other audio formats
           FOUND_AUDIO=""
+          FOUND_NAME=""
           if [ -f "/tmp/audio-intake/$SLUG.wav" ]; then
-            FOUND_AUDIO="/tmp/audio-intake/$SLUG.wav"
+            FOUND_AUDIO="/tmp/audio-intake/$SLUG.wav"; FOUND_NAME="$SLUG.wav"
           elif [ -f "/tmp/audio-intake/$SLUG.mp3" ]; then
-            FOUND_AUDIO="/tmp/audio-intake/$SLUG.mp3"
+            FOUND_AUDIO="/tmp/audio-intake/$SLUG.mp3"; FOUND_NAME="$SLUG.mp3"
           elif [ -n "$AUDIO_FILE" ] && [ -f "/tmp/audio-intake/$AUDIO_FILE" ]; then
-            FOUND_AUDIO="/tmp/audio-intake/$AUDIO_FILE"
+            FOUND_AUDIO="/tmp/audio-intake/$AUDIO_FILE"; FOUND_NAME="$AUDIO_FILE"
           else
             FOUND_AUDIO=$(find /tmp/audio-intake -type f -name "*.wav" | head -n1)
-            if [ -z "$FOUND_AUDIO" ]; then
+            if [ -n "$FOUND_AUDIO" ]; then
+              FOUND_NAME=$(basename "$FOUND_AUDIO")
+            else
               FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.m4a" \) | head -n1)
+              [ -n "$FOUND_AUDIO" ] && FOUND_NAME=$(basename "$FOUND_AUDIO")
             fi
           fi
 
           if [ -n "$FOUND_AUDIO" ]; then
-            echo "Selected narration audio ($FOUND_AUDIO) — converting to /tmp/vo.mp3 with ffmpeg..."
-            ffmpeg -v error -y -i "$FOUND_AUDIO" -c:a libmp3lame -q:a 2 /tmp/vo.mp3
+            echo "Selected narration audio ($FOUND_AUDIO) — converting to 48kHz stereo..."
+            ffmpeg -v error -y -i "$FOUND_AUDIO" -ar 48000 -ac 2 /tmp/vo_clean.wav
+            ffmpeg -v error -y -i /tmp/vo_clean.wav -c:a libmp3lame -q:a 2 /tmp/vo.mp3
+            DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/vo_clean.wav)
+            echo "audio_dur=$DUR" >> "$GITHUB_OUTPUT"
+            echo "found_file_name=$FOUND_NAME" >> "$GITHUB_OUTPUT"
+            echo "Detected audio duration: ${DUR}s"
           elif [ -f "films/$SLUG/assets/audio/vo.mp3" ]; then
             echo "Using existing audio in repository films/$SLUG/assets/audio/vo.mp3"
             cp "films/$SLUG/assets/audio/vo.mp3" /tmp/vo.mp3
+            DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/vo.mp3)
+            echo "audio_dur=$DUR" >> "$GITHUB_OUTPUT"
+            echo "Detected audio duration: ${DUR}s"
           else
-            echo "::warning::No audio found in Google Drive intake or repo. Using fallback silence pad."
-            ffmpeg -f lavfi -i anullsrc=r=48000:cl=mono -t 60 -q:a 9 -acodec libmp3lame /tmp/vo.mp3
+            echo "::error::No narration audio found in Google Drive 01-Audio-Intake or repository! Halting run to prevent silent video generation."
+            exit 1
           fi
 
       - name: Scaffold & Master Audio
         run: |
           SLUG="${{ steps.params.outputs.slug }}"
           LANG_CODE="${{ steps.params.outputs.lang }}"
+          AUDIO_DUR="${{ steps.fetch_audio.outputs.audio_dur }}"
+          if [ -z "$AUDIO_DUR" ]; then
+            AUDIO_DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/vo.mp3)
+          fi
+
           if [ ! -d "films/$SLUG" ]; then
-            echo "Scaffolding film project: films/$SLUG"
-            node skills/kape-explainer/scripts/new-explainer.mjs "films/$SLUG" --name "$SLUG" --mp3 /tmp/vo.mp3
+            echo "Scaffolding 9:16 vertical film project: films/$SLUG"
+            node skills/kape-explainer/scripts/new-explainer.mjs "films/$SLUG" --name "$SLUG" --format 9x16 --mp3 /tmp/vo.mp3
           fi
           echo "Transcribing narration audio..."
           python3 skills/kape-explainer/scripts/transcribe.py "films/$SLUG/assets/audio/vo.mp3" "films/$SLUG/src/timing" --lang "$LANG_CODE"
-          echo "Mastering audio to -16 LUFS..."
-          python3 skills/kape-explainer/scripts/master-audio.py --dir "films/$SLUG" --len 60
+          echo "Mastering audio to -16 LUFS (duration: ${AUDIO_DUR}s)..."
+          python3 skills/kape-explainer/scripts/master-audio.py --dir "films/$SLUG" --len "$AUDIO_DUR"
 
       - name: AI Director — Generate Storyboard, Covers & Assets
         env:
@@ -210,37 +227,38 @@ jobs:
           python3 ../../skills/spatial-film/scripts/assemble.py
           python3 ../../skills/spatial-film/scripts/make-harness.py
 
-      - name: Unpack Pre-Packaged Project ZIP if already committed
+      - name: Profile Gates & HyperFrames Check
         run: |
           SLUG="${{ steps.params.outputs.slug }}"
-          ZIP="films/$SLUG/package/${SLUG}-project.zip"
-          if [ -f "$ZIP" ]; then
-            echo "Unpacking committed project ZIP: $ZIP"
-            unzip -o -q "$ZIP" -d "films/$SLUG"
-          fi
+          echo "=== Profile Gates ==="
+          python3 pipeline/profile_gates.py "films/$SLUG" --profiles profile/profiles.json --profile TE || true
+          
+          echo "=== HyperFrames Check ==="
+          mkdir -p /tmp/hf-tmp
+          cd "films/$SLUG"
+          TMPDIR=/tmp/hf-tmp npx --yes hyperframes@0.8.117 check || true
 
       - name: Stage 7 — Render 1080p60 MP4 via HyperFrames
         working-directory: films/${{ steps.params.outputs.slug }}
         run: |
           SLUG="${{ steps.params.outputs.slug }}"
           WORKERS="${{ steps.params.outputs.workers }}"
-          mkdir -p renders
+          mkdir -p /tmp/hf-tmp renders
           echo "=== Rendering $SLUG at 60fps ($WORKERS workers) ==="
-          npx --prefer-offline --yes hyperframes@0.8.117 render \
+          TMPDIR=/tmp/hf-tmp npx --prefer-offline --yes hyperframes@0.8.117 render \
             --fps 60 \
-            --browser-gpu \
             --workers "$WORKERS" \
             -o "renders/${SLUG}-1080p60.mp4" 2>&1 | tee "renders/${SLUG}-1080p60.log"
           ls -lh "renders/${SLUG}-1080p60.mp4"
 
-      - name: Stage 8 — Run ffprobe + faster-whisper Word-Sync Proof
+      - name: Stage 8 — Run ffprobe + Word-Sync Proof + Audio Volume Check
         run: |
           SLUG="${{ steps.params.outputs.slug }}"
           LANG_CODE="${{ steps.params.outputs.lang }}"
           node skills/kape-explainer/scripts/verify-render.mjs \
-            "renders/${SLUG}-1080p60.mp4" \
+            "films/$SLUG/renders/${SLUG}-1080p60.mp4" \
             --dir "films/$SLUG" \
-            --lang "$LANG_CODE" || true
+            --lang "$LANG_CODE"
           
           # Generate captions, upload pack metadata, and package bundle
           node skills/kape-explainer/scripts/package-film.mjs --dir "films/$SLUG" --skip-gate-check --allow-incomplete-pack || true
@@ -257,11 +275,18 @@ jobs:
         env:
           SLUG: ${{ steps.params.outputs.slug }}
           OUTPUT_FOLDER_ID: "1z5082Iq5JgOC4vYgirMim9vOYMcUhDRe"
+          INTAKE_FOLDER_ID: "1BZcjqcHBWL64o1CC26tjdIFMu8nwjqoz"
+          AUDIO_NAME: ${{ steps.fetch_audio.outputs.found_file_name }}
         run: |
           if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ]; then
             echo "Uploading finished video and upload pack to Google Drive 03-Completed-Videos/$SLUG..."
             rclone copy "films/$SLUG/package/" "gdrive,root_folder_id=$OUTPUT_FOLDER_ID:$SLUG/" --progress
             echo "SUCCESS: Delivered to Google Drive -> 03-Completed-Videos/$SLUG/"
+
+            if [ -n "$AUDIO_NAME" ]; then
+              echo "Archiving processed audio ($AUDIO_NAME) to processed folder..."
+              rclone move "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$AUDIO_NAME" "gdrive,root_folder_id=$INTAKE_FOLDER_ID:processed/$AUDIO_NAME" || true
+            fi
           else
             echo "::notice::Google Drive credentials not set. Files are saved in GitHub Artifacts below."
           fi

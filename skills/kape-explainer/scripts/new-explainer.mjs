@@ -21,7 +21,12 @@ const fwd = (p) => p.replace(/\\/g, '/').replace(/\/+$/, '');
 const target = args.find((a, i) => !a.startsWith('--') && !(i > 0 && args[i - 1].startsWith('--')));
 const name = flag('--name');
 const mp3 = flag('--mp3');
-const format = flag('--format') || '16x9';
+let format = flag('--format');
+if (!format && name && (name.toLowerCase().startsWith('te-') || name.toLowerCase().startsWith('ft-'))) {
+  format = '9x16';
+} else if (!format) {
+  format = '16x9';
+}
 const profArg = flag('--profile');
 if (!name || !['16x9', '9x16'].includes(format)) die('usage: new-explainer.mjs [path] --name <slug> [--format 16x9|9x16] [--mp3 <file>] [--profile <id>]');
 if (!fs.existsSync(path.join(ENGINE, 'scripts', 'new-film.mjs'))) die('spatial-film engine not found at ' + ENGINE);

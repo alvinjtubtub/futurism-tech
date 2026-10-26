@@ -54,15 +54,16 @@ snippets file; never restyle a kit class inside a scene. Components: `.kit-groun
   past its authored size - 3D layers rasterize at their authored size and go soft. Author each piece at the size
   it has in its closest shot; the camera only ever shrinks it.
 
-## Layout - vertical frame zones (frame px)
+## Layout - vertical frame zones (1080x1920 locked layout from profile/profiles.json)
 
-- **Top band** y 170-430: the scene's label / kicker / caption.
-- **Stage** y 440-1000, 60px side margins: the main objects.
-- **Lower right** x 500-950, y 1000-1500: secondary objects.
-- **Kape zone** x 20-480, y 1000-1700: the presenter overlay (`compositions/m-kape.html`, not yours). Never put
-  scene content there and never draw a mascot. Things "at Kape" (Kape's phone, the You node) sit at the zone's
-  top-right edge, around frame (430-480, 820-950).
-- Nothing below y 1720, no text at x > 950 below y 1300 (Reels UI).
+- **Headline band** y 210-268: the scene's label / kicker (`left: 540px; top: 268px; transform: translate(-50%, -50%); width: 880px; text-align: center; font-size: 60-84px; line-height: 1.2; font-weight: 700;`).
+- **Stage** x 60-960, y 470-1180: diagram zone, full width above the presenter. Ends at y1180 (~25px headroom above Carla's head).
+- **Presenter zone (Carla)**: scale 0.30, home x: 245, feet pinned at y: 1540 (above FB bottom block y >= 1560).
+- **Caption band**: pinned with bottom anchor at y: 1500 (x: 486-934, y: 1280-1500, font-size: 46px/700, text grows upward from y1500).
+- **Safe zones (Facebook Reels)**:
+  - Top bar danger: y 0-140 (cleared by headlines at y268)
+  - Right rail danger: x 952-1080, y 860-1560 (cleared by 60px side margins)
+  - Bottom block danger: y 1560-1920 (cleared by Carla feet at y1540 and captions bottom at y1500)
 
 ## Branding ({{BRAND_NAME}}) - colours and logo come from `brand.json`, never from this file
 

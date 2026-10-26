@@ -72,7 +72,19 @@ const isTemplateScaffold = Array.isArray(film.scenes) && film.scenes.some((s) =>
 
 if (isTemplateScaffold) {
   const totalFilmDur = Math.max(60.0, Number((voDur + 2.4).toFixed(1)));
-  const sceneNames = [
+  const isVertical = film.height > film.width;
+  const isTE = slug.toLowerCase().startsWith('te-') || (film.name && film.name.toLowerCase().startsWith('te-'));
+  const sceneNames = (isVertical || isTE) ? [
+    's01-hook',
+    's02-overview',
+    's03-mechanism',
+    's04-deepdive',
+    's05-process',
+    's06-comparison',
+    's07-application',
+    's08-question',
+    's09-close'
+  ] : [
     's01-hook',
     's02-overview',
     's03-problem',
@@ -93,6 +105,15 @@ if (isTemplateScaffold) {
     id,
     idx === count - 1 ? rem : Number(baseDur.toFixed(2))
   ]);
+
+  if (!film.layout && (isVertical || isTE)) {
+    film.layout = {
+      stage: { x: 60, y: 470, w: 900, h: 710 },
+      headline_band: { x: 60, y: 210, w: 872, h: 230 },
+      presenter_zone: { x: 24, y: 1205, w: 361, h: 335, feet_y: 1540 },
+      caption_band: { x: 486, y: 1280, w: 446, h: 240 }
+    };
+  }
 
   const compDir = path.join(filmDir, 'compositions');
   if (fs.existsSync(compDir)) {
@@ -452,6 +473,19 @@ function buildProceduralVisual(sceneId, duration, index, totalScenes, segText, f
 function wrapSceneHtml(sceneId, duration, visual, filmTopic) {
   const D = Number(duration).toFixed(2);
   const exitTime = Math.max(0.2, duration - 0.55).toFixed(2);
+  const W = film.width || 1080;
+  const H = film.height || 1920;
+  const isVertical = H > W;
+
+  const titleStyles = isVertical
+    ? `position: absolute; left: 540px; top: 268px; transform: translate(-50%, -50%); width: 880px; text-align: center; opacity: 0;`
+    : `position: absolute; left: 1140px; top: 110px; transform: translate(-50%, -50%); width: 920px; text-align: center; opacity: 0;`;
+
+  const stageStyles = isVertical
+    ? `position: absolute; left: 540px; top: 825px; transform: translate(-50%, -50%); width: 900px; height: 710px; display: flex; align-items: center; justify-content: center;`
+    : `position: absolute; left: 1140px; top: 540px; transform: translate(-50%, -50%); width: 960px; height: 520px; display: flex; align-items: center; justify-content: center;`;
+
+  const labelSize = isVertical ? '60px' : '54px';
 
   return `<!-- Scene ${sceneId} (${D}s). Topic: ${filmTopic} -->
 <template>
@@ -459,13 +493,13 @@ function wrapSceneHtml(sceneId, duration, visual, filmTopic) {
 <style>
 @font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
 @font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
-#root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+#root { position: absolute; inset: 0; width: ${W}px; height: ${H}px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
 .${sceneId}-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
 .${sceneId}-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
-.${sceneId}-title { position: absolute; left: 1140px; top: 110px; transform: translate(-50%, -50%); width: 920px; text-align: center; opacity: 0; }
-.${sceneId}-stage-wrap { position: absolute; left: 1140px; top: 540px; transform: translate(-50%, -50%); width: 960px; height: 520px; display: flex; align-items: center; justify-content: center; }
+.${sceneId}-title { ${titleStyles} }
+.${sceneId}-stage-wrap { ${stageStyles} }
 </style>
-<div id="root" data-composition-id="${sceneId}" data-width="1920" data-height="1080">
+<div id="root" data-composition-id="${sceneId}" data-width="${W}" data-height="${H}">
   <div id="${sceneId}-ground" class="clip kit-ground" data-start="0" data-duration="${D}" data-track-index="0"></div>
   <div id="${sceneId}-stage" class="clip" data-start="0" data-duration="${D}" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
     <div id="${sceneId}-drift" class="${sceneId}-layer">
@@ -473,7 +507,7 @@ function wrapSceneHtml(sceneId, duration, visual, filmTopic) {
         <div class="kit-floor"></div>
         <div id="${sceneId}-headline" class="${sceneId}-world ${sceneId}-title" data-layout-allow-overlap>
           <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">${visual.kicker}</div>
-          <div class="kit-label" style="font-size:54px; line-height:1.2; color:#0B1E3F; font-weight:700;">${visual.headline}</div>
+          <div class="kit-label" style="font-size:${labelSize}; line-height:1.2; color:#0B1E3F; font-weight:700;">${visual.headline}</div>
         </div>
         <div id="${sceneId}-content" class="${sceneId}-world ${sceneId}-stage-wrap">
           ${visual.stageMarkup}

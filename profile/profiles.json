@@ -1,0 +1,388 @@
+{
+  "_doc": "Machine-readable encoding of TECH-EXPLANASYON-AUTOMATION-BLUEPRINT.md section 2 (v1.5, 24 Oct 2026). Source of truth for intake, gates and pack assembly (blueprint section 16). All rectangles are pixels on a 1080x1920 canvas, origin top-left. Safe-zone numbers are conservative design assumptions from published platform UI guides - see phase-1.5/BUILD-NOTES.md; re-verify against the live apps at Phase 4.",
+  "version": "1.0",
+  "updated": "2026-10-24",
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "aspect": "9:16"
+  },
+  "publish_slots": {
+    "timezone": "Asia/Manila",
+    "slots": [
+      "07:30",
+      "12:15",
+      "19:30"
+    ],
+    "per_day": 3,
+    "note": "Pipeline-wide default (blueprint section 22.4); split between FT and TE follows the topic queue, no fixed per-brand count."
+  },
+  "profiles": {
+    "FT": {
+      "id_prefix": "FT",
+      "brand": "Futurism Tech",
+      "destination": "YouTube Shorts",
+      "draft_destination": {
+        "platform": "YouTube Studio",
+        "visibility": "Private"
+      },
+      "duration_s": {
+        "target": [
+          50,
+          55
+        ],
+        "warn_outside": [
+          48,
+          58
+        ],
+        "rework_outside": [
+          45,
+          60
+        ]
+      },
+      "script": {
+        "words": [
+          130,
+          145
+        ],
+        "language": "English",
+        "lane": "AI / tech news - verified, timely; news value decays in ~48h",
+        "audience": "Global English, target US / CA / AU"
+      },
+      "hook": {
+        "style": "Punchy one-line hook in the first 2 seconds",
+        "on_screen_text": "Bold minimal captions, English"
+      },
+      "visual_style": "AI-generated stills + cinematic pan/zoom motion; no face or voice on camera",
+      "presenter": null,
+      "badge": {
+        "type": "wordmark",
+        "text": "Futurism Tech",
+        "position": {
+          "x": 56,
+          "y": 200
+        }
+      },
+      "narration": {
+        "mode": "established-ai-voice",
+        "voice": "Established Futurism Tech AI voice",
+        "disclosure_line": "AI voice + AI-generated visuals. Human-researched, written, and fact-checked by FUTURISM TECH."
+      },
+      "closing": {
+        "type": "save_bait_cta",
+        "must_include_keyword": "save"
+      },
+      "safe_zones": {
+        "map": "youtube_shorts",
+        "danger": {
+          "top_bar": {
+            "x": 0,
+            "y": 0,
+            "w": 1080,
+            "h": 170,
+            "label": "YT Shorts header (logo, search, menu)"
+          },
+          "right_rail": {
+            "x": 944,
+            "y": 740,
+            "w": 136,
+            "h": 840,
+            "label": "YT Shorts action rail (like, dislike, comments, share, remix)"
+          },
+          "bottom_block": {
+            "x": 0,
+            "y": 1600,
+            "w": 1080,
+            "h": 320,
+            "label": "YT Shorts bottom block (channel handle + subscribe, title, comment preview)"
+          }
+        },
+        "safe_content_rect": {
+          "x": 48,
+          "y": 210,
+          "w": 872,
+          "h": 1370
+        }
+      },
+      "layout": {
+        "stage": {
+          "x": 48,
+          "y": 210,
+          "w": 984,
+          "h": 1330
+        },
+        "headline_band": {
+          "x": 56,
+          "y": 230,
+          "w": 868,
+          "h": 300
+        },
+        "caption_band": {
+          "x": 64,
+          "y": 1180,
+          "w": 856,
+          "h": 330,
+          "align": "center",
+          "font_px": 54,
+          "weight": 700
+        },
+        "presenter_zone": null
+      },
+      "captions": {
+        "style": "bold minimal",
+        "language": "en",
+        "placement": "caption_band"
+      },
+      "upload_pack": {
+        "fields": [
+          "title",
+          "description",
+          "hashtags",
+          "pinned_comment",
+          "ai_disclosure"
+        ],
+        "ai_disclosure": "Yes - altered content"
+      },
+      "gates": {
+        "duration": {
+          "warn_outside": [
+            48,
+            58
+          ],
+          "fail_outside": [
+            45,
+            60
+          ]
+        },
+        "brand_leakage": {
+          "forbidden": [
+            "Carla mascot",
+            "Tech Explanasyon badge",
+            "Taglish closing sign-off"
+          ],
+          "required": [
+            "Futurism Tech wordmark"
+          ]
+        },
+        "closing": {
+          "type": "save_bait_cta",
+          "must_include_keyword": "save"
+        },
+        "safe_zone": {
+          "key_content_within": "safe_content_rect",
+          "no_text_in": [
+            "top_bar",
+            "right_rail",
+            "bottom_block"
+          ]
+        }
+      }
+    },
+    "TE": {
+      "id_prefix": "TE",
+      "brand": "Tech Explanasyon",
+      "destination": "Facebook Reels",
+      "draft_destination": {
+        "platform": "Meta Business Suite",
+        "state": "unpublished draft",
+        "page": "Tech Explanasyon"
+      },
+      "duration_s": {
+        "target": [
+          95,
+          115
+        ],
+        "warn_outside": [
+          90,
+          120
+        ],
+        "rework_outside": [
+          85,
+          125
+        ]
+      },
+      "script": {
+        "words": [
+          255,
+          305
+        ],
+        "language": "English-dominant Taglish (English carries the technical explanation; Tagalog carries hook, transitions, emphasis, local color, closing question)",
+        "lane": "Evergreen mechanisms - invisible processes, how systems work; no expiry",
+        "exclamation_marks": false,
+        "delivery": "Ready-to-copy-paste plain paragraphs in chat; scene map lives in the saved file"
+      },
+      "hook": {
+        "style": "Hook question displayed as on-screen text at the very start (scene 1)",
+        "on_screen_text_language": "en"
+      },
+      "visual_style": "KAPE spatial-film: diagram stage + Carla presenter, hand-built animated scenes, vertical template (Phase 1.5)",
+      "presenter": {
+        "name": "Carla",
+        "poses": 9,
+        "blink": true,
+        "talk": true,
+        "blink_cadence_s": [
+          2.7,
+          4.9
+        ]
+      },
+      "badge": {
+        "type": "floating_badge",
+        "text": "Tech Explanasyon",
+        "position": "top-center",
+        "top_px": 168,
+        "max_width_px": 320,
+        "builder": "kape-explainer/scripts/build-brand.py -> compositions/m-brand.html"
+      },
+      "narration": {
+        "mode": "manual-gemini-tts",
+        "provider": "Gemini TTS",
+        "voice": "Kira",
+        "note": "Standard TE voice from 24 Oct 2026; films 1-8 used ElevenLabs 'Zia' and stay as-is. Alvin generates the MP3 and hands it over."
+      },
+      "closing": {
+        "spoken_sequence": [
+          "tagalog_engagement_question",
+          "signoff"
+        ],
+        "signoff_exact": "Follow me for more tech explained. See yah.",
+        "on_screen_language": "en"
+      },
+      "on_screen_text_language": "en",
+      "safe_zones": {
+        "map": "facebook_reels",
+        "danger": {
+          "top_bar": {
+            "x": 0,
+            "y": 0,
+            "w": 1080,
+            "h": 140,
+            "label": "FB Reels top bar (back arrow, Reels title, camera)"
+          },
+          "right_rail": {
+            "x": 952,
+            "y": 860,
+            "w": 128,
+            "h": 700,
+            "label": "FB Reels action rail (like, comment, share, save, more)"
+          },
+          "bottom_block": {
+            "x": 0,
+            "y": 1560,
+            "w": 1080,
+            "h": 360,
+            "label": "FB Reels bottom block (Page name + follow, caption, audio attribution, CTA)"
+          }
+        },
+        "safe_content_rect": {
+          "x": 48,
+          "y": 180,
+          "w": 884,
+          "h": 1360
+        }
+      },
+      "layout": {
+        "headline_band": {
+          "x": 60,
+          "y": 210,
+          "w": 880,
+          "h": 230
+        },
+        "stage": {
+          "x": 60,
+          "y": 470,
+          "w": 900,
+          "h": 710,
+          "note": "Diagram zone, full width above the presenter. Revision #4 (24 Oct 2026, Alvin's direction - accommodate the space for visuals until Carla's headroom): stage expanded DOWN, y470-1030 -> y470-1180. Stage bottom is set by Carla's headroom = presenter zone top (y1205) minus ~25px; if her scale/zone ever changes, the stage bottom follows her head top. Was y470, h560 (bottom y1030)."
+        },
+        "secondary_zone": {
+          "x": 500,
+          "y": 1060,
+          "w": 440,
+          "h": 180
+        },
+        "presenter_zone": {
+          "x": 24,
+          "y": 1205,
+          "w": 361,
+          "h": 335,
+          "home": {
+            "x": 245,
+            "feet_y": 1540
+          },
+          "scale": 0.3,
+          "note": "Carla lower-left at scale 0.3 (0.5 at first build; reduced to 0.4 then 0.3 on 24 Oct 2026 at Alvin's direction - more room for visuals), feet on y=1540 - above the FB bottom block (y>=1560). Feet baseline deliberately UNCHANGED at the safe edge: Alvin explicitly declined moving her down into the bottom block. Zone = union of all 9 poses rendered at scale (widest celebrate 876x1102 asset -> 263x331 on screen; true sprite footprint x122-384, y1209-1540, recomputed with build-presenter.py head-anchor geometry) with the established 24px left frame margin and ~4px breath headroom kept (same convention as the 0.4 zone). Home anchor x=245 unchanged; caption band stays clear to her right."
+        },
+        "caption_band": {
+          "x": 486,
+          "y": 1280,
+          "w": 448,
+          "h": 240,
+          "align": "left",
+          "font_px": 46,
+          "weight": 700,
+          "text_bottom_y": 1500,
+          "note": "Right of the presenter zone, fully inside the FB safe_content_rect. Revision #3 (24 Oct 2026, Alvin's direction - more room for visuals): captions moved DOWN, bottom-anchored - the caption text block's bottom edge sits at y=1500, 40px above the y1540 safe edge; longer captions grow UPWARD from there and must not rise above the band top (y1280). Band = moved text block with padding (measured 4-line sample: glyphs x487-920, y1305-1500; element top y1301). Was x486-934, y1150-1480, top-anchored at y1150 (sample glyphs y1154-1349; moved +151px)."
+        }
+      },
+      "captions": {
+        "style": "burned-in subtitles from verified word timings (CAPTIONS.srt)",
+        "language": "spoken (en/tl); on-screen display text en",
+        "placement": "caption_band"
+      },
+      "upload_pack": {
+        "fields": [
+          "fb_caption",
+          "first_comment",
+          "ai_info_label",
+          "reel_cover"
+        ],
+        "first_comment": "= the Tagalog closing question",
+        "ai_info_label": "on"
+      },
+      "gates": {
+        "duration": {
+          "warn_outside": [
+            90,
+            120
+          ],
+          "fail_outside": [
+            85,
+            125
+          ]
+        },
+        "brand_leakage": {
+          "forbidden": [
+            "Futurism Tech wordmark",
+            "16:9 canvas",
+            "ElevenLabs Zia voice (post-switch films)"
+          ],
+          "required": [
+            "Tech Explanasyon badge",
+            "Carla presenter"
+          ]
+        },
+        "closing": {
+          "required_sequence": [
+            "tagalog_engagement_question",
+            "signoff"
+          ],
+          "signoff_exact": "Follow me for more tech explained. See yah."
+        },
+        "safe_zone": {
+          "key_content_within": "safe_content_rect",
+          "no_text_in": [
+            "top_bar",
+            "right_rail",
+            "bottom_block"
+          ]
+        },
+        "hook": {
+          "scene1_on_screen_question": true,
+          "language": "en"
+        }
+      }
+    }
+  }
+}

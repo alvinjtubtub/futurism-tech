@@ -117,7 +117,8 @@ for i, fx in enumerate(T.get("fx", [])):
 # ---- timeline ----
 js = []
 home, ent = T["home"], T["enter"]
-js.append(f"gsap.set(q('pos'), {{ x: {ent['from_x']}, y: {home['feet']}, force3D: true }});")
+feet_pos = home.get("feet", home.get("feet_y", 1540))
+js.append(f"gsap.set(q('pos'), {{ x: {ent['from_x']}, y: {feet_pos}, force3D: true }});")
 js.append(f"tl.fromTo(q('pos'), {{ x: {ent['from_x']} }}, {{ x: {home['x']}, duration: {ent['dur']}, ease: 'expo.out', force3D: true }}, {ent['at']});")
 sched = T["poses"]
 first = sched[0][1]
