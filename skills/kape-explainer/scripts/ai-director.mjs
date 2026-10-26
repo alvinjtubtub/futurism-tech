@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ai-director.mjs — Autonomous KAPE Scene Director.
+ * ai-director.mjs — Autonomous KAPE Scene Director with Gemini AI Studio Integration.
  * Reads transcript word timings (vo-words.json) and audio duration,
  * updates film.json (scenes, audio dur, bgm: null if no bgm-duck.wav),
  * and generates:
@@ -8,6 +8,12 @@
  * 2. STORYBOARD.md (11 scenes aligned to narration timestamps)
  * 3. 11 GSAP HTML compositions with rich 3D spatial motion design (compositions/s01-hook.html ... s11-close.html)
  * 4. src/presenter-track.json (mascot poses aligned to narration, eye blinks, talking bob)
+ *
+ * When GEMINI_API_KEY is present:
+ * - Queries Google AI Studio (Gemini 2.5 Flash) to generate bespoke, topic-specific 3D motion graphics
+ *   and animated SVG/HTML/CSS diagrams for each scene aligned with the spoken words.
+ * When GEMINI_API_KEY is absent or network fails:
+ * - Falls back to the built-in procedural 3D motion-design generator.
  *
  * Usage:
  *   node skills/kape-explainer/scripts/ai-director.mjs --dir films/<slug> [--topic "<topic>"]
@@ -127,7 +133,6 @@ const compDir = path.join(filmDir, 'compositions');
 fs.mkdirSync(compDir, { recursive: true });
 
 // Poses with 100% verified blink and talk variants:
-// wave, present, point, sit, thumbs-up, celebrate, idle, walk
 const MASCOT_POSES = ['wave', 'present', 'point', 'sit', 'thumbs-up', 'celebrate', 'idle', 'walk'];
 
 // 1. Generate / Update src/presenter-track.json
@@ -180,19 +185,87 @@ scenes.forEach((scene, i) => {
 fs.writeFileSync(path.join(filmDir, 'STORYBOARD.md'), storyboardMd);
 console.log('OK       STORYBOARD.md generated');
 
-// 3. Rich 3D Motion-Design Scene Builders
-function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTopic) {
+// 3. Query Google AI Studio Gemini API for Bespoke Visuals if GEMINI_API_KEY is present
+async function queryGeminiDirector(filmTopic, sceneList, segments, apiKey) {
+  if (!apiKey) return null;
+  console.log('🤖 AI Director: Querying Google AI Studio Gemini API for custom 3D motion design...');
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+  const prompt = `You are the Lead Spatial 3D Motion Graphic Director for "Tech Explanasyon", an elite technical visual explainer channel.
+Topic: "${filmTopic}"
+Duration: ${sceneList.reduce((a, b) => a + b.duration, 0).toFixed(1)}s across ${sceneList.length} scenes.
+
+Narration transcript broken into scenes:
+${sceneList.map((s, i) => `Scene ${i+1} [${s.id}] (${s.duration}s): "${segments[i]?.text || ''}"`).join('\n')}
+
+For each scene, design a high-end 3D motion graphic layout inside the center-right stage container:
+- Available stage area: left: 1140px, top: 540px, width: 960px, height: 520px.
+- The mascot presenter occupies x: 40-620px (left side), and brand badge is at x > 1500px, y < 140px. Do not overlap them.
+- Use rich visual elements: diagrams, mechanical parts, cards with borders, status badges, SVG shapes, progress rings, arrows.
+- Design tokens: Navy (#0B1E3F), Orange (#FF7A1A), Teal (#0F9F8F), Paper (#F6F2EA), White (#FFFFFF), Red (#B02A30).
+- GSAP Tweens: Animate elements inside #\${sceneId}-content with staggered entrances.
+- IMPORTANT RULE: NEVER use \`repeat: -1\` (infinite repeats fail render checks). Use finite loops like \`repeat: Math.max(1, Math.floor(D / cycle))\`.
+
+Respond ONLY with a valid JSON array of objects, one per scene, formatted as:
+[
+  {
+    "sceneId": "s01-hook",
+    "kicker": "THE HOOK",
+    "headline": "Punchy Title",
+    "stageMarkup": "<div id=\\"s01-card\\"...>...</div>",
+    "gsapTweens": "tl.fromTo($('card'), ...);"
+  }
+]`;
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.3,
+          responseMimeType: 'application/json'
+        }
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      console.warn(`::warning::Gemini API responded with status ${res.status} ${res.statusText}`);
+      return null;
+    }
+    const data = await res.json();
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!rawText) return null;
+    const parsed = JSON.parse(rawText);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      console.log(`✨ AI Director: Gemini created ${parsed.length} tailored 3D scenes!`);
+      const map = {};
+      for (const item of parsed) {
+        if (item.sceneId) map[item.sceneId] = item;
+      }
+      return map;
+    }
+  } catch (err) {
+    console.warn(`::notice::Gemini API call skipped: ${err.message}. Using built-in spatial generator.`);
+  }
+  return null;
+}
+
+// 4. Procedural Fallback Visual Generator
+function buildProceduralVisual(sceneId, duration, index, totalScenes, segText, filmTopic) {
   const D = Number(duration).toFixed(2);
-  const exitTime = Math.max(0.2, duration - 0.55).toFixed(2);
   const headline = sceneId.replace(/^s\d+-?/, '').replace(/-/g, ' ').toUpperCase() || 'CORE INSIGHT';
   const rawSub = (segText && segText.length > 5) ? segText.trim().replace(/"/g, "'") : filmTopic;
   const shortSub = rawSub.length > 100 ? rawSub.slice(0, 97) + '...' : rawSub;
 
   const isWatch = /watch|clock|rotor|gear|spring|escapement|balance/i.test(filmTopic + ' ' + rawSub);
   const isMagnet = /magnet|flux|domain|pole|north|south|iron/i.test(filmTopic + ' ' + rawSub);
-  const isNetwork = /network|internet|search|packet|google|wifi|data|router/i.test(filmTopic + ' ' + rawSub);
 
-  // Kicker & subtitle selection
   let kicker = `STEP ${index + 1} OF ${totalScenes}`;
   if (index === 0) kicker = 'THE HOOK';
   else if (index === totalScenes - 1) kicker = 'TECH EXPLANASYON';
@@ -201,9 +274,7 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
   let gsapTweens = '';
 
   if (isWatch) {
-    // WATCH SCENE THEMES
     if (index === 0) {
-      // Watch Hook: 3D Watch Case & Sweeping Second Hand
       stageMarkup = `
         <div id="${sceneId}-dial" style="width:360px; height:360px; border-radius:50%; background:#0B1E3F; border:6px solid #FF7A1A; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
           <div style="position:absolute; width:12px; height:12px; border-radius:50%; background:#FFFFFF; z-index:5;"></div>
@@ -213,7 +284,7 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         </div>
         <div id="${sceneId}-card" style="width:420px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float); margin-left:36px;">
           <div style="font-size:16px; font-weight:700; color:#B8500A; text-transform:uppercase;">No Battery Required</div>
-          <div style="font-size:32px; font-weight:700; color:#0B1E3F; line-height:1.25; margin:12px 0;">Powered By Your Movement</div>
+          <div style="font-size:32px; font-weight:700; color:#0B1E3F; line-height:1.25; margin:12px 0;">Powered By Movement</div>
           <div style="font-size:18px; font-weight:500; color:#5B6478; line-height:1.4;">${shortSub}</div>
         </div>`;
       gsapTweens = `
@@ -221,7 +292,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('hand'), { rotation: 0 }, { rotation: 360 * 2, duration: D - 0.7, ease: 'none' }, 0.40);
         tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.50);`;
     } else if (index % 3 === 1) {
-      // The Rotor / Oscillating Weight
       stageMarkup = `
         <div id="${sceneId}-rotor-wrap" style="width:380px; height:380px; border-radius:50%; background:#FAF8F5; border:3px dashed #0F9F8F; display:flex; align-items:center; justify-content:center; position:relative;">
           <div id="${sceneId}-rotor" style="width:340px; height:170px; border-top-left-radius:170px; border-top-right-radius:170px; background:linear-gradient(180deg, #FF9445, #C8580B); box-shadow:0 12px 24px rgba(184,80,10,0.3); position:absolute; top:20px; transform-origin:50% 100%;">
@@ -239,7 +309,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('rotor'), { rotation: -60 }, { rotation: 60, duration: 1.1, ease: 'sine.inOut', repeat: Math.max(1, Math.floor(D / 1.1)), yoyo: true }, 0.40);
         tl.fromTo($('info'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
     } else if (index % 3 === 2) {
-      // Gear Train Transmission
       stageMarkup = `
         <div id="${sceneId}-gears" style="width:440px; height:340px; position:relative; display:flex; align-items:center;">
           <div id="${sceneId}-g1" style="width:180px; height:180px; border-radius:50%; background:#FF9445; border:6px dashed #B8500A; position:absolute; left:20px; top:40px; display:flex; align-items:center; justify-content:center; box-shadow:var(--float);">
@@ -264,7 +333,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('g3'), { rotation: 0 }, { rotation: 360, duration: 2, ease: 'none', repeat: Math.max(1, Math.floor(D / 2)) }, 0.30);
         tl.fromTo($('spec'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
     } else {
-      // Escapement & Balance Wheel Heartbeat
       stageMarkup = `
         <div id="${sceneId}-balance" style="width:360px; height:360px; border-radius:50%; background:#FAF8F5; border:4px solid #0B1E3F; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
           <div id="${sceneId}-spring" style="width:240px; height:240px; border-radius:50%; border:3px dashed #FF7A1A; position:absolute;"></div>
@@ -284,9 +352,7 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('desc'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
     }
   } else if (isMagnet) {
-    // MAGNET SCENE THEMES
     if (index === 0) {
-      // Fridge Hook
       stageMarkup = `
         <div id="${sceneId}-door" style="width:520px; height:380px; border-radius:36px; background:#FFFFFF; border:3px solid #ECE5D8; box-shadow:var(--float); position:relative; display:flex; align-items:center; justify-content:center;">
           <div style="position:absolute; left:28px; top:50%; transform:translateY(-50%); width:12px; height:160px; border-radius:6px; background:#D5CDBD;"></div>
@@ -305,12 +371,11 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('magnet'), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)', force3D: true }, 0.50);
         tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.60);`;
     } else if (index % 2 === 1) {
-      // Domain Lattice Matrix
       stageMarkup = `
         <div id="${sceneId}-matrix" style="width:480px; padding:24px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float);">
           <div style="font-size:16px; font-weight:700; color:#0B1E3F; margin-bottom:14px;">MAGNETIC DOMAINS (MICRO-SCALE)</div>
           <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
-            ${[1,2,3,4,5,6].map(k => `<div class="${sceneId}-cell" style="height:76px; border-radius:16px; background:#FCFAF6; border:2px solid #0F9F8F; display:flex; align-items:center; justify-content:center; font-size:24px; color:#0A7468; font-weight:700;">➔</div>`).join('')}
+            ${[1,2,3,4,5,6].map(() => `<div class="${sceneId}-cell" style="height:76px; border-radius:16px; background:#FCFAF6; border:2px solid #0F9F8F; display:flex; align-items:center; justify-content:center; font-size:24px; color:#0A7468; font-weight:700;">➔</div>`).join('')}
           </div>
         </div>
         <div id="${sceneId}-info" style="width:360px; padding:32px; border-radius:32px; background:#0B1E3F; border:2px solid #0F9F8F; box-shadow:var(--float); margin-left:32px;">
@@ -323,7 +388,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo('.${sceneId}-cell', { rotation: (i) => i * 35 }, { rotation: 0, duration: 0.8, ease: 'power2.out', stagger: 0.08 }, 0.40);
         tl.fromTo($('info'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.50);`;
     } else {
-      // North / South Poles
       stageMarkup = `
         <div id="${sceneId}-pole-wrap" style="width:500px; display:flex; flex-direction:column; align-items:center;">
           <div id="${sceneId}-bar" style="width:480px; height:100px; border-radius:24px; display:flex; overflow:hidden; box-shadow:var(--float);">
@@ -341,9 +405,7 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('card'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.45);`;
     }
   } else {
-    // UNIVERSAL DYNAMIC TECH LAYOUT
     if (index === 0) {
-      // Universal Hero Hook
       stageMarkup = `
         <div id="${sceneId}-card" style="width:840px; padding:48px; border-radius:36px; background:#FFFFFF; border:3px solid #ECE5D8; box-shadow:var(--float); display:flex; flex-direction:column;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -356,7 +418,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
       gsapTweens = `
         tl.fromTo($('card'), { opacity: 0, y: 30, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out', force3D: true }, 0.20);`;
     } else if (index === totalScenes - 1) {
-      // Universal Outro / CTA Card
       stageMarkup = `
         <div id="${sceneId}-cta" style="width:820px; padding:48px; border-radius:36px; background:#0B1E3F; border:3px solid #FF7A1A; box-shadow:var(--float); text-align:center; display:flex; flex-direction:column; align-items:center;">
           <div style="font-size:16px; font-weight:700; color:#FF7A1A; letter-spacing:2px;">TECH EXPLANASYON</div>
@@ -367,7 +428,6 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
       gsapTweens = `
         tl.fromTo($('cta'), { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)', force3D: true }, 0.20);`;
     } else {
-      // Multi-Card Step Visual
       stageMarkup = `
         <div id="${sceneId}-c1" style="width:420px; padding:32px; border-radius:32px; background:#FFFFFF; border:2px solid #ECE5D8; box-shadow:var(--float);">
           <div style="font-size:15px; font-weight:700; color:#B8500A;">SYSTEM COMPONENT</div>
@@ -384,6 +444,14 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
         tl.fromTo($('c2'), { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.35);`;
     }
   }
+
+  return { kicker, headline, stageMarkup, gsapTweens };
+}
+
+// 5. Wrap Stage into KAPE 3D Motion Scene HTML
+function wrapSceneHtml(sceneId, duration, visual, filmTopic) {
+  const D = Number(duration).toFixed(2);
+  const exitTime = Math.max(0.2, duration - 0.55).toFixed(2);
 
   return `<!-- Scene ${sceneId} (${D}s). Topic: ${filmTopic} -->
 <template>
@@ -404,11 +472,11 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
       <div id="${sceneId}-cam" class="${sceneId}-layer">
         <div class="kit-floor"></div>
         <div id="${sceneId}-headline" class="${sceneId}-world ${sceneId}-title" data-layout-allow-overlap>
-          <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">${kicker}</div>
-          <div class="kit-label" style="font-size:54px; line-height:1.2; color:#0B1E3F; font-weight:700;">${headline}</div>
+          <div class="kit-kicker" style="color:#B8500A; margin-bottom:12px;">${visual.kicker}</div>
+          <div class="kit-label" style="font-size:54px; line-height:1.2; color:#0B1E3F; font-weight:700;">${visual.headline}</div>
         </div>
         <div id="${sceneId}-content" class="${sceneId}-world ${sceneId}-stage-wrap">
-          ${stageMarkup}
+          ${visual.stageMarkup}
         </div>
       </div>
     </div>
@@ -431,7 +499,7 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
   tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
 
   // Visual Scene Tweens
-  ${gsapTweens}
+  ${visual.gsapTweens}
 
   // Seam Law: Clean exit before cut
   tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, ${exitTime});
@@ -444,13 +512,35 @@ function buildSceneVisual(sceneId, duration, index, totalScenes, segText, filmTo
 </template>`;
 }
 
-// Write/Overwrite compositions with the upgraded 3D Spatial Motion Visuals
-scenes.forEach((scene, i) => {
-  const compPath = path.join(compDir, `${scene.id}.html`);
-  const segText = voSegments[i]?.text || '';
-  const html = buildSceneVisual(scene.id, scene.duration, i, scenes.length, segText, topic);
-  fs.writeFileSync(compPath, html);
-  console.log(`OK       compositions/${scene.id}.html created (3D Spatial Motion Scene)`);
-});
+// 6. Generate All 11 Scenes
+async function main() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  const geminiMap = await queryGeminiDirector(topic, scenes, voSegments, apiKey);
 
-console.log('ai-director: Preparation complete. All 11 scene compositions and presenter track verified.');
+  scenes.forEach((scene, i) => {
+    const compPath = path.join(compDir, `${scene.id}.html`);
+    const segText = voSegments[i]?.text || '';
+    const geminiScene = geminiMap?.[scene.id];
+
+    let visual;
+    if (geminiScene && geminiScene.stageMarkup && geminiScene.gsapTweens) {
+      visual = {
+        kicker: geminiScene.kicker || `STEP ${i + 1} OF ${scenes.length}`,
+        headline: geminiScene.headline || scene.id.replace(/^s\d+-/, '').toUpperCase(),
+        stageMarkup: geminiScene.stageMarkup,
+        gsapTweens: geminiScene.gsapTweens
+      };
+      console.log(`OK       compositions/${scene.id}.html created (AI-Designed via Gemini Studio)`);
+    } else {
+      visual = buildProceduralVisual(scene.id, scene.duration, i, scenes.length, segText, topic);
+      console.log(`OK       compositions/${scene.id}.html created (3D Spatial Motion Scene)`);
+    }
+
+    const html = wrapSceneHtml(scene.id, scene.duration, visual, topic);
+    fs.writeFileSync(compPath, html);
+  });
+
+  console.log('ai-director: Preparation complete. All 11 scene compositions and presenter track verified.');
+}
+
+await main();
