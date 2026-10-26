@@ -63,19 +63,23 @@ jobs:
           echo "workers=${{ github.event.inputs.workers || '4' }}" >> "$GITHUB_OUTPUT"
           echo "Target film: films/$SLUG ($TOPIC)"
 
-      - name: Install System Dependencies (Chrome Vulkan, rclone)
+      - name: Install System Dependencies (FFmpeg, Chrome Vulkan, rclone)
         timeout-minutes: 3
         run: |
           echo "Installing rclone standalone binary..."
           curl -fsSL https://rclone.org/install.sh | sudo bash
 
-          echo "Installing Vulkan and font libraries for HyperFrames..."
+          echo "Installing FFmpeg, Vulkan, and fonts..."
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" update
           sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" install -y --no-install-recommends \
+            ffmpeg \
             libvulkan1 \
             mesa-vulkan-drivers \
             fonts-liberation \
             fonts-dejavu-core
+
+          ffmpeg -version | head -n1
+          rclone --version | head -n1
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
@@ -142,18 +146,31 @@ jobs:
         run: |
           mkdir -p /tmp/audio-intake
           if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ]; then
-            echo "Searching for audio in Google Drive 01-Audio-Intake..."
-            if [ -n "$AUDIO_FILE" ]; then
-              rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$AUDIO_FILE" /tmp/audio-intake/ || true
-            fi
-            # Also try matching slug
-            rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$SLUG.mp3" /tmp/audio-intake/ || true
-            rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:$SLUG.wav" /tmp/audio-intake/ || true
+            echo "Fetching all narration audio from Google Drive 01-Audio-Intake..."
+            rclone copy "gdrive,root_folder_id=$INTAKE_FOLDER_ID:" /tmp/audio-intake/ \
+              --include "*.wav" --include "*.mp3" --include "*.m4a" --max-depth 1 --progress || true
           fi
 
-          FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.wav" -o -name "*.m4a" \) | head -n1)
+          echo "Files retrieved from 01-Audio-Intake:"
+          ls -la /tmp/audio-intake/
+
+          # Prioritize matching SLUG.wav, then any .wav, then other audio formats
+          FOUND_AUDIO=""
+          if [ -f "/tmp/audio-intake/$SLUG.wav" ]; then
+            FOUND_AUDIO="/tmp/audio-intake/$SLUG.wav"
+          elif [ -f "/tmp/audio-intake/$SLUG.mp3" ]; then
+            FOUND_AUDIO="/tmp/audio-intake/$SLUG.mp3"
+          elif [ -n "$AUDIO_FILE" ] && [ -f "/tmp/audio-intake/$AUDIO_FILE" ]; then
+            FOUND_AUDIO="/tmp/audio-intake/$AUDIO_FILE"
+          else
+            FOUND_AUDIO=$(find /tmp/audio-intake -type f -name "*.wav" | head -n1)
+            if [ -z "$FOUND_AUDIO" ]; then
+              FOUND_AUDIO=$(find /tmp/audio-intake -type f \( -name "*.mp3" -o -name "*.m4a" \) | head -n1)
+            fi
+          fi
+
           if [ -n "$FOUND_AUDIO" ]; then
-            echo "Found narration audio ($FOUND_AUDIO) — normalizing to /tmp/vo.mp3..."
+            echo "Selected narration audio ($FOUND_AUDIO) — converting to /tmp/vo.mp3 with ffmpeg..."
             ffmpeg -v error -y -i "$FOUND_AUDIO" -c:a libmp3lame -q:a 2 /tmp/vo.mp3
           elif [ -f "films/$SLUG/assets/audio/vo.mp3" ]; then
             echo "Using existing audio in repository films/$SLUG/assets/audio/vo.mp3"
