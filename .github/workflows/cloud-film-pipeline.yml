@@ -63,36 +63,19 @@ jobs:
           echo "workers=${{ github.event.inputs.workers || '4' }}" >> "$GITHUB_OUTPUT"
           echo "Target film: films/$SLUG ($TOPIC)"
 
-      - name: Install System Dependencies (FFmpeg, Chrome Vulkan, rclone)
-        timeout-minutes: 5
+      - name: Install System Dependencies (Chrome Vulkan, rclone)
+        timeout-minutes: 3
         run: |
+          echo "Installing rclone standalone binary..."
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+
+          echo "Installing Vulkan and font libraries for HyperFrames..."
           sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" update
           sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout="15" install -y --no-install-recommends \
-            ffmpeg \
-            unzip \
-            zip \
-            libnss3 \
-            libatk1.0-0 \
-            libatk-bridge2.0-0 \
-            libcups2 \
-            libdrm2 \
-            libxkbcommon0 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxfixes3 \
-            libxrandr2 \
-            libgbm1 \
-            libasound2t64 \
-            libpango-1.0-0 \
-            libcairo2 \
-            libegl1 \
-            libgl1 \
             libvulkan1 \
             mesa-vulkan-drivers \
-            vulkan-tools \
             fonts-liberation \
-            fonts-dejavu-core \
-            rclone
+            fonts-dejavu-core
 
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
