@@ -1,6 +1,8 @@
 name: Cloud Film Pipeline (Triggered from Android / Google Drive)
 
 on:
+  push:
+    branches: [test/ois-eis-archived-intake]
   workflow_dispatch:
     inputs:
       slug:
@@ -44,7 +46,11 @@ jobs:
       - name: Resolve film inputs
         id: params
         run: |
-          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "push" ]; then
+            SLUG="ois-eis-fix-test"
+            TOPIC="Optical vs Electronic Image Stabilization"
+            AUDIO_FILE="OIS-EIS.wav"
+          elif [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             SLUG="${{ github.event.client_payload.slug }}"
             TOPIC="${{ github.event.client_payload.topic || github.event.client_payload.slug }}"
             AUDIO_FILE="${{ github.event.client_payload.file_name }}"
