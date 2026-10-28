@@ -152,6 +152,18 @@ jobs:
               --include "*.wav" --include "*.mp3" --include "*.m4a" --max-depth 1 --progress || true
           fi
 
+          # The Drive dispatcher may archive the file before this runner starts.
+          # Recover only the explicitly requested filename; never choose another
+          # file from the archive.
+          if [ "${{ steps.gdrive_config.outputs.configured }}" = "true" ] && [ -n "$AUDIO_FILE" ] && [ ! -f "/tmp/audio-intake/$AUDIO_FILE" ]; then
+            if [ "$AUDIO_FILE" != "${AUDIO_FILE##*/}" ] || [ "$AUDIO_FILE" = "." ] || [ "$AUDIO_FILE" = ".." ]; then
+              echo "::error::Invalid narration filename"
+              exit 1
+            fi
+            echo "Checking processed folder for the requested narration..."
+            rclone copyto "gdrive,root_folder_id=$INTAKE_FOLDER_ID:processed/$AUDIO_FILE" "/tmp/audio-intake/$AUDIO_FILE"
+          fi
+
           echo "Files retrieved from 01-Audio-Intake:"
           ls -la /tmp/audio-intake/
 
@@ -297,3 +309,4 @@ jobs:
           name: ${{ steps.params.outputs.slug }}-cloud-pack
           path: films/${{ steps.params.outputs.slug }}/package/
           retention-days: 14
+
