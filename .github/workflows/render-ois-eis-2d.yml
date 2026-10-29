@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           mkdir -p films/ois-eis-2d /tmp/ois-redesign-results
           rclone copyto 'gdrive,root_folder_id=1lMz8NZJCUOz5qps79zzjrScs9zcJHbON:ois-eis-project.zip' /tmp/original.zip
-          rclone copyto 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:ois-eis-2d-update-v2.zip' /tmp/update.zip
+          rclone copyto 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:ois-eis-2d-update-v3.zip' /tmp/update.zip
           unzip -oq /tmp/original.zip -d films/ois-eis-2d
           unzip -oq /tmp/update.zip -d films/ois-eis-2d
       - name: Check transitions
