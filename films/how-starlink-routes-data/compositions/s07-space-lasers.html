@@ -1,0 +1,100 @@
+<!-- Scene s07-space-lasers (1080x1920, dur 19.08s). Big Hero Visual & Space Lasers -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s07-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s07-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s07-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s07-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s07-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s07-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Laser Beam */
+.s07-laser-core { position: absolute; left: 16%; top: 50%; width: 68%; height: 6px; background: #FFFFFF; box-shadow: 0 0 20px #00E5FF, 0 0 40px #00E5FF; opacity: 0; transform-origin: left center; pointer-events: none; z-index: 10; }
+.s07-photon-pulse { position: absolute; left: 16%; top: calc(50% - 6px); width: 40px; height: 18px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 0 24px #38BDF8; opacity: 0; pointer-events: none; z-index: 12; }
+
+/* HUD Badges */
+.s07-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; }
+.s07-speed-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(0,229,255,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #0B1E3F; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,229,255,0.35); z-index: 15; opacity: 0; }
+.s07-vacuum-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s07-space-lasers" data-width="1080" data-height="1920">
+  <div id="s07-ground" class="clip kit-ground" data-start="0" data-duration="19.08" data-track-index="0"></div>
+  <div id="s07-stage" class="clip" data-start="0" data-duration="19.08" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s07-drift" class="s07-layer">
+      <div id="s07-cam" class="s07-layer">
+        <div class="kit-floor"></div>
+        <div id="s07-headline" class="s07-world s07-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0284C7; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">OPTICAL INTER-SATELLITE LINKS</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Space Lasers: 47% mas mabilis kaysa undersea fiber cables!</div>
+        </div>
+        <div class="s07-world s07-stage-wrap">
+          <div id="s07-viewport" class="s07-viewport">
+            <img id="s07-photo" class="s07-img" src="assets/images/s07_space_laser_optical_gimbal.jpg" alt="Space Laser Optical Gimbal">
+            
+            <div id="s07-laser" class="s07-laser-core"></div>
+            <div id="s07-photon" class="s07-photon-pulse"></div>
+
+            <div id="s07-hud" class="s07-hud-header">
+              <span>OPTICAL LASER PROPAGATION IN VACUUM</span>
+            </div>
+            <div id="s07-speed" class="s07-speed-badge">⚡ VACUUM SPEED: 300,000 KM/S (+47% FASTER)</div>
+            <div id="s07-vacuum" class="s07-vacuum-badge">🔒 100 GBPS OPTICAL THROUGHPUT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s07-grain" class="clip kit-grain" data-start="0" data-duration="19.08" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s07-' + id; };
+  var D = 19.08;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, scaleX: 0 });
+  gsap.set($('photon'), { opacity: 0, x: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('speed'), { opacity: 0, x: -20 });
+  gsap.set($('vacuum'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+
+  // Laser beam firing across space (~1.8s)
+  tl.fromTo($('laser'), { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: 'power2.out' }, 1.80);
+
+  // High-speed photon pulse racing across the beam
+  tl.fromTo($('photon'), { opacity: 0.9, x: 0 }, { opacity: 0.9, x: 620, duration: 0.8, ease: 'none', repeat: 12 }, 2.30);
+
+  // Badges enter on audio cues
+  tl.fromTo($('speed'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 7.50);
+  tl.fromTo($('vacuum'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 11.50);
+
+  // Clean Exit before cut (D - 0.45s)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s07-space-lasers'] = tl;
+})();
+</script>
+</template>

@@ -1,0 +1,30 @@
+[   0.00] Alam mo ba na habang nag-e-stream ka sa gitna ng dagat o bundok gamit ang Starlink?
+[   6.10] Kung mokonnecta ka sa satellite na lumilipad ng halos 27,000 km per hour,
+[  13.10] ang lumang satellite internet ay nasa geostationary orbit.
+[  16.92] Mahigit 35,000 km ang layo.
+[  20.18] Kaya ang ping ay pumapalo sa 600 milliseconds.
+[  23.96] Pero ang Starlink satellites ay nasa low earth orbit, sa 550 km lang.
+[  29.44] kaya ang ping ay 25 milliseconds.
+[  33.02] Pero dahil mababa ang orbit,
+[  35.12] bawat satellite ay mabilis na dumadaan at nawawala sa horizon sa loob lang ng tatlong minuto.
+[  41.14] Paano ito na susundan ng starlink dish nang hindi umiikot ang motor nito?
+[  45.80] Ang sekreto ay phased array beamforming.
+[  48.92] Sa loob ng dish, may mahigit isang libong micro antennas.
+[  53.02] Sa pamamagitan ng nanosecond phase shifts,
+[  56.28] pinagsasabay ang mga radio waves para magkakonstructive interference.
+[  60.86] Kaya nabubuo ang isang radio beam na kayang lumipat ng direksyon ng walang gumagalaw na piyasa.
+[  67.50] Bago pa lumubog ang isang satellite sa Horizon,
+[  70.62] nakikipagugnayan na ang dish sa susunod na papasok na satellite.
+[  74.28] Sa loob ng milliseconds, nagaganap ang satellite handoff.
+[  78.14] Kaya tuloy-tuloy ang video call mo ng walang lag.
+[  81.66] Nung una, kailangan ang satellite ng ground station sa lupa,
+[  84.86] sa loob ng 500 km para i-forward ang data sa internet backbone
+[  89.98] gamit ang tinatawag na bent pipe routing.
+[  93.22] Pero ngayon, may optical space lasers na ang bawat satellite.
+[  97.32] Nagpapasa sila ng data gamit ang infrared laser sa vacuum ng outer space.
+[ 102.50] Dahil 47% mas mabilis ang liwanag sa vacuum
+[ 106.18] kaysa sa fiber optic cable sa ilalim ng dagat, mas mabilis pa ang space routing.
+[ 112.30] Bumubuo ang libo-libong satellites ng isang lumilipad na dynamic mesh network
+[ 117.18] na otomatikong naghanap ng pinakamabilis na ruta sa buong mundo.
+[ 122.38] Sa tingin mo, papalitan na ba ng space laser internet ang mga subsea cable sa ilalim ng dagat?
+[ 128.50] Follow me for more tech explained. See ya!

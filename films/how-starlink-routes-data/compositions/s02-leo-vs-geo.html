@@ -1,0 +1,101 @@
+<!-- Scene s02-leo-vs-geo (1080x1920, dur 19.92s). Big Hero Visual & LEO vs GEO Latency -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s02-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s02-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s02-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s02-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s02-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s02-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Ping & Waves */
+.s02-ping-ring { position: absolute; left: 34%; top: 40%; transform: translate(-50%, -50%); width: 140px; height: 140px; border: 3px solid #10B981; border-radius: 50%; opacity: 0; pointer-events: none; }
+.s02-geo-beam { position: absolute; left: 35%; top: 40%; width: 520px; height: 4px; background: linear-gradient(90deg, #10B981, #EF4444); transform-origin: left center; transform: rotate(-18deg); opacity: 0; }
+
+/* HUD Badges */
+.s02-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; }
+.s02-leo-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+.s02-geo-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(239,68,68,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(239,68,68,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s02-leo-vs-geo" data-width="1080" data-height="1920">
+  <div id="s02-ground" class="clip kit-ground" data-start="0" data-duration="19.92" data-track-index="0"></div>
+  <div id="s02-stage" class="clip" data-start="0" data-duration="19.92" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s02-drift" class="s02-layer">
+      <div id="s02-cam" class="s02-layer">
+        <div class="kit-floor"></div>
+        <div id="s02-headline" class="s02-world s02-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0284C7; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">ORBITAL MECHANICS</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Bakit 25ms lang ang ping sa LEO vs 600ms sa GEO?</div>
+        </div>
+        <div class="s02-world s02-stage-wrap">
+          <div id="s02-viewport" class="s02-viewport">
+            <img id="s02-photo" class="s02-img" src="assets/images/s02_leo_vs_geo_orbit_scale.jpg" alt="LEO vs GEO Orbit Comparison">
+            
+            <div id="s02-ring1" class="s02-ping-ring"></div>
+            <div id="s02-ring2" class="s02-ping-ring"></div>
+            <div id="s02-beam" class="s02-geo-beam"></div>
+
+            <div id="s02-hud" class="s02-hud-header">
+              <span>LATENCY PROPAGATION TIME ANALYSIS</span>
+            </div>
+            <div id="s02-leo" class="s02-leo-badge">⚡ STARLINK LEO (550 KM): ~25 MS PING</div>
+            <div id="s02-geo" class="s02-geo-badge">🐢 LEGACY GEO (35,786 KM): ~600 MS PING</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s02-grain" class="clip kit-grain" data-start="0" data-duration="19.92" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s02-' + id; };
+  var D = 19.92;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('ring1'), { opacity: 0, scale: 0.2 });
+  gsap.set($('ring2'), { opacity: 0, scale: 0.2 });
+  gsap.set($('beam'), { opacity: 0, scaleX: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('leo'), { opacity: 0, x: -20 });
+  gsap.set($('geo'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: 0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: 0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+
+  // GEO High-latency beam & badge (~3.5s - 7.0s)
+  tl.fromTo($('beam'), { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 1.2, ease: 'power1.inOut' }, 3.50);
+  tl.fromTo($('geo'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 5.50);
+
+  // LEO Fast Ping Rings pulsating repeatedly (~10.5s onwards)
+  tl.fromTo($('ring1'), { opacity: 0.9, scale: 0.2 }, { opacity: 0, scale: 2.2, duration: 1.4, ease: 'sine.out', repeat: 5 }, 10.50);
+  tl.fromTo($('ring2'), { opacity: 0.9, scale: 0.2 }, { opacity: 0, scale: 2.2, duration: 1.4, ease: 'sine.out', repeat: 5, delay: 0.7 }, 11.20);
+  tl.fromTo($('leo'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2.2)' }, 12.00);
+
+  // Clean Exit before cut (D - 0.45s)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s02-leo-vs-geo'] = tl;
+})();
+</script>
+</template>

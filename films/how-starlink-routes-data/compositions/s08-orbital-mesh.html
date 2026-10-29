@@ -1,0 +1,100 @@
+<!-- Scene s08-orbital-mesh (1080x1920, dur 10.08s). Big Hero Visual & Dynamic Mesh -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s08-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s08-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s08-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s08-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s08-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s08-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Orbital Crosslinks */
+.s08-mesh-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 440px; height: 320px; border: 2px dashed #00E5FF; border-radius: 50%; opacity: 0; pointer-events: none; }
+.s08-hop-pulse { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 28px; height: 28px; border-radius: 50%; background: #F59E0B; box-shadow: 0 0 24px #F59E0B; opacity: 0; pointer-events: none; }
+
+/* HUD Badges */
+.s08-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; }
+.s08-mesh-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(245,158,11,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); z-index: 15; opacity: 0; }
+.s08-route-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s08-orbital-mesh" data-width="1080" data-height="1920">
+  <div id="s08-ground" class="clip kit-ground" data-start="0" data-duration="10.08" data-track-index="0"></div>
+  <div id="s08-stage" class="clip" data-start="0" data-duration="10.08" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s08-drift" class="s08-layer">
+      <div id="s08-cam" class="s08-layer">
+        <div class="kit-floor"></div>
+        <div id="s08-headline" class="s08-world s08-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0284C7; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">AUTONOMOUS ROUTING</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Dynamic Mesh Network sa kalawakan na lumilipad!</div>
+        </div>
+        <div class="s08-world s08-stage-wrap">
+          <div id="s08-viewport" class="s08-viewport">
+            <img id="s08-photo" class="s08-img" src="assets/images/s08_orbital_laser_mesh_constellation.jpg" alt="Orbital Laser Mesh">
+            
+            <div id="s08-ring" class="s08-mesh-ring"></div>
+            <div id="s08-hop" class="s08-hop-pulse"></div>
+
+            <div id="s08-hud" class="s08-hud-header">
+              <span>GLOBAL SATELLITE MESH TOPOLOGY</span>
+            </div>
+            <div id="s08-mesh" class="s08-mesh-badge">🌐 6,000+ SATELLITE INTERCONNECTED MESH</div>
+            <div id="s08-route" class="s08-route-badge">⚡ SHORTEST-PATH AUTONOMOUS RE-ROUTING</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s08-grain" class="clip kit-grain" data-start="0" data-duration="10.08" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s08-' + id; };
+  var D = 10.08;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('ring'), { opacity: 0, rotation: 0 });
+  gsap.set($('hop'), { opacity: 0, scale: 0.5 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('mesh'), { opacity: 0, x: -20 });
+  gsap.set($('route'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+
+  // Rotating constellation orbital ring
+  tl.fromTo($('ring'), { opacity: 0, rotation: 0 }, { opacity: 0.8, rotation: 360, duration: 8.0, ease: 'none' }, 1.20);
+
+  // Hop pulses jumping across nodes
+  tl.fromTo($('hop'), { opacity: 0.9, scale: 0.5 }, { opacity: 0, scale: 2.2, duration: 1.2, ease: 'sine.out', repeat: 5 }, 1.50);
+
+  // Badges enter
+  tl.fromTo($('mesh'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 2.50);
+  tl.fromTo($('route'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 5.00);
+
+  // Clean Exit before cut (D - 0.45s)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s08-orbital-mesh'] = tl;
+})();
+</script>
+</template>

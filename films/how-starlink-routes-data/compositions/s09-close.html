@@ -1,0 +1,89 @@
+<!-- Scene s09-close (1080x1920, dur 8.50s). Big Hero Visual & Closing Call-to-Action -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s09-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s09-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s09-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s09-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s09-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s09-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Split Divider */
+.s09-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #00E5FF; box-shadow: 0 0 16px #00E5FF; opacity: 0; }
+
+/* Floating Engagement Card */
+.s09-cta-card { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); background: rgba(11,30,63,0.92); backdrop-filter: blur(12px); border: 2px solid #00E5FF; color: #FFFFFF; font-size: 16px; font-weight: 700; padding: 12px 24px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,229,255,0.3); z-index: 15; opacity: 0; white-space: nowrap; }
+.s09-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s09-close" data-width="1080" data-height="1920">
+  <div id="s09-ground" class="clip kit-ground" data-start="0" data-duration="8.50" data-track-index="0"></div>
+  <div id="s09-stage" class="clip" data-start="0" data-duration="8.50" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s09-drift" class="s09-layer">
+      <div id="s09-cam" class="s09-layer">
+        <div class="kit-floor"></div>
+        <div id="s09-headline" class="s09-world s09-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0284C7; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">FUTURE OF CONNECTIVITY</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Papalitan na ba ng space laser ang subsea cables?</div>
+        </div>
+        <div class="s09-world s09-stage-wrap">
+          <div id="s09-viewport" class="s09-viewport">
+            <img id="s09-photo" class="s09-img" src="assets/images/s09_subsea_cables_vs_lasers.jpg" alt="Subsea Cables vs Space Lasers">
+            
+            <div id="s09-div" class="s09-divider"></div>
+
+            <div id="s09-hud" class="s09-hud-header">
+              <span>GLOBAL TELECOMMUNICATIONS SHOWDOWN</span>
+            </div>
+            <div id="s09-cta" class="s09-cta-card">💬 I-COMMENT ANG IYONG OPINYON SA BABA!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s09-grain" class="clip kit-grain" data-start="0" data-duration="8.50" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s09-' + id; };
+  var D = 8.50;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('div'), { opacity: 0, scaleY: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('cta'), { opacity: 0, y: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: 0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: 0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+  tl.fromTo($('div'), { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.6, ease: 'power2.out' }, 0.80);
+
+  // CTA Card Enter & Subtle Pulsing
+  tl.fromTo($('cta'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 1.50);
+  tl.fromTo($('cta'), { scale: 1 }, { scale: 1.05, duration: 0.8, ease: 'sine.inOut', repeat: 4, yoyo: true }, 2.20);
+
+  // Clean Exit before cut (D - 0.45s)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s09-close'] = tl;
+})();
+</script>
+</template>
