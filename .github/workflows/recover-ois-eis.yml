@@ -1,0 +1,39 @@
+name: Recover OIS EIS project for cloud workspace
+
+on:
+  push:
+    branches:
+      - recovery/ois-eis-cloud-transfer
+    paths:
+      - .github/workflows/recover-ois-eis.yml
+
+jobs:
+  split-project:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install rclone
+        run: curl -fsSL https://rclone.org/install.sh | sudo bash
+      - name: Recover and split project
+        env:
+          GDRIVE_SA_KEY: ${{ secrets.GDRIVE_SA_KEY }}
+          RCLONE_TOKEN: ${{ secrets.RCLONE_GDRIVE_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.config/rclone /tmp/ois-recovery
+          if [ -n "$GDRIVE_SA_KEY" ]; then
+            printf '%s' "$GDRIVE_SA_KEY" > /tmp/gdrive_sa.json
+            printf '[gdrive]\ntype = drive\nscope = drive\nservice_account_file = /tmp/gdrive_sa.json\n' > ~/.config/rclone/rclone.conf
+          elif [ -n "$RCLONE_TOKEN" ]; then
+            printf '[gdrive]\ntype = drive\nscope = drive\ntoken = %s\n' "$RCLONE_TOKEN" > ~/.config/rclone/rclone.conf
+          else
+            echo "::error::Drive credentials are unavailable"
+            exit 1
+          fi
+          rclone copyto 'gdrive,root_folder_id=1lMz8NZJCUOz5qps79zzjrScs9zcJHbON:ois-eis-project.zip' /tmp/ois-recovery/project.zip
+          cd /tmp/ois-recovery
+          sha256sum project.zip > SHA256SUMS
+          split -b 20M -d -a 3 project.zip ois-eis-project.part-
+          mkdir parts
+          mv ois-eis-project.part-* SHA256SUMS parts/
+          rclone copy parts/ 'gdrive,root_folder_id=1Y4IoOTi40SOkpWwJqPI5iuikDkMT71Pm:ois-eis-cloud-recovery/' --progress
