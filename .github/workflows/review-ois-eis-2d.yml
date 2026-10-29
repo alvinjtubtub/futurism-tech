@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           mkdir -p films/ois-eis-2d /tmp/review-output
           rclone copyto 'gdrive,root_folder_id=1lMz8NZJCUOz5qps79zzjrScs9zcJHbON:ois-eis-project.zip' /tmp/original.zip
-          rclone copyto 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:ois-eis-2d-update.zip' /tmp/update.zip
+          rclone copyto 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:ois-eis-2d-update-v2.zip' /tmp/update.zip
           unzip -oq /tmp/original.zip -d films/ois-eis-2d
           unzip -oq /tmp/update.zip -d films/ois-eis-2d
       - name: Check and capture scenes
@@ -51,11 +51,15 @@ jobs:
         run: |
           set -o pipefail
           python3 ../../skills/spatial-film/scripts/fromto-scan.py compositions/s*.html 2>&1 | tee /tmp/review-output/fromto.txt
+          set +e
           npx --yes hyperframes@0.8.117 check 2>&1 | tee /tmp/review-output/check.txt
+          CHECK_STATUS=${PIPESTATUS[0]}
           npx --yes hyperframes@0.8.117 snapshot . --at 4,13,22,30,36,44,55,68,75,84 --no-end --describe false -o /tmp/review-output/snaps 2>&1 | tee /tmp/review-output/snapshot.txt
+          SNAP_STATUS=${PIPESTATUS[0]}
+          if [ "$CHECK_STATUS" -ne 0 ] || [ "$SNAP_STATUS" -ne 0 ]; then exit 1; fi
       - name: Upload review material
         if: always()
-        run: rclone copy /tmp/review-output/ 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:review/' --progress
+        run: rclone copy /tmp/review-output/ 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:review-v2/' --progress --retries 1 --low-level-retries 1 --timeout 30s
       - name: Upload review artifact
         if: always()
         uses: actions/upload-artifact@v4
