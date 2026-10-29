@@ -1,0 +1,99 @@
+name: Render OIS EIS 2D redesign
+on:
+  push:
+    branches: [recovery/ois-eis-cloud-transfer]
+    paths: [.github/workflows/render-ois-eis-2d.yml]
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install tools
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-liberation fonts-dejavu-core
+          python3 -m pip install pillow numpy faster-whisper av==12.3.0
+          npx --yes hyperframes@0.8.117 browser ensure
+      - name: Configure Drive
+        env:
+          GDRIVE_SA_KEY: ${{ secrets.GDRIVE_SA_KEY }}
+          RCLONE_TOKEN: ${{ secrets.RCLONE_GDRIVE_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.config/rclone
+          if [ -n "$GDRIVE_SA_KEY" ]; then
+            printf '%s' "$GDRIVE_SA_KEY" > /tmp/gdrive_sa.json
+            printf '[gdrive]\ntype = drive\nscope = drive\nservice_account_file = /tmp/gdrive_sa.json\n' > ~/.config/rclone/rclone.conf
+          elif [ -n "$RCLONE_TOKEN" ]; then
+            printf '[gdrive]\ntype = drive\nscope = drive\ntoken = %s\n' "$RCLONE_TOKEN" > ~/.config/rclone/rclone.conf
+          else
+            echo "::error::Drive credentials unavailable"
+            exit 1
+          fi
+      - name: Restore project
+        run: |
+          set -euo pipefail
+          mkdir -p films/ois-eis-2d /tmp/ois-redesign-results
+          rclone copyto 'gdrive,root_folder_id=1lMz8NZJCUOz5qps79zzjrScs9zcJHbON:ois-eis-project.zip' /tmp/original.zip
+          rclone copyto 'gdrive,root_folder_id=1e5vWo3I428uYbfE0O0vIY2aVhnMSyoED:ois-eis-2d-update-v2.zip' /tmp/update.zip
+          unzip -oq /tmp/original.zip -d films/ois-eis-2d
+          unzip -oq /tmp/update.zip -d films/ois-eis-2d
+      - name: Check transitions
+        working-directory: films/ois-eis-2d
+        run: |
+          set -euo pipefail
+          python3 ../../skills/spatial-film/scripts/fromto-scan.py compositions/s*.html | tee /tmp/ois-redesign-results/fromto.txt
+          npx --yes hyperframes@0.8.117 snapshot . --at 8.4333,8.4667,17.3833,17.4167,26.9833,27.0167,33.0833,33.1167,39.6833,39.7167,49.0833,49.1167,61.5333,61.5667,79.1833,79.2167 --no-end --describe false -o /tmp/seams
+          python3 - <<'PY' | tee /tmp/ois-redesign-results/seams.txt
+          from PIL import Image, ImageChops, ImageDraw
+          from pathlib import Path
+          import sys
+          files=sorted(Path('/tmp/seams').glob('frame-*.png'),key=lambda p:int(p.name.split('-')[1]))
+          if len(files)!=16: raise SystemExit(f'Expected 16 seam snapshots; got {len(files)}')
+          failed=False
+          for i in range(8):
+              a=Image.open(files[2*i]).convert('RGB');b=Image.open(files[2*i+1]).convert('RGB')
+              diff=ImageChops.difference(a,b)
+              # Carla occupies this presenter region throughout; her speech and blink animate over cuts.
+              ImageDraw.Draw(diff).rectangle((0,1000,500,1750),fill=(0,0,0))
+              m=diff.point(lambda v: 255 if v>8 else 0).convert('L').point(lambda v:255 if v else 0)
+              pct=100*m.histogram()[255]/(a.width*a.height)
+              print(f'seam {i+1}: {pct:.4f}% outside presenter')
+              if pct>0.005: failed=True
+          if failed: sys.exit(1)
+          PY
+      - name: Render film
+        working-directory: films/ois-eis-2d
+        run: |
+          set -euo pipefail
+          mkdir -p renders
+          npx --yes hyperframes@0.8.117 render --fps 60 --workers 4 -o renders/ois-eis-2d-1080p60.mp4 2>&1 | tee /tmp/ois-redesign-results/render.log
+      - name: Verify render
+        run: |
+          set -euo pipefail
+          node skills/kape-explainer/scripts/verify-render.mjs films/ois-eis-2d/renders/ois-eis-2d-1080p60.mp4 --dir films/ois-eis-2d --lang tl 2>&1 | tee /tmp/ois-redesign-results/verify.txt
+      - name: Deliver video and project
+        run: |
+          set -euo pipefail
+          cp films/ois-eis-2d/renders/ois-eis-2d-1080p60.mp4 /tmp/ois-redesign-results/
+          cp films/ois-eis-2d/.hyperframes/render-proof.json /tmp/ois-redesign-results/
+          cp films/ois-eis-2d/SCRIPT.md /tmp/ois-redesign-results/
+          cd films/ois-eis-2d
+          zip -qr /tmp/ois-redesign-results/ois-eis-2d-project.zip . -x 'renders/*' '.hyperframes/*' 'snapshots/*'
+          rclone copy /tmp/ois-redesign-results/ 'gdrive,root_folder_id=1z5082Iq5JgOC4vYgirMim9vOYMcUhDRe:ois-eis-2d-redesign/' --progress
+      - name: Diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ois-eis-2d-results
+          path: /tmp/ois-redesign-results/
+          if-no-files-found: warn
+          retention-days: 14
