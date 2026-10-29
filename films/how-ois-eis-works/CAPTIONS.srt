@@ -1,0 +1,155 @@
+1
+00:00:00,000 --> 00:00:03,080
+kapag tomatak buka habang nag-ve-video gamit ang phone mo,
+
+2
+00:00:03,580 --> 00:00:06,760
+bakit hindi masakit sa mata o para ang lumilindol ang footage.
+
+3
+00:00:07,380 --> 00:00:09,420
+Kung titignan mo ang loob ng camera module,
+
+4
+00:00:09,920 --> 00:00:11,680
+may physical suspension system,
+
+5
+00:00:11,960 --> 00:00:16,720
+at matinding algorithm na nagtutulungan para ang mukhang lumulutang ang camera mo.
+
+6
+00:00:17,280 --> 00:00:19,100
+Paano ko maghana ang OIS,
+
+7
+00:00:19,560 --> 00:00:21,300
+o optical image stabilization.
+
+8
+00:00:21,880 --> 00:00:23,160
+Sa loob ng camera bump,
+
+9
+00:00:23,560 --> 00:00:25,240
+hindi nakadikit ng dyrecho ang lens.
+
+10
+00:00:25,240 --> 00:00:35,160
+Sa tuto lang lumulutang ito sa Microscopic Suspension Springs at napapalibutan ng 4-pole voice coil electromagnets o VCM's.
+
+11
+00:00:35,560 --> 00:00:43,540
+Kapag gumalog ang kamay mo, agad itong nararamdaman ng Microscopic MEMS gyroscope sa bilis na 1000 times per second.
+
+12
+00:00:43,940 --> 00:00:49,140
+Kung tumagilit ang phone, pakanan, agad hihilain ng electromagnets ang lens pakaliwa.
+
+13
+00:00:49,640 --> 00:00:52,680
+Pisikalitong kinakan sila ang pagalog sa bilis ng liwanag.
+
+14
+00:00:52,680 --> 00:01:02,460
+Sa mga bagong flagship tulad ng iPhone hindi lang lens ang gumagalau, sensor shift OIS ang gamit kung saan mismong CMOS sensor ang lumulutang.
+
+15
+00:01:03,040 --> 00:01:09,180
+Pero may limitation ang OIS, kaya lang nito mag compensate ng hanggang isa o dalawang degrees ng tilt.
+
+16
+00:01:09,580 --> 00:01:18,300
+Kapag tumatak buka o tumatalon ko lang ang physical movement ng magnets, dito na papasok ang EIS o Electronic Image Stabilization.
+
+17
+00:01:18,300 --> 00:01:28,920
+Ang EIS ay puroong software at math. Sa halit nagamitin ang buong 4K sensor, makakrop ang phone ng 10-20% buffer margins sa paligit ng video.
+
+18
+00:01:29,420 --> 00:01:33,080
+Isipin mo na may virtual camera window sa loob ng mas malaking canvas.
+
+19
+00:01:33,800 --> 00:01:41,180
+Gamit ang gyro data at frame-by-frame motion vector analysis hino hulaan ang algorithm kung saan gagalaw ang susunud na frame.
+
+20
+00:01:41,180 --> 00:01:45,040
+Ini-Shift at winawarp niito ang virtual window pixel-by-pixel
+
+21
+00:01:45,040 --> 00:01:47,020
+para mag-mukang steady ang horizon
+
+22
+00:01:47,020 --> 00:01:48,660
+kaid nagtatal bugang phone mo.
+
+23
+00:01:49,120 --> 00:01:51,460
+Kapag pinagsama ang OIS at EIS
+
+24
+00:01:51,460 --> 00:01:54,860
+tinatawag itong hybrid stabilization o action mode
+
+25
+00:01:54,860 --> 00:01:57,380
+smooth na cinematic glide ang resulta
+
+26
+00:01:57,380 --> 00:01:58,960
+kaid mag sprint kasahagdan.
+
+27
+00:01:59,480 --> 00:02:01,040
+Pero may trade-off ito
+
+28
+00:02:01,040 --> 00:02:02,580
+dahil nakakrop ang sensor
+
+29
+00:02:02,580 --> 00:02:04,460
+at kelangan ng mobilis na shutter speed
+
+30
+00:02:04,460 --> 00:02:05,920
+para maawasa ng motion blur
+
+31
+00:02:05,920 --> 00:02:09,060
+madilim at grainy ang EIS video sa gabi.
+
+32
+00:02:09,060 --> 00:02:13,660
+Kaya salo-light madalas nanginginig o nagiging jelly ang video,
+
+33
+00:02:14,060 --> 00:02:15,600
+dahil nag-istragalang algorithm.
+
+34
+00:02:16,320 --> 00:02:17,960
+Kaya, ito ang tanong kasainyo.
+
+35
+00:02:18,480 --> 00:02:20,820
+Naranasan mo nubang mag-video habang tumatakbo,
+
+36
+00:02:21,060 --> 00:02:24,480
+at napan sinmubang pagkakaiba ng may OIS sa wala,
+
+37
+00:02:24,940 --> 00:02:25,940
+ikamit mo sababa.
+
+38
+00:02:26,440 --> 00:02:27,780
+Follow me for more Tech Explained.
+
+39
+00:02:28,280 --> 00:02:28,560
+See ya!

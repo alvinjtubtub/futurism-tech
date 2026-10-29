@@ -1,0 +1,132 @@
+<!-- Scene s06-homography (1080x1920, dur 15.30s). 3D Homography Mesh & Horizon Lock Physics -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s06-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s06-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s06-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage (No Restrictive Box) */
+.s06-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s06-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s06-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving 3D Homography Mesh Grid */
+.s06-mesh-grid { position: absolute; inset: 20px; border: 2px dashed rgba(236,72,153,0.7); display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(4, 1fr); pointer-events: none; z-index: 10; opacity: 0; transform-origin: center center; }
+.s06-mesh-cell { border: 1px dashed rgba(236,72,153,0.35); position: relative; }
+.s06-mesh-cell::after { content: ''; position: absolute; right: 4px; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: #38BDF8; box-shadow: 0 0 6px #38BDF8; }
+
+/* Animated Horizon Bar */
+.s06-horizon-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 3px; background: #10B981; box-shadow: 0 0 16px #10B981, 0 0 24px #10B981; pointer-events: none; z-index: 12; opacity: 0; }
+.s06-horizon-line::before { content: '▲'; position: absolute; left: 50%; top: -14px; transform: translateX(-50%); font-size: 10px; color: #10B981; }
+
+/* Floating Tech Overlays */
+.s06-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(236,72,153,0.6); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s06-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #EC4899; box-shadow: 0 0 10px #EC4899; }
+
+.s06-warp-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(219,39,119,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(219,39,119,0.35); z-index: 15; opacity: 0; }
+.s06-lock-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+
+.s06-flow-label { position: absolute; right: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(8px); border: 2px solid #38BDF8; color: #38BDF8; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 14px; z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s06-homography" data-width="1080" data-height="1920">
+  <div id="s06-ground" class="clip kit-ground" data-start="0" data-duration="15.30" data-track-index="0"></div>
+  <div id="s06-stage" class="clip" data-start="0" data-duration="15.30" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s06-drift" class="s06-layer">
+      <div id="s06-cam" class="s06-layer">
+        <div class="kit-floor"></div>
+        <div id="s06-headline" class="s06-world s06-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0F9F8F; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">FRAME-BY-FRAME PERSPECTIVE CORRECTION</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Wina-warp nito ang virtual window pixel-by-pixel.</div>
+        </div>
+        <div class="s06-world s06-stage-wrap">
+          <div id="s06-viewport" class="s06-viewport">
+            <img id="s06-photo" class="s06-img" src="assets/images/mesh_homography_warp.jpg" alt="Homography Mesh Warp">
+            
+            <!-- Animated 3D Wireframe Perspective Mesh -->
+            <div id="s06-mesh" class="s06-mesh-grid">
+              <div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div>
+              <div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div>
+              <div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div>
+              <div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div><div class="s06-mesh-cell"></div>
+            </div>
+
+            <!-- Active Horizon Leveling Laser Bar -->
+            <div id="s06-horizon" class="s06-horizon-line"></div>
+
+            <!-- Floating Tech Overlays -->
+            <div id="s06-hud" class="s06-hud-header">
+              <span class="s06-hud-dot"></span>
+              <span>HOMOGRAPHY PERSPECTIVE MATRIX</span>
+            </div>
+            <div id="s06-flow" class="s06-flow-label">OPTICAL FLOW MOTION VECTORS</div>
+
+            <div id="s06-warp" class="s06-warp-badge">📐 3D MESH WARPING</div>
+            <div id="s06-lock" class="s06-lock-badge">🔒 HORIZON LOCKED: 0.00°</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s06-grain" class="clip kit-grain" data-start="0" data-duration="15.30" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s06-' + id; };
+  var D = 15.30;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('mesh'), { opacity: 0, scale: 0.95 });
+  gsap.set($('horizon'), { opacity: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('flow'), { opacity: 0, y: -15 });
+  gsap.set($('warp'), { opacity: 0, x: -20 });
+  gsap.set($('lock'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Hero Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+  tl.fromTo($('flow'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.90);
+
+  // 3D Homography Mesh Grid reveals and actively warps (~3.5s)
+  tl.fromTo($('mesh'), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, 3.50);
+  tl.fromTo($('warp'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.8)' }, 4.00);
+
+  // Active Perspective Warping of the Mesh (Simulating EIS Homography)
+  tl.fromTo($('mesh'), { skewX: 0, skewY: 0 }, { skewX: -7, skewY: 4, duration: 1.2, ease: 'sine.inOut' }, 5.50);
+  tl.fromTo($('mesh'), { skewX: -7, skewY: 4 }, { skewX: 6, skewY: -5, duration: 1.4, ease: 'sine.inOut' }, 6.70);
+  tl.fromTo($('mesh'), { skewX: 6, skewY: -5 }, { skewX: 0, skewY: 0, duration: 1.2, ease: 'sine.inOut' }, 8.10);
+
+  // Horizon Lock line reveals when audio talks about steady horizon (~9.8s)
+  tl.fromTo($('horizon'), { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' }, 9.80);
+  tl.fromTo($('lock'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 10.00);
+
+  // Active Horizon leveling counter-tilt
+  tl.fromTo($('viewport'), { rotation: 0 }, { rotation: 2.5, duration: 1.0, ease: 'sine.inOut' }, 10.50);
+  tl.fromTo($('horizon'), { rotation: 0 }, { rotation: -2.5, duration: 1.0, ease: 'sine.inOut' }, 10.50);
+  tl.fromTo($('viewport'), { rotation: 2.5 }, { rotation: 0, duration: 1.0, ease: 'sine.inOut' }, 11.50);
+  tl.fromTo($('horizon'), { rotation: -2.5 }, { rotation: 0, duration: 1.0, ease: 'sine.inOut' }, 11.50);
+
+  // Clean Exit before cut (Seam Law: D - 0.45)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s06-homography'] = tl;
+})();
+</script>
+</template>

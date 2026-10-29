@@ -1,0 +1,125 @@
+<!-- Scene s05-eis-crop (1080x1920, dur 24.30s). EIS & 4K Digital Sensor Buffer Crop -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s05-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s05-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s05-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage (No Restrictive Box) */
+.s05-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s05-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s05-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Animated Virtual Window */
+.s05-virtual-window { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 660px; height: 380px; border: 3px solid #38BDF8; border-radius: 16px; box-shadow: 0 0 30px rgba(56,189,248,0.7), inset 0 0 20px rgba(56,189,248,0.2); pointer-events: none; z-index: 12; opacity: 0; }
+.s05-win-header { position: absolute; left: 16px; top: -14px; background: #0B1E3F; border: 2px solid #38BDF8; color: #38BDF8; font-size: 13px; font-weight: 700; padding: 2px 14px; border-radius: 8px; }
+
+/* Dynamic Corner Reticles */
+.s05-corner-tl { position: absolute; left: 8px; top: 8px; width: 20px; height: 20px; border-top: 3px solid #38BDF8; border-left: 3px solid #38BDF8; }
+.s05-corner-tr { position: absolute; right: 8px; top: 8px; width: 20px; height: 20px; border-top: 3px solid #38BDF8; border-right: 3px solid #38BDF8; }
+.s05-corner-bl { position: absolute; left: 8px; bottom: 8px; width: 20px; height: 20px; border-bottom: 3px solid #38BDF8; border-left: 3px solid #38BDF8; }
+.s05-corner-br { position: absolute; right: 8px; bottom: 8px; width: 20px; height: 20px; border-bottom: 3px solid #38BDF8; border-right: 3px solid #38BDF8; }
+
+/* Floating Tech Overlays */
+.s05-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.6); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s05-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #38BDF8; box-shadow: 0 0 10px #38BDF8; }
+
+.s05-math-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(37,99,235,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); z-index: 15; opacity: 0; }
+.s05-buffer-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(245,158,11,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); z-index: 15; opacity: 0; }
+
+.s05-canvas-label { position: absolute; right: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(8px); border: 2px solid #0F9F8F; color: #0F9F8F; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 14px; z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s05-eis-crop" data-width="1080" data-height="1920">
+  <div id="s05-ground" class="clip kit-ground" data-start="0" data-duration="24.30" data-track-index="0"></div>
+  <div id="s05-stage" class="clip" data-start="0" data-duration="24.30" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s05-drift" class="s05-layer">
+      <div id="s05-cam" class="s05-layer">
+        <div class="kit-floor"></div>
+        <div id="s05-headline" class="s05-world s05-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0F9F8F; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">ELECTRONIC STABILIZATION (EIS)</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Nagka-crop ang phone ng 10-20% buffer margin.</div>
+        </div>
+        <div class="s05-world s05-stage-wrap">
+          <div id="s05-viewport" class="s05-viewport">
+            <img id="s05-photo" class="s05-img" src="assets/images/s05_digital_crop_4k_buffer.jpg" alt="4K Digital Crop Buffer Canvas">
+            
+            <!-- Floating Animated Virtual Window that slides dynamically to absorb shake -->
+            <div id="s05-window" class="s05-virtual-window">
+              <div class="s05-win-header">ACTIVE 80% VIRTUAL WINDOW</div>
+              <div class="s05-corner-tl"></div>
+              <div class="s05-corner-tr"></div>
+              <div class="s05-corner-bl"></div>
+              <div class="s05-corner-br"></div>
+            </div>
+
+            <!-- Floating Tech Overlays -->
+            <div id="s05-hud" class="s05-hud-header">
+              <span class="s05-hud-dot"></span>
+              <span>FULL 4K CMOS SENSOR CANVAS</span>
+            </div>
+            <div id="s05-canvas" class="s05-canvas-label">CANVAS: 3840 x 2160 PX</div>
+
+            <div id="s05-math" class="s05-math-badge">💻 PURONG SOFTWARE AT MATH</div>
+            <div id="s05-buffer" class="s05-buffer-badge">🛡️ 20% DYNAMIC BUFFER MARGIN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s05-grain" class="clip kit-grain" data-start="0" data-duration="24.30" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s05-' + id; };
+  var D = 24.30;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('window'), { opacity: 0, scale: 0.85 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('canvas'), { opacity: 0, y: -15 });
+  gsap.set($('math'), { opacity: 0, x: -20 });
+  gsap.set($('buffer'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Hero Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+  tl.fromTo($('canvas'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.90);
+
+  // Software at math badge (~5.0s)
+  tl.fromTo($('math'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.8)' }, 5.00);
+
+  // Virtual Window appears & Buffer margin badge reveals (~10.5s)
+  tl.fromTo($('window'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)' }, 10.50);
+  tl.fromTo($('buffer'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.8)' }, 12.00);
+
+  // Active Sliding Motion of the Virtual Window inside the buffer margin
+  // Demonstrating how EIS smoothly shifts the window to absorb camera movement:
+  tl.fromTo($('window'), { x: 0, y: 0 }, { x: -35, y: 20, duration: 1.4, ease: 'sine.inOut' }, 14.50);
+  tl.fromTo($('window'), { x: -35, y: 20 }, { x: 30, y: -15, duration: 1.6, ease: 'sine.inOut' }, 16.00);
+  tl.fromTo($('window'), { x: 30, y: -15 }, { x: -20, y: -18, duration: 1.5, ease: 'sine.inOut' }, 17.70);
+  tl.fromTo($('window'), { x: -20, y: -18 }, { x: 0, y: 0, duration: 1.3, ease: 'sine.inOut' }, 19.30);
+
+  // Clean Exit before cut (Seam Law: D - 0.45)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s05-eis-crop'] = tl;
+})();
+</script>
+</template>

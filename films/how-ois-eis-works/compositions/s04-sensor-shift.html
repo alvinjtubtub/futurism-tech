@@ -1,0 +1,113 @@
+<!-- Scene s04-sensor-shift (1080x1920, dur 16.90s). Sensor-Shift CMOS & Physical Travel Limit -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s04-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s04-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s04-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage (No Restrictive Box) */
+.s04-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s04-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s04-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Mechanical Travel Boundary Stops */
+.s04-stop-left { position: absolute; left: 16%; top: 50%; transform: translate(-50%, -50%); width: 70px; height: 160px; border: 3px dashed #E05252; border-radius: 14px; opacity: 0; pointer-events: none; z-index: 10; }
+.s04-stop-right { position: absolute; right: 16%; top: 50%; transform: translate(50%, -50%); width: 70px; height: 160px; border: 3px dashed #E05252; border-radius: 14px; opacity: 0; pointer-events: none; z-index: 10; }
+
+/* Floating Tech Overlays */
+.s04-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.6); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s04-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #38BDF8; box-shadow: 0 0 10px #38BDF8; }
+
+.s04-shift-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(15,159,143,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(15,159,143,0.35); z-index: 15; opacity: 0; }
+.s04-limit-box { position: absolute; right: 24px; bottom: 24px; background: rgba(224,82,82,0.95); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(224,82,82,0.4); z-index: 15; opacity: 0; }
+
+.s04-degrees-callout { position: absolute; right: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(8px); border: 2px solid #E05252; color: #FCA5A5; font-size: 14px; font-weight: 700; padding: 8px 18px; border-radius: 14px; z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s04-sensor-shift" data-width="1080" data-height="1920">
+  <div id="s04-ground" class="clip kit-ground" data-start="0" data-duration="16.90" data-track-index="0"></div>
+  <div id="s04-stage" class="clip" data-start="0" data-duration="16.90" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s04-drift" class="s04-layer">
+      <div id="s04-cam" class="s04-layer">
+        <div class="kit-floor"></div>
+        <div id="s04-headline" class="s04-world s04-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0F9F8F; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">HARDWARE BOUNDARY REACHED</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Kaya lang nitong mag-compensate ng hanggang 2 degrees.</div>
+        </div>
+        <div class="s04-world s04-stage-wrap">
+          <div id="s04-viewport" class="s04-viewport">
+            <img id="s04-photo" class="s04-img" src="assets/images/s04_sensor_shift_iphone_cutaway.jpg" alt="Sensor Shift iPhone Cutaway">
+            
+            <!-- Mechanical Boundary Stops -->
+            <div id="s04-stop-l" class="s04-stop-left"></div>
+            <div id="s04-stop-r" class="s04-stop-right"></div>
+
+            <!-- Floating Tech Overlays -->
+            <div id="s04-hud" class="s04-hud-header">
+              <span class="s04-hud-dot"></span>
+              <span>SENSOR-SHIFT OIS (CMOS FLOATS)</span>
+            </div>
+            <div id="s04-degrees" class="s04-degrees-callout">RANGE: ±2° TILT MAXIMUM</div>
+
+            <div id="s04-shift" class="s04-shift-badge">📱 5-AXIS SENSOR SHIFTING</div>
+            <div id="s04-limit" class="s04-limit-box">🛑 HARDWARE LIMIT REACHED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s04-grain" class="clip kit-grain" data-start="0" data-duration="16.90" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s04-' + id; };
+  var D = 16.90;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('degrees'), { opacity: 0, y: -15 });
+  gsap.set($('shift'), { opacity: 0, x: -20 });
+  gsap.set($('limit'), { opacity: 0, x: 20 });
+  gsap.set($('stop-l'), { opacity: 0 });
+  gsap.set($('stop-r'), { opacity: 0 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: 0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: 0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Hero Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+  tl.fromTo($('degrees'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.90);
+
+  // Active Physical Shifting of the CMOS Sensor
+  tl.fromTo($('photo'), { x: 0, y: 0 }, { x: -14, y: 8, duration: 1.4, ease: 'sine.inOut', repeat: 4, yoyo: true }, 1.20);
+  tl.fromTo($('shift'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.8)' }, 2.50);
+
+  // Physical Limit Stops Flashing Red when audio mentions 2 degrees (~10.0s)
+  tl.fromTo($('stop-l'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 10.00);
+  tl.fromTo($('stop-r'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 10.00);
+  tl.fromTo($('limit'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2.2)' }, 10.50);
+
+  // Strobe pulse on boundary collision
+  tl.fromTo($('limit'), { scale: 1 }, { scale: 1.06, duration: 0.25, repeat: 7, yoyo: true, ease: 'sine.inOut' }, 11.00);
+
+  // Clean Exit before cut (Seam Law: D - 0.45)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s04-sensor-shift'] = tl;
+})();
+</script>
+</template>

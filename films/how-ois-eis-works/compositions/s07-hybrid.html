@@ -1,0 +1,120 @@
+<!-- Scene s07-hybrid (1080x1920, dur 10.30s). Hybrid Stabilization & Dual Oscilloscope Waveforms -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s07-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s07-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s07-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage (No Restrictive Box) */
+.s07-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s07-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s07-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Dual Oscilloscope Waveform Overlay */
+.s07-scope-panel { position: absolute; left: 24px; right: 24px; bottom: 84px; height: 120px; background: rgba(11,30,63,0.88); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); border-radius: 18px; padding: 12px 20px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; z-index: 12; opacity: 0; }
+.s07-scope-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 700; color: #FFFFFF; }
+.s07-wave-svg { width: 500px; height: 28px; overflow: visible; }
+
+/* Floating Tech Overlays */
+.s07-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(16,185,129,0.6); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s07-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
+
+.s07-action-badge { position: absolute; right: 24px; top: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+.s07-glide-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(37,99,235,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s07-hybrid" data-width="1080" data-height="1920">
+  <div id="s07-ground" class="clip kit-ground" data-start="0" data-duration="10.30" data-track-index="0"></div>
+  <div id="s07-stage" class="clip" data-start="0" data-duration="10.30" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s07-drift" class="s07-layer">
+      <div id="s07-cam" class="s07-layer">
+        <div class="kit-floor"></div>
+        <div id="s07-headline" class="s07-world s07-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0F9F8F; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">HYBRID STABILIZATION (ACTION MODE)</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">OIS plus EIS: Cinematic glide kahit tumatakbo.</div>
+        </div>
+        <div class="s07-world s07-stage-wrap">
+          <div id="s07-viewport" class="s07-viewport">
+            <img id="s07-photo" class="s07-img" src="assets/images/camera_module_vcm_cutaway.jpg" alt="Hybrid Stabilization">
+            
+            <!-- Floating Oscilloscope Waveform Panel -->
+            <div id="s07-scope" class="s07-scope-panel">
+              <div class="s07-scope-row">
+                <span style="color:#38BDF8;">OIS: &gt;50Hz Micro-Jitter</span>
+                <svg class="s07-wave-svg" viewBox="0 0 500 28">
+                  <path id="s07-wave-ois" d="M0,14 Q25,2 50,14 T100,14 T150,14 T200,14 T250,14 T300,14 T350,14 T400,14 T450,14 T500,14" fill="none" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"></path>
+                </svg>
+                <span style="color:#10B981;">FLATTENED</span>
+              </div>
+              <div class="s07-scope-row">
+                <span style="color:#F59E0B;">EIS: 2Hz Running Stride</span>
+                <svg class="s07-wave-svg" viewBox="0 0 500 28">
+                  <path id="s07-wave-eis" d="M0,14 C120,4 180,24 250,14 C320,4 380,24 500,14" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round"></path>
+                </svg>
+                <span style="color:#10B981;">SMOOTHED</span>
+              </div>
+            </div>
+
+            <!-- Floating Tech Overlays -->
+            <div id="s07-hud" class="s07-hud-header">
+              <span class="s07-hud-dot"></span>
+              <span>DUAL-LAYER STABILIZATION ENGINE</span>
+            </div>
+            <div id="s07-action" class="s07-action-badge">⚡ ACTION MODE ACTIVE</div>
+            <div id="s07-glide" class="s07-glide-badge">🎬 CINEMATIC STEADYCAM GLIDE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s07-grain" class="clip kit-grain" data-start="0" data-duration="10.30" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s07-' + id; };
+  var D = 10.30;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('scope'), { opacity: 0, y: 20 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('action'), { opacity: 0, y: -15 });
+  gsap.set($('glide'), { opacity: 0, x: -20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Hero Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+  tl.fromTo($('action'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.90);
+
+  // Oscilloscope Panel reveals (~2.0s)
+  tl.fromTo($('scope'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.8)' }, 2.00);
+
+  // Oscilloscope wave motion animation (GSAP sine morphing)
+  tl.fromTo($('wave-ois'), { strokeDashoffset: 0 }, { strokeDashoffset: -200, duration: 2.5, ease: 'none', repeat: 3 }, 2.50);
+  tl.fromTo($('wave-eis'), { strokeDashoffset: 0 }, { strokeDashoffset: -100, duration: 3.0, ease: 'none', repeat: 2 }, 2.50);
+
+  // Cinematic glide badge when audio mentions sprint sa hagdan (~5.5s)
+  tl.fromTo($('glide'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 5.50);
+
+  // Clean Exit before cut (Seam Law: D - 0.45)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s07-hybrid'] = tl;
+})();
+</script>
+</template>
