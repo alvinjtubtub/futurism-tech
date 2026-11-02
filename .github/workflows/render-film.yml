@@ -45,8 +45,16 @@ jobs:
           if [ -n "${{ github.event.inputs.slug }}" ]; then
             SLUG="${{ github.event.inputs.slug }}"
           else
-            # Detect most recently modified film.json or packaged zip under films/
-            SLUG=$(find films -maxdepth 2 -name "film.json" -printf "%T@ %h\n" | sort -nr | head -n1 | awk '{print $2}' | xargs basename)
+            # 1. Detect film slug from files touched in latest commit
+            SLUG=$(git log -1 --name-only --format="" 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
+            # 2. Fallback to git diff against previous commit
+            if [ -z "$SLUG" ]; then
+              SLUG=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
+            fi
+            # 3. Fallback to find
+            if [ -z "$SLUG" ]; then
+              SLUG=$(find films -maxdepth 2 -name "film.json" -printf "%T@ %h\n" | sort -nr | head -n1 | awk '{print $2}' | xargs basename)
+            fi
           fi
           if [ -z "$SLUG" ] || [ ! -d "films/$SLUG" ]; then
             echo "::error::Could not resolve film directory films/$SLUG"
