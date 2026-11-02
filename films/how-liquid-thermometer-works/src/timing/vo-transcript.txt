@@ -1,0 +1,15 @@
+Paano na lalama ng isang simple and glass tube na may pulang likido ang exactong temperaturamo ng walang bateria, sensor or microchip.
+Ang secreto ay puroong physics, thermal expansion.
+Sa microscopic level, kapag uminit ang paligid sumisip-sip ng thermal energy ang mga molecules ng likido sa lawob ng bulb.
+Mas mabilisilang nginginig at nagtutulakan palayos sa isat isa, kaya bahagyang lumalakay ang volume ng likido.
+Pero na pakalit lang ng paglaking ito.
+Kung nasa malapad na baso ang likido, hindi mo mapapansin ang pagtaas.
+Kaya ang tunay na engineering trick ay ang capillary bore.
+Ito ay isang na-pakanipis na lagusan sa gitnanang salaman na kasing lapad lang ng hibla ng buhok.
+Dahil na pakakiput ng daanan, kahit katiting na paglaking ng likido sa reservoir bulb sa ilalim, mapipili tanitong umakiat ng mata as sa tube.
+Nog una, mercury ang gamit dahil pan tai pan tai ang pag-explant nito.
+Pero dahil nakakala sonito kapag nabasag, pinalitaniton ng red dyed ethanol na maslingtas at hindi nagyelok kahit sa matindinglamig.
+At para sa lumang medical thermometer, may secretong kink o constriction sa leg ng tube.
+Pinipigila nito ang likido na bumag sakpabalik kapag inalisa kilikile para mabasa mo ang lagnat mo bago mo ito ipagpag.
+Ikaw na abutan mo pabahan ang lumang mercury thermometer na kailang ang ipagpagpag bago gamitin, o puro digital na ang nagamit mo.
+Follow me for more tech explained. See ya.

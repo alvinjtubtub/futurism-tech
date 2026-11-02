@@ -1,0 +1,54 @@
+{
+  "name": "how-liquid-thermometer-works",
+  "version": "1.0.0",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "bpm": 60,
+  "beats_per_bar": 1,
+  "ground": "#F6F2EA",
+  "scenes": [
+    ["s01-hook", 16.3],
+    ["s02-thermal-expansion", 16.7],
+    ["s03-capillary-trick", 11.8],
+    ["s04-hair-thin-bore", 16.8],
+    ["s05-mercury-vs-ethanol", 13.7],
+    ["s06-constriction-kink", 13.9],
+    ["s07-close", 11.2]
+  ],
+  "overlays": [
+    {
+      "id": "m-kape",
+      "track": 2,
+      "z": 5
+    },
+    {
+      "id": "m-brand",
+      "track": 3,
+      "z": 6
+    },
+    {
+      "id": "m-captions",
+      "track": 4,
+      "z": 7
+    }
+  ],
+  "audio": [
+    {
+      "id": "vo",
+      "src": "assets/audio/vo-master.wav",
+      "dur": 100.4,
+      "volume": 1,
+      "track": 9
+    }
+  ],
+  "bgm": null,
+  "cues": [],
+  "delivery": {
+    "title": "Paano Gumagana ang Tradisyunal na Liquid Thermometer? (Thermal Expansion Explained)",
+    "description": "Naisip mo ba kung paano nalalaman ng simpleng glass tube na may pulang likido ang temperatura mo nang walang baterya o microchip? Alamin ang sikreto ng thermal expansion, capillary bore, at constriction kink!",
+    "tags": ["Thermometer", "PhysicsExplained", "ThermalExpansion", "SciencePH", "HowItWorks", "TechExplanasyon", "FilipinoScience"]
+  }
+}

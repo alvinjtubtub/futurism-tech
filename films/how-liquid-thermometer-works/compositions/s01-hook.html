@@ -1,0 +1,110 @@
+<!-- Scene s01-hook (1080x1920, dur 16.30s). Big Hero Visual & Liquid Thermometer Hook -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s01-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s01-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s01-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage (No Restrictive Box) */
+.s01-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s01-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s01-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Effects */
+.s01-laser { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, #EF4444, #F87171, #EF4444, transparent); box-shadow: 0 0 18px #EF4444; opacity: 0; pointer-events: none; z-index: 10; }
+.s01-reticle-wrap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; pointer-events: none; z-index: 12; opacity: 0; }
+.s01-reticle-ring { width: 100%; height: 100%; border: 2px dashed #EF4444; border-radius: 50%; box-shadow: 0 0 24px rgba(239,68,68,0.5); }
+.s01-liquid-rise { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 8px; height: 0; background: linear-gradient(0deg, #DC2626, #EF4444); box-shadow: 0 0 16px #EF4444; border-radius: 4px; opacity: 0; z-index: 11; }
+
+/* HUD Badges */
+.s01-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(239,68,68,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s01-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #EF4444; box-shadow: 0 0 10px #EF4444; }
+.s01-zero-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(220,38,38,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(220,38,38,0.35); z-index: 15; opacity: 0; }
+.s01-phys-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(2,132,199,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(2,132,199,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s01-hook" data-width="1080" data-height="1920">
+  <div id="s01-ground" class="clip kit-ground" data-start="0" data-duration="16.30" data-track-index="0"></div>
+  <div id="s01-stage" class="clip" data-start="0" data-duration="16.30" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s01-drift" class="s01-layer">
+      <div id="s01-cam" class="s01-layer">
+        <div class="kit-floor"></div>
+        <div id="s01-headline" class="s01-world s01-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#DC2626; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">THERMODYNAMICS</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Paano nalalaman ang temperatura nang walang baterya o microchip?</div>
+        </div>
+        <div class="s01-world s01-stage-wrap">
+          <div id="s01-viewport" class="s01-viewport">
+            <img id="s01-photo" class="s01-img" src="assets/images/s01_glass_thermometer_rising_liquid_hero.jpg" alt="Glass Liquid Thermometer">
+            
+            <div id="s01-laser" class="s01-laser"></div>
+            <div id="s01-reticle" class="s01-reticle-wrap">
+              <div id="s01-ring" class="s01-reticle-ring"></div>
+            </div>
+            <div id="s01-liquid" class="s01-liquid-rise"></div>
+
+            <div id="s01-hud" class="s01-hud-header">
+              <span class="s01-hud-dot"></span>
+              <span>PURE THERMODYNAMIC SENSOR</span>
+            </div>
+            <div id="s01-zero" class="s01-zero-badge">🔋 ZERO BATTERY REQUIRED</div>
+            <div id="s01-phys" class="s01-phys-badge">🧪 THERMAL EXPANSION PRINCIPLE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s01-grain" class="clip kit-grain" data-start="0" data-duration="16.30" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s01-' + id; };
+  var D = 16.30;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, y: 0 });
+  gsap.set($('reticle'), { opacity: 0, scale: 0.5 });
+  gsap.set($('liquid'), { opacity: 0, height: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('zero'), { opacity: 0, x: -20 });
+  gsap.set($('phys'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { x: -12, y: 8 }, { x: 12, y: -8, duration: D, ease: 'none', force3D: true }, 0);
+  tl.fromTo($('cam'), { rotateZ: -0.3 }, { rotateZ: 0.3, duration: D, ease: 'none', force3D: true }, 0);
+
+  // Entrance
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out', force3D: true }, 0.2);
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power3.out', force3D: true }, 0.4);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.0, duration: 1.2, ease: 'power2.out', force3D: true }, 0.5);
+
+  // HUD & Badges
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', force3D: true }, 0.8);
+  tl.fromTo($('zero'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.2);
+  tl.fromTo($('phys'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.5);
+
+  // Moving Effects: Sweeping Laser
+  tl.fromTo($('laser'), { opacity: 0, y: 20 }, { opacity: 0.85, y: 560, duration: 3.0, repeat: 4, yoyo: true, ease: 'power1.inOut' }, 1.0);
+
+  // Rotating Target Reticle
+  tl.fromTo($('reticle'), { opacity: 0, scale: 0.5 }, { opacity: 0.9, scale: 1.0, duration: 0.6, ease: 'back.out(1.7)' }, 1.2);
+  tl.fromTo($('ring'), { rotate: 0 }, { rotate: 360, duration: 8.0, repeat: 1, ease: 'none' }, 1.2);
+
+  // Rising Liquid Column
+  tl.fromTo($('liquid'), { opacity: 0.85, height: 40 }, { opacity: 1, height: 420, duration: 6.0, repeat: 1, yoyo: true, ease: 'power2.inOut' }, 1.5);
+
+  // Clean Exit Transition
+  tl.fromTo($('headline'), { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.95, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s01-hook'] = tl;
+})();
+</script>
+</template>

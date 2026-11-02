@@ -20,6 +20,7 @@ Source of truth for topics, production stages, and delivery tracking.
 | `TE-how-starlink-routes-data` | TE | How Starlink Actually Routes Data to Moving Satellites | `RENDERED` | 130.88s | Mastered -16.9 LUFS | PASS (fromTo scan) | Upload pack in GitHub Actions & GDrive | `03-Completed-Videos/how-starlink-routes-data/` |
 | `TE-how-smartwatch-measures-heartbeat` | TE | How Your Watch Measures Your Heartbeat with Light | `RENDERED` | 112.96s | Mastered -16.6 LUFS | PASS (fromTo scan) | Uploaded to Google Drive | `03-Completed-Videos/how-smartwatch-measures-heartbeat/` |
 | `TE-how-nfc-works` | TE | How NFC Works in Mobile Phones (Tap to Pay) | `PACKED` | 100.56s | Mastered -16.7 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-nfc-works/` |
+| `TE-how-liquid-thermometer-works` | TE | How Traditional Liquid Thermometer Works | `PACKED` | 100.40s | Mastered -16.3 LUFS | PASS (fromTo scan) | Upload pack created & ready for cloud render | `films/how-liquid-thermometer-works/` |
 
 ---
 

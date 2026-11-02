@@ -1,0 +1,110 @@
+<!-- Scene s03-capillary-trick (1080x1920, dur 11.80s). Big Hero Visual & Capillary Trick vs Wide Beaker -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s03-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s03-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s03-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s03-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s03-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s03-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Effects */
+.s03-laser { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, #2563EB, #60A5FA, #2563EB, transparent); box-shadow: 0 0 18px #2563EB; opacity: 0; pointer-events: none; z-index: 10; }
+.s03-reticle-wrap { position: absolute; left: 72%; top: 50%; transform: translate(-50%, -50%); width: 130px; height: 130px; pointer-events: none; z-index: 12; opacity: 0; }
+.s03-reticle-ring { width: 100%; height: 100%; border: 2px dashed #38BDF8; border-radius: 50%; box-shadow: 0 0 20px rgba(56,189,248,0.5); }
+.s03-indicator-line { position: absolute; left: 28%; top: 55%; width: 60px; height: 2px; background: #EF4444; box-shadow: 0 0 10px #EF4444; z-index: 12; opacity: 0; }
+
+/* HUD Badges */
+.s03-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s03-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #38BDF8; box-shadow: 0 0 10px #38BDF8; }
+.s03-beaker-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(71,85,105,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(71,85,105,0.35); z-index: 15; opacity: 0; }
+.s03-capillary-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(37,99,235,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(37,99,235,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s03-capillary-trick" data-width="1080" data-height="1920">
+  <div id="s03-ground" class="clip kit-ground" data-start="0" data-duration="11.80" data-track-index="0"></div>
+  <div id="s03-stage" class="clip" data-start="0" data-duration="11.80" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s03-drift" class="s03-layer">
+      <div id="s03-cam" class="s03-layer">
+        <div class="kit-floor"></div>
+        <div id="s03-headline" class="s03-world s03-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#2563EB; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">HYDRAULIC AMPLIFICATION</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Bakit hindi gagana kung malapad na baso ang gagamitin?</div>
+        </div>
+        <div class="s03-world s03-stage-wrap">
+          <div id="s03-viewport" class="s03-viewport">
+            <img id="s03-photo" class="s03-img" src="assets/images/s03_capillary_bore_vs_wide_beaker.jpg" alt="Capillary Bore vs Wide Beaker">
+            
+            <div id="s03-laser" class="s03-laser"></div>
+            <div id="s03-reticle" class="s03-reticle-wrap">
+              <div id="s03-ring" class="s03-reticle-ring"></div>
+            </div>
+            <div id="s03-line" class="s03-indicator-line"></div>
+
+            <div id="s03-hud" class="s03-hud-header">
+              <span class="s03-hud-dot"></span>
+              <span>CROSS-SECTIONAL AREA RATIO</span>
+            </div>
+            <div id="s03-beaker" class="s03-beaker-badge">🥛 WIDE BEAKER: NO VISIBLE RISE</div>
+            <div id="s03-capillary" class="s03-capillary-badge">📏 CAPILLARY: 100x AMPLIFIED RISE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s03-grain" class="clip kit-grain" data-start="0" data-duration="11.80" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s03-' + id; };
+  var D = 11.80;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, y: 0 });
+  gsap.set($('reticle'), { opacity: 0, scale: 0.5 });
+  gsap.set($('line'), { opacity: 0, scaleX: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('beaker'), { opacity: 0, x: -20 });
+  gsap.set($('capillary'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { x: -10, y: 6 }, { x: 10, y: -6, duration: D, ease: 'none', force3D: true }, 0);
+  tl.fromTo($('cam'), { rotateZ: -0.25 }, { rotateZ: 0.25, duration: D, ease: 'none', force3D: true }, 0);
+
+  // Entrance
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out', force3D: true }, 0.2);
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power3.out', force3D: true }, 0.4);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.0, duration: 1.2, ease: 'power2.out', force3D: true }, 0.5);
+
+  // HUD & Badges
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', force3D: true }, 0.8);
+  tl.fromTo($('beaker'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.2);
+  tl.fromTo($('capillary'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.5);
+
+  // Moving Effects: Sweeping Laser
+  tl.fromTo($('laser'), { opacity: 0, y: 20 }, { opacity: 0.85, y: 560, duration: 2.8, repeat: 3, yoyo: true, ease: 'power1.inOut' }, 1.0);
+
+  // Rotating Target Reticle on Capillary
+  tl.fromTo($('reticle'), { opacity: 0, scale: 0.5 }, { opacity: 0.9, scale: 1.0, duration: 0.6, ease: 'back.out(1.7)' }, 1.2);
+  tl.fromTo($('ring'), { rotate: 0 }, { rotate: 360, duration: 7.0, repeat: 1, ease: 'none' }, 1.2);
+
+  // Indicator Line Pulse
+  tl.fromTo($('line'), { opacity: 0.2, scaleX: 0.5 }, { opacity: 1, scaleX: 1.2, duration: 0.8, repeat: 8, yoyo: true, ease: 'power1.inOut' }, 1.4);
+
+  // Clean Exit Transition
+  tl.fromTo($('headline'), { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.95, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s03-capillary-trick'] = tl;
+})();
+</script>
+</template>

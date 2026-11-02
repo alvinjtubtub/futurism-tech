@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:10,720
+Paano na lalama ng isang simple and glass tube na may pulang likido ang exactong temperaturamo ng walang bateria, sensor or microchip.
+
+2
+00:00:11,240 --> 00:00:15,980
+Ang secreto ay puroong physics, thermal expansion.
+
+3
+00:00:16,540 --> 00:00:25,020
+Sa microscopic level, kapag uminit ang paligid sumisip-sip ng thermal energy ang mga molecules ng likido sa lawob ng bulb.
+
+4
+00:00:25,020 --> 00:00:32,620
+Mas mabilisilang nginginig at nagtutulakan palayos sa isat isa, kaya bahagyang lumalakay ang volume ng likido.
+
+5
+00:00:33,280 --> 00:00:35,780
+Pero na pakalit lang ng paglaking ito.
+
+6
+00:00:36,160 --> 00:00:40,320
+Kung nasa malapad na baso ang likido, hindi mo mapapansin ang pagtaas.
+
+7
+00:00:40,760 --> 00:00:44,560
+Kaya ang tunay na engineering trick ay ang capillary bore.
+
+8
+00:00:45,160 --> 00:00:51,940
+Ito ay isang na-pakanipis na lagusan sa gitnanang salaman na kasing lapad lang ng hibla ng buhok.
+
+9
+00:00:51,940 --> 00:01:01,300
+Dahil na pakakiput ng daanan, kahit katiting na paglaking ng likido sa reservoir bulb sa ilalim, mapipili tanitong umakiat ng mata as sa tube.
+
+10
+00:01:01,900 --> 00:01:06,200
+Nog una, mercury ang gamit dahil pan tai pan tai ang pag-explant nito.
+
+11
+00:01:06,620 --> 00:01:15,100
+Pero dahil nakakala sonito kapag nabasag, pinalitaniton ng red dyed ethanol na maslingtas at hindi nagyelok kahit sa matindinglamig.
+
+12
+00:01:15,500 --> 00:01:21,420
+At para sa lumang medical thermometer, may secretong kink o constriction sa leg ng tube.
+
+13
+00:01:21,420 --> 00:01:28,980
+Pinipigila nito ang likido na bumag sakpabalik kapag inalisa kilikile para mabasa mo ang lagnat mo bago mo ito ipagpag.
+
+14
+00:01:29,400 --> 00:01:37,360
+Ikaw na abutan mo pabahan ang lumang mercury thermometer na kailang ang ipagpagpag bago gamitin, o puro digital na ang nagamit mo.
+
+15
+00:01:37,780 --> 00:01:40,080
+Follow me for more tech explained. See ya.
