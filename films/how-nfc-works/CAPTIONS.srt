@@ -1,0 +1,171 @@
+1
+00:00:00,000 --> 00:00:02,920
+Paano gumagana ang tap-to-pay sa cellphone mo,
+
+2
+00:00:03,160 --> 00:00:05,080
+kahit walang wires or internet connection.
+
+3
+00:00:05,760 --> 00:00:07,580
+Ang secreto ay NFC,
+
+4
+00:00:07,980 --> 00:00:09,360
+unirfield communication.
+
+5
+00:00:09,980 --> 00:00:13,220
+Hindi ito tulad ng Wi-Fi or Bluetooth na umakabot ng malayo.
+
+6
+00:00:13,700 --> 00:00:14,520
+Gumagana lang ito,
+
+7
+00:00:14,600 --> 00:00:16,660
+kapag halos mag-gadikit ang mga device
+
+8
+00:00:16,660 --> 00:00:19,640
+salayong mas mababa sa apat na centimetro.
+
+9
+00:00:20,300 --> 00:00:21,900
+Sa ilalim ng likut ng yung phone,
+
+10
+00:00:22,320 --> 00:00:25,160
+may nakatagong manipis na flat copper coil antenna.
+
+11
+00:00:25,740 --> 00:00:26,880
+Kapag may inita tap ka,
+
+12
+00:00:27,240 --> 00:00:29,700
+nagpapadala ito ng alternating electric current
+
+13
+00:00:29,700 --> 00:00:31,620
+na lumili-kanang magnetic field
+
+14
+00:00:31,620 --> 00:00:35,020
+sa frequency na 13.56 mhz.
+
+15
+00:00:35,020 --> 00:00:37,600
+Deto pumapasok ang elektromagnetic induction.
+
+16
+00:00:38,080 --> 00:00:40,300
+Kapag itinapat mo ang phone sa isang passive tag
+
+17
+00:00:40,300 --> 00:00:42,280
+o beep card na walang sariling bateria,
+
+18
+00:00:42,680 --> 00:00:45,460
+ang magnetic field ng phone ay nag-iindust ng coreante
+
+19
+00:00:45,460 --> 00:00:46,560
+sa coil ng card.
+
+20
+00:00:47,000 --> 00:00:49,520
+Nabubuhay ang microchip gamit lang ang coreanting
+
+21
+00:00:49,520 --> 00:00:51,020
+nakuha mula sa hangin.
+
+22
+00:00:51,860 --> 00:00:53,380
+Para magpadalan ang impromachon,
+
+23
+00:00:53,700 --> 00:00:55,400
+ginagamit ang load modulation.
+
+24
+00:00:55,920 --> 00:00:59,300
+Minabago ng receiver ang electrical resistance ng sarilinitong coil,
+
+25
+00:00:59,300 --> 00:01:01,300
+na nagdudulot ng malili-it na fluctuation
+
+26
+00:01:01,860 --> 00:01:03,200
+sa magnetic field ng phone.
+
+27
+00:01:03,720 --> 00:01:06,000
+Minabasa ito ng phone di lang once and zeros
+
+28
+00:01:06,000 --> 00:01:08,860
+sa bilis ng hanggang 424 kbps.
+
+29
+00:01:09,500 --> 00:01:11,460
+Pero, ligtas ba ang peramo?
+
+30
+00:01:12,200 --> 00:01:13,940
+Oh oh, dahil bukud sa nap,
+
+31
+00:01:14,080 --> 00:01:15,300
+pakaikling transmission range,
+
+32
+00:01:15,660 --> 00:01:17,300
+ang sensitive payment data ay nakakandado
+
+33
+00:01:17,960 --> 00:01:19,080
+sa isang hiwala in chip,
+
+34
+00:01:19,420 --> 00:01:21,060
+na tinatawag na secure element.
+
+35
+00:01:21,600 --> 00:01:23,300
+Hindi ang tunay mo card number ang ipinapadala
+
+36
+00:01:23,880 --> 00:01:26,940
+kundi isang pan sa mantalang encrypted digital token.
+
+37
+00:01:26,940 --> 00:01:28,980
+Kaya, kait may katabikasatren,
+
+38
+00:01:29,360 --> 00:01:31,500
+hindi nila basta-basta-basta may iskan ng wallet mo.
+
+39
+00:01:32,220 --> 00:01:34,680
+Ikao, mas madelas mo bang gamitin ang NFC
+
+40
+00:01:34,680 --> 00:01:35,440
+sa tap-to-pay,
+
+41
+00:01:35,620 --> 00:01:37,720
+o masanay ka parin sa pang scan ng QR code.
+
+42
+00:01:38,080 --> 00:01:39,400
+Follow me for more tech explained.
+
+43
+00:01:39,800 --> 00:01:40,180
+See ya!

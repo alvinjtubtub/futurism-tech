@@ -1,0 +1,54 @@
+{
+  "name": "how-nfc-works",
+  "version": "1.0.0",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "bpm": 60,
+  "beats_per_bar": 1,
+  "ground": "#F6F2EA",
+  "scenes": [
+    ["s01-hook", 20.0],
+    ["s02-antenna-coil", 15.2],
+    ["s03-induction", 16.2],
+    ["s04-load-modulation", 17.8],
+    ["s05-secure-element", 17.6],
+    ["s06-range-safety", 5.0],
+    ["s07-close", 8.76]
+  ],
+  "overlays": [
+    {
+      "id": "m-kape",
+      "track": 2,
+      "z": 5
+    },
+    {
+      "id": "m-brand",
+      "track": 3,
+      "z": 6
+    },
+    {
+      "id": "m-captions",
+      "track": 4,
+      "z": 7
+    }
+  ],
+  "audio": [
+    {
+      "id": "vo",
+      "src": "assets/audio/vo-master.wav",
+      "dur": 100.56,
+      "volume": 1,
+      "track": 9
+    }
+  ],
+  "bgm": null,
+  "cues": [],
+  "delivery": {
+    "title": "Paano Gumagana ang NFC sa Cellphone? (Tap to Pay Explained)",
+    "description": "Naisip mo ba kung paano gumagana ang tap-to-pay sa cellphone mo kahit walang internet? Alamin ang sikreto ng Near Field Communication (NFC), electromagnetic induction, load modulation, at secure element!",
+    "tags": ["NFC", "TapToPay", "TechExplanasyon", "SmartphoneTech", "Engineering", "FilipinoTech"]
+  }
+}

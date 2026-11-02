@@ -1,0 +1,109 @@
+<!-- Scene s02-antenna-coil (1080x1920, dur 15.20s). Big Hero Visual & Planar Copper Coil Antenna -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s02-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s02-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s02-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s02-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s02-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s02-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Effects */
+.s02-laser { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, #F59E0B, #FBBF24, #F59E0B, transparent); box-shadow: 0 0 18px #F59E0B; opacity: 0; pointer-events: none; z-index: 10; }
+.s02-coil-glow { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 240px; height: 240px; border: 3px solid rgba(245,158,11,0.6); border-radius: 40px; box-shadow: 0 0 35px rgba(245,158,11,0.5); pointer-events: none; z-index: 11; opacity: 0; }
+.s02-flux-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; border: 2px dashed #38BDF8; border-radius: 50%; opacity: 0; z-index: 12; }
+
+/* HUD Badges */
+.s02-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(245,158,11,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s02-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #F59E0B; box-shadow: 0 0 10px #F59E0B; }
+.s02-copper-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(217,119,6,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(217,119,6,0.35); z-index: 15; opacity: 0; }
+.s02-ferrite-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(71,85,105,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(71,85,105,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s02-antenna-coil" data-width="1080" data-height="1920">
+  <div id="s02-ground" class="clip kit-ground" data-start="0" data-duration="15.20" data-track-index="0"></div>
+  <div id="s02-stage" class="clip" data-start="0" data-duration="15.20" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s02-drift" class="s02-layer">
+      <div id="s02-cam" class="s02-layer">
+        <div class="kit-floor"></div>
+        <div id="s02-headline" class="s02-world s02-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#D97706; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">INTERNAL HARDWARE</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Nakatagong planar copper coil antenna sa likod ng phone</div>
+        </div>
+        <div class="s02-world s02-stage-wrap">
+          <div id="s02-viewport" class="s02-viewport">
+            <img id="s02-photo" class="s02-img" src="assets/images/s02_smartphone_copper_coil_antenna_cutaway.jpg" alt="Planar Copper Coil Antenna">
+            
+            <div id="s02-laser" class="s02-laser"></div>
+            <div id="s02-coil" class="s02-coil-glow"></div>
+            <div id="s02-ring1" class="s02-flux-ring"></div>
+            <div id="s02-ring2" class="s02-flux-ring"></div>
+
+            <div id="s02-hud" class="s02-hud-header">
+              <span class="s02-hud-dot"></span>
+              <span>13.56 MHz ALTERNATING CURRENT EMITTER</span>
+            </div>
+            <div id="s02-copper" class="s02-copper-badge">🌀 SPIRAL COPPER INDUCTION LOOP</div>
+            <div id="s02-ferrite" class="s02-ferrite-badge">🛡️ FERRITE MAGNETIC BACKING</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s02-grain" class="clip kit-grain" data-start="0" data-duration="15.20" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s02-' + id; };
+  var D = 15.20;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, y: 0 });
+  gsap.set($('coil'), { opacity: 0, scale: 0.8 });
+  gsap.set($('ring1'), { opacity: 0, scale: 0.8 });
+  gsap.set($('ring2'), { opacity: 0, scale: 0.8 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('copper'), { opacity: 0, x: -20 });
+  gsap.set($('ferrite'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { x: 12, y: -6 }, { x: -12, y: 6, duration: D, ease: 'none', force3D: true }, 0);
+  tl.fromTo($('cam'), { rotateZ: 0.3 }, { rotateZ: -0.3, duration: D, ease: 'none', force3D: true }, 0);
+
+  // Entrance
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out', force3D: true }, 0.2);
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power3.out', force3D: true }, 0.4);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.0, duration: 1.2, ease: 'power2.out', force3D: true }, 0.5);
+
+  // HUD & Badges
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', force3D: true }, 0.8);
+  tl.fromTo($('copper'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.1);
+  tl.fromTo($('ferrite'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.4);
+
+  // Moving Effects: Oscillating Coil Glow
+  tl.fromTo($('coil'), { opacity: 0.3, scale: 0.95 }, { opacity: 0.9, scale: 1.05, duration: 1.4, repeat: 8, yoyo: true, ease: 'power1.inOut' }, 1.0);
+
+  // Sweeping Golden Diagnostic Laser
+  tl.fromTo($('laser'), { opacity: 0, y: 20 }, { opacity: 0.85, y: 560, duration: 2.8, repeat: 4, yoyo: true, ease: 'power1.inOut' }, 1.0);
+
+  // Alternating Field Rings
+  tl.fromTo($('ring1'), { opacity: 0.8, scale: 0.8, rotate: 0 }, { opacity: 0, scale: 3.2, rotate: 180, duration: 2.2, repeat: 5, ease: 'power1.out' }, 1.5);
+  tl.fromTo($('ring2'), { opacity: 0.8, scale: 0.8, rotate: 0 }, { opacity: 0, scale: 3.2, rotate: -180, duration: 2.2, repeat: 5, delay: 1.1, ease: 'power1.out' }, 2.0);
+
+  // Clean Exit Transition
+  tl.fromTo($('headline'), { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.95, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s02-antenna-coil'] = tl;
+})();
+</script>
+</template>

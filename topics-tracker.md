@@ -17,8 +17,9 @@ Source of truth for topics, production stages, and delivery tracking.
 | `TE-how-ai-teams-coordinate` | TE | How AI Teams Coordinate (Multi-Agent Swarms & Slack) | `GATES-PASSED` | 105.16s | Mastered -16 LUFS | PASS (6 gates) | Pending local render | `films/how-ai-teams-coordinate/` |
 | `TE-how-airbags-work` | TE | Paano Talaga Gumagana ang Airbags (Rocket Chemistry) | `GATES-PASSED` | 109.72s | Mastered -16 LUFS | PASS (6 gates) | Pending local render | `films/how-airbags-work/` |
 | `TE-how-ois-eis-works` | TE | OIS & EIS: Why Is Phone Video Shake-Free While Running? | `GATES-PASSED` | 151.72s | Mastered -16.1 LUFS | PASS (6 gates) | Pending local render | `films/how-ois-eis-works/` |
-| `TE-how-starlink-routes-data` | TE | How Starlink Actually Routes Data to Moving Satellites | `RENDERED` | 130.88s | Mastered -16.9 LUFS | PASS (fromTo scan) | Upload pack in GitHub Actions & GDrive | `films/how-starlink-routes-data/` |
-| `TE-how-smartwatch-measures-heartbeat` | TE | How Your Watch Measures Your Heartbeat with Light | `PACKED` | 112.96s | Mastered -16.6 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-smartwatch-measures-heartbeat/` |
+| `TE-how-starlink-routes-data` | TE | How Starlink Actually Routes Data to Moving Satellites | `RENDERED` | 130.88s | Mastered -16.9 LUFS | PASS (fromTo scan) | Upload pack in GitHub Actions & GDrive | `03-Completed-Videos/how-starlink-routes-data/` |
+| `TE-how-smartwatch-measures-heartbeat` | TE | How Your Watch Measures Your Heartbeat with Light | `RENDERED` | 112.96s | Mastered -16.6 LUFS | PASS (fromTo scan) | Uploaded to Google Drive | `03-Completed-Videos/how-smartwatch-measures-heartbeat/` |
+| `TE-how-nfc-works` | TE | How NFC Works in Mobile Phones (Tap to Pay) | `PACKED` | 100.56s | Mastered -16.7 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-nfc-works/` |
 
 ---
 

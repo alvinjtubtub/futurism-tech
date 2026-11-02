@@ -1,0 +1,106 @@
+<!-- Scene s07-close (1080x1920, dur 8.76s). Big Hero Visual & CTA Engagement Question -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s07-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s07-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s07-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s07-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s07-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s07-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Effects */
+.s07-laser { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, #06B6D4, #38BDF8, #06B6D4, transparent); box-shadow: 0 0 18px #06B6D4; opacity: 0; pointer-events: none; z-index: 10; }
+.s07-wave-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 3px solid #06B6D4; border-radius: 50%; opacity: 0; z-index: 11; }
+
+/* HUD Badges */
+.s07-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s07-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #06B6D4; box-shadow: 0 0 10px #06B6D4; }
+.s07-speed-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(6,182,212,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(6,182,212,0.35); z-index: 15; opacity: 0; }
+.s07-cta-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(16,185,129,0.95); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.4); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s07-close" data-width="1080" data-height="1920">
+  <div id="s07-ground" class="clip kit-ground" data-start="0" data-duration="8.76" data-track-index="0"></div>
+  <div id="s07-stage" class="clip" data-start="0" data-duration="8.76" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s07-drift" class="s07-layer">
+      <div id="s07-cam" class="s07-layer">
+        <div class="kit-floor"></div>
+        <div id="s07-headline" class="s07-world s07-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#0284C7; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">TECH EXPLANASYON</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Ikaw, mas madalas mo bang gamitin ang NFC sa tap to pay, o mas sanay ka pa rin sa QR code?</div>
+        </div>
+        <div class="s07-world s07-stage-wrap">
+          <div id="s07-viewport" class="s07-viewport">
+            <img id="s07-photo" class="s07-img" src="assets/images/s07_nfc_wallet_contactless_future_cta.jpg" alt="Contactless NFC Digital Wallet CTA">
+            
+            <div id="s07-laser" class="s07-laser"></div>
+            <div id="s07-ring1" class="s07-wave-ring"></div>
+            <div id="s07-ring2" class="s07-wave-ring"></div>
+
+            <div id="s07-hud" class="s07-hud-header">
+              <span class="s07-hud-dot"></span>
+              <span>VERIFIED CONTACTLESS TRANSACTION</span>
+            </div>
+            <div id="s07-speed" class="s07-speed-badge">⚡ INSTANT 100MS LATENCY</div>
+            <div id="s07-cta" class="s07-cta-badge">👉 FOLLOW FOR MORE TECH EXPLAINED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s07-grain" class="clip kit-grain" data-start="0" data-duration="8.76" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s07-' + id; };
+  var D = 8.76;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, y: 0 });
+  gsap.set($('ring1'), { opacity: 0, scale: 0.8 });
+  gsap.set($('ring2'), { opacity: 0, scale: 0.8 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('speed'), { opacity: 0, x: -20 });
+  gsap.set($('cta'), { opacity: 0, scale: 0.9 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { x: -8, y: 6 }, { x: 8, y: -6, duration: D, ease: 'none', force3D: true }, 0);
+  tl.fromTo($('cam'), { rotateZ: -0.2 }, { rotateZ: 0.2, duration: D, ease: 'none', force3D: true }, 0);
+
+  // Entrance
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', force3D: true }, 0.2);
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power3.out', force3D: true }, 0.3);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.0, duration: 1.1, ease: 'power2.out', force3D: true }, 0.4);
+
+  // HUD & Badges
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', force3D: true }, 0.7);
+  tl.fromTo($('speed'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.0);
+  tl.fromTo($('cta'), { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1.0, duration: 0.6, ease: 'back.out(1.6)', force3D: true }, 1.4);
+
+  // Moving Effects: Sweeping Laser
+  tl.fromTo($('laser'), { opacity: 0, y: 20 }, { opacity: 0.85, y: 560, duration: 2.8, repeat: 2, yoyo: true, ease: 'power1.inOut' }, 0.8);
+
+  // Concentric Expanding Cyan Waves
+  tl.fromTo($('ring1'), { opacity: 0.9, scale: 0.8 }, { opacity: 0, scale: 3.5, duration: 2.2, repeat: 3, ease: 'power1.out' }, 1.0);
+  tl.fromTo($('ring2'), { opacity: 0.9, scale: 0.8 }, { opacity: 0, scale: 3.5, duration: 2.2, repeat: 3, delay: 1.1, ease: 'power1.out' }, 1.5);
+
+  // Pulsing CTA
+  tl.fromTo($('cta'), { scale: 1.0 }, { scale: 1.06, duration: 0.8, repeat: 4, yoyo: true, ease: 'sine.inOut' }, 2.0);
+
+  // Clean Exit Transition
+  tl.fromTo($('headline'), { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.95, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s07-close'] = tl;
+})();
+</script>
+</template>

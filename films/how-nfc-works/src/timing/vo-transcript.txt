@@ -1,0 +1,43 @@
+ Paano gumagana ang tap-to-pay sa cellphone mo,
+ kahit walang wires or internet connection.
+ Ang secreto ay NFC,
+ unirfield communication.
+ Hindi ito tulad ng Wi-Fi or Bluetooth na umakabot ng malayo.
+ Gumagana lang ito,
+ kapag halos mag-gadikit ang mga device
+ salayong mas mababa sa apat na centimetro.
+ Sa ilalim ng likut ng yung phone,
+ may nakatagong manipis na flat copper coil antenna.
+ Kapag may inita tap ka,
+ nagpapadala ito ng alternating electric current
+ na lumili-kanang magnetic field
+ sa frequency na 13.56 mhz.
+ Deto pumapasok ang elektromagnetic induction.
+ Kapag itinapat mo ang phone sa isang passive tag
+ o beep card na walang sariling bateria,
+ ang magnetic field ng phone ay nag-iindust ng coreante
+ sa coil ng card.
+ Nabubuhay ang microchip gamit lang ang coreanting
+ nakuha mula sa hangin.
+ Para magpadalan ang impromachon,
+ ginagamit ang load modulation.
+ Minabago ng receiver ang electrical resistance ng sarilinitong coil,
+ na nagdudulot ng malili-it na fluctuation
+ sa magnetic field ng phone.
+ Minabasa ito ng phone di lang once and zeros
+ sa bilis ng hanggang 424 kbps.
+ Pero, ligtas ba ang peramo?
+ Oh oh, dahil bukud sa nap,
+ pakaikling transmission range,
+ ang sensitive payment data ay nakakandado
+ sa isang hiwala in chip,
+ na tinatawag na secure element.
+ Hindi ang tunay mo card number ang ipinapadala
+ kundi isang pan sa mantalang encrypted digital token.
+ Kaya, kait may katabikasatren,
+ hindi nila basta-basta-basta may iskan ng wallet mo.
+ Ikao, mas madelas mo bang gamitin ang NFC
+ sa tap-to-pay,
+ o masanay ka parin sa pang scan ng QR code.
+ Follow me for more tech explained.
+ See ya!

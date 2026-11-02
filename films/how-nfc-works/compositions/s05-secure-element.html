@@ -1,0 +1,106 @@
+<!-- Scene s05-secure-element (1080x1920, dur 17.60s). Big Hero Visual & Secure Element Tokenization -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s05-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s05-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s05-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s05-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s05-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s05-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Effects */
+.s05-laser { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, transparent, #10B981, #34D399, #10B981, transparent); box-shadow: 0 0 18px #10B981; opacity: 0; pointer-events: none; z-index: 10; }
+.s05-vault-lock { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 160px; height: 160px; border: 3px solid #10B981; border-radius: 50%; box-shadow: 0 0 35px rgba(16,185,129,0.5); pointer-events: none; z-index: 11; opacity: 0; }
+.s05-token-box { position: absolute; left: 30px; top: 75px; background: rgba(11,30,63,0.85); border: 2px solid #10B981; padding: 8px 18px; border-radius: 12px; color: #6EE7B7; font-family: monospace; font-size: 18px; font-weight: 700; z-index: 12; opacity: 0; letter-spacing: 2px; }
+
+/* HUD Badges */
+.s05-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(16,185,129,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; display: flex; align-items: center; gap: 10px; }
+.s05-hud-dot { width: 10px; height: 10px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
+.s05-ese-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(5,150,105,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(5,150,105,0.35); z-index: 15; opacity: 0; }
+.s05-token-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(2,132,199,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(2,132,199,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s05-secure-element" data-width="1080" data-height="1920">
+  <div id="s05-ground" class="clip kit-ground" data-start="0" data-duration="17.60" data-track-index="0"></div>
+  <div id="s05-stage" class="clip" data-start="0" data-duration="17.60" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s05-drift" class="s05-layer">
+      <div id="s05-cam" class="s05-layer">
+        <div class="kit-floor"></div>
+        <div id="s05-headline" class="s05-world s05-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#059669; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">HARDWARE SECURITY VAULT</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Ligtas ba ang pera mo? Ang Secure Element at Encrypted Tokenization</div>
+        </div>
+        <div class="s05-world s05-stage-wrap">
+          <div id="s05-viewport" class="s05-viewport">
+            <img id="s05-photo" class="s05-img" src="assets/images/s05_secure_element_tokenization_silicon_vault.jpg" alt="Secure Element Silicon Vault">
+            
+            <div id="s05-laser" class="s05-laser"></div>
+            <div id="s05-lock" class="s05-vault-lock"></div>
+            <div id="s05-token" class="s05-token-box">TOKEN: 9F20-A4B7-81CE [ONE-TIME]</div>
+
+            <div id="s05-hud" class="s05-hud-header">
+              <span class="s05-hud-dot"></span>
+              <span>EMBEDDED SECURE ELEMENT (eSE)</span>
+            </div>
+            <div id="s05-ese" class="s05-ese-badge">🔒 ISOLATED CRYPTOGRAPHIC SILICON</div>
+            <div id="s05-tok" class="s05-token-badge">🎟️ ZERO EXPOSURE OF REAL CARD #</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s05-grain" class="clip kit-grain" data-start="0" data-duration="17.60" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s05-' + id; };
+  var D = 17.60;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('laser'), { opacity: 0, y: 0 });
+  gsap.set($('lock'), { opacity: 0, scale: 0.6, rotate: 0 });
+  gsap.set($('token'), { opacity: 0, x: -15 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('ese'), { opacity: 0, x: -20 });
+  gsap.set($('tok'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { x: -12, y: 8 }, { x: 12, y: -8, duration: D, ease: 'none', force3D: true }, 0);
+  tl.fromTo($('cam'), { rotateZ: -0.3 }, { rotateZ: 0.3, duration: D, ease: 'none', force3D: true }, 0);
+
+  // Entrance
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out', force3D: true }, 0.2);
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power3.out', force3D: true }, 0.4);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1.0, duration: 1.2, ease: 'power2.out', force3D: true }, 0.5);
+
+  // HUD & Badges
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', force3D: true }, 0.8);
+  tl.fromTo($('ese'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.2);
+  tl.fromTo($('tok'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.4)', force3D: true }, 1.5);
+
+  // Moving Effects: Sweeping Laser
+  tl.fromTo($('laser'), { opacity: 0, y: 20 }, { opacity: 0.85, y: 560, duration: 3.1, repeat: 4, yoyo: true, ease: 'power1.inOut' }, 1.0);
+
+  // Vault Lock Rotation
+  tl.fromTo($('lock'), { opacity: 0.3, scale: 0.8, rotate: 0 }, { opacity: 0.9, scale: 1.05, rotate: 180, duration: 3.5, repeat: 4, yoyo: true, ease: 'power1.inOut' }, 1.2);
+
+  // Dynamic Token Box Entrance
+  tl.fromTo($('token'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' }, 1.6);
+
+  // Clean Exit Transition
+  tl.fromTo($('headline'), { opacity: 1, y: 0 }, { opacity: 0, y: -20, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.95, duration: 0.45, ease: 'power2.in', force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s05-secure-element'] = tl;
+})();
+</script>
+</template>
