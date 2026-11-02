@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: Determine target film slug
         id: target
@@ -45,15 +47,15 @@ jobs:
           if [ -n "${{ github.event.inputs.slug }}" ]; then
             SLUG="${{ github.event.inputs.slug }}"
           else
-            # 1. Detect film slug from most recent commit that touched a film
-            SLUG=$(git log -n 10 --name-only --format="" 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
-            # 2. Fallback to git diff against previous commit
+            # 1. Detect film slug from git diff against parent commit
+            SLUG=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
+            # 2. Extract from git commit message if present
             if [ -z "$SLUG" ]; then
-              SLUG=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
+              SLUG=$(git log -1 --pretty=%B 2>/dev/null | grep -oE 'how-[a-z0-9-]+' | head -n1)
             fi
-            # 3. Fallback to find
+            # 3. Fallback to inspect recent commit history for touched films
             if [ -z "$SLUG" ]; then
-              SLUG=$(find films -maxdepth 2 -name "film.json" -printf "%T@ %h\n" | sort -nr | head -n1 | awk '{print $2}' | xargs basename)
+              SLUG=$(git log -n 5 --name-only --format="" 2>/dev/null | grep -E '^films/[^/]+/film.json' | cut -d/ -f2 | head -n1)
             fi
           fi
           if [ -z "$SLUG" ] || [ ! -d "films/$SLUG" ]; then
