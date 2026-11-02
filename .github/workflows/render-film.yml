@@ -45,8 +45,8 @@ jobs:
           if [ -n "${{ github.event.inputs.slug }}" ]; then
             SLUG="${{ github.event.inputs.slug }}"
           else
-            # 1. Detect film slug from files touched in latest commit
-            SLUG=$(git log -1 --name-only --format="" 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
+            # 1. Detect film slug from most recent commit that touched a film
+            SLUG=$(git log -n 10 --name-only --format="" 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
             # 2. Fallback to git diff against previous commit
             if [ -z "$SLUG" ]; then
               SLUG=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -E '^films/[^/]+/' | cut -d/ -f2 | head -n1)
