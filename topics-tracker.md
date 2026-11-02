@@ -17,7 +17,8 @@ Source of truth for topics, production stages, and delivery tracking.
 | `TE-how-ai-teams-coordinate` | TE | How AI Teams Coordinate (Multi-Agent Swarms & Slack) | `GATES-PASSED` | 105.16s | Mastered -16 LUFS | PASS (6 gates) | Pending local render | `films/how-ai-teams-coordinate/` |
 | `TE-how-airbags-work` | TE | Paano Talaga Gumagana ang Airbags (Rocket Chemistry) | `GATES-PASSED` | 109.72s | Mastered -16 LUFS | PASS (6 gates) | Pending local render | `films/how-airbags-work/` |
 | `TE-how-ois-eis-works` | TE | OIS & EIS: Why Is Phone Video Shake-Free While Running? | `GATES-PASSED` | 151.72s | Mastered -16.1 LUFS | PASS (6 gates) | Pending local render | `films/how-ois-eis-works/` |
-| `TE-how-starlink-routes-data` | TE | How Starlink Actually Routes Data to Moving Satellites | `PACKED` | 130.88s | Mastered -16.9 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-starlink-routes-data/` |
+| `TE-how-starlink-routes-data` | TE | How Starlink Actually Routes Data to Moving Satellites | `RENDERED` | 130.88s | Mastered -16.9 LUFS | PASS (fromTo scan) | Upload pack in GitHub Actions & GDrive | `films/how-starlink-routes-data/` |
+| `TE-how-smartwatch-measures-heartbeat` | TE | How Your Watch Measures Your Heartbeat with Light | `PACKED` | 112.96s | Mastered -16.6 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-smartwatch-measures-heartbeat/` |
 
 ---
 

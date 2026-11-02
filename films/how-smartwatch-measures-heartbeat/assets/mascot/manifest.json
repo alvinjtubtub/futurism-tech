@@ -1,0 +1,82 @@
+{
+ "poses/celebrate": {
+  "w": 876,
+  "h": 1102,
+  "sheet_box": null
+ },
+ "poses/idle": {
+  "w": 570,
+  "h": 1100,
+  "sheet_box": null
+ },
+ "poses/point": {
+  "w": 683,
+  "h": 1100,
+  "sheet_box": null
+ },
+ "poses/present": {
+  "w": 758,
+  "h": 1069,
+  "sheet_box": null
+ },
+ "poses/sit": {
+  "w": 579,
+  "h": 876,
+  "sheet_box": null
+ },
+ "poses/think": {
+  "w": 584,
+  "h": 1048,
+  "sheet_box": null
+ },
+ "poses/thumbs-up": {
+  "w": 652,
+  "h": 1100,
+  "sheet_box": null
+ },
+ "poses/walk": {
+  "w": 568,
+  "h": 1076,
+  "sheet_box": null
+ },
+ "poses/wave": {
+  "w": 702,
+  "h": 1100,
+  "sheet_box": null
+ },
+ "faces/blink": {
+  "w": 249,
+  "h": 224,
+  "sheet_box": null
+ },
+ "faces/neutral": {
+  "w": 250,
+  "h": 224,
+  "sheet_box": null
+ },
+ "fx/coffee-ring": {
+  "w": 451,
+  "h": 377,
+  "sheet_box": null
+ },
+ "fx/confetti": {
+  "w": 554,
+  "h": 377,
+  "sheet_box": null
+ },
+ "fx/question": {
+  "w": 411,
+  "h": 378,
+  "sheet_box": null
+ },
+ "fx/sparkle-burst": {
+  "w": 467,
+  "h": 397,
+  "sheet_box": null
+ },
+ "fx/steam": {
+  "w": 283,
+  "h": 392,
+  "sheet_box": null
+ }
+}

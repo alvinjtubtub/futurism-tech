@@ -1,0 +1,127 @@
+1
+00:00:00,000 --> 00:00:03,400
+Paano nalalaman ng smartwatch ang tibok ng puso mo?
+
+2
+00:00:03,860 --> 00:00:05,740
+Gamit lang ang ilaw!
+
+3
+00:00:06,020 --> 00:00:07,060
+Look underneath your watch.
+
+4
+00:00:07,600 --> 00:00:12,900
+Those green lights are part of a system called photoplethysmography, or PPG.
+
+5
+00:00:13,120 --> 00:00:15,220
+Mahabang pangalan, pero simple ang idea.
+
+6
+00:00:15,560 --> 00:00:18,800
+Your pulse changes how much light comes back from your skin.
+
+7
+00:00:19,500 --> 00:00:21,680
+The watch shines light into your wrist.
+
+8
+00:00:22,060 --> 00:00:26,840
+Some gets absorbed and some scatters back toward a light detector called a photodiode.
+
+9
+00:00:27,180 --> 00:00:28,920
+It measures light intensity.
+
+10
+00:00:28,920 --> 00:00:30,700
+not a picture of your veins.
+
+11
+00:00:31,440 --> 00:00:34,880
+With each heartbeat, a pressure wave travels through your arteries.
+
+12
+00:00:35,460 --> 00:00:39,060
+Blood volume in the small vessels under your skin rises and falls.
+
+13
+00:00:39,640 --> 00:00:41,600
+Because blood absorbs green light,
+
+14
+00:00:41,840 --> 00:00:44,600
+those changes affect the amount returning to the sensor.
+
+15
+00:00:45,220 --> 00:00:48,180
+More blood generally means more green light absorbed,
+
+16
+00:00:48,460 --> 00:00:49,480
+so less returns.
+
+17
+00:00:49,960 --> 00:00:52,360
+Between pulses, the pattern reverses.
+
+18
+00:00:52,680 --> 00:00:57,100
+Tiny changes repeated over time create a wave the watch can analyze.
+
+19
+00:00:57,100 --> 00:01:01,720
+Hindi ibig sabihin na bawat flash ng ilaw ay isang heartbeat.
+
+20
+00:01:02,280 --> 00:01:04,760
+The LEDs can flash much faster than your pulse.
+
+21
+00:01:05,340 --> 00:01:09,500
+The watch takes many samples, and software looks for the repeating pulse pattern.
+
+22
+00:01:10,160 --> 00:01:15,240
+If that pattern repeats once every second, that corresponds to 60 beats per minute.
+
+23
+00:01:15,700 --> 00:01:17,760
+Twice every second would be 120.
+
+24
+00:01:18,240 --> 00:01:20,300
+These are examples, not target numbers.
+
+25
+00:01:21,000 --> 00:01:21,960
+Pero may challenge.
+
+26
+00:01:22,400 --> 00:01:26,600
+Moving your wrist or letting the watch slide can also change the light signal.
+
+27
+00:01:26,600 --> 00:01:31,720
+Cold skin can reduce blood flow near the surface, making the pulse harder to detect.
+
+28
+00:01:32,420 --> 00:01:36,360
+That is why fit, movement, and the algorithm affect the estimate.
+
+29
+00:01:37,100 --> 00:01:42,360
+And this optical pulse signal is different from an ECG, which measures electrical activity.
+
+30
+00:01:42,920 --> 00:01:44,840
+Different sensors, different information.
+
+31
+00:01:45,620 --> 00:01:49,980
+Ikaw, napansin mo na bang nagbabago ang reading kapag maluwag ang relo mo?
+
+32
+00:01:50,600 --> 00:01:52,740
+Follow me for more tech explained. See ya!

@@ -1,0 +1,103 @@
+<!-- Scene s07-challenges (1080x1920, dur 16.10s). Big Hero Visual & Real-World Challenges -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s07-layer { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.s07-world { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.s07-title { position: absolute; left: 60px; top: 190px; width: 872px; box-sizing: border-box; text-align: left; opacity: 0; }
+
+/* Hero Visual Stage */
+.s07-stage-wrap { position: absolute; left: 540px; top: 820px; transform: translate(-50%, -50%); width: 960px; height: 620px; display: flex; align-items: center; justify-content: center; }
+.s07-viewport { width: 960px; height: 600px; border-radius: 28px; overflow: hidden; position: relative; background: #0B1E3F; box-shadow: 0 24px 60px rgba(11,30,63,0.18), 0 4px 16px rgba(11,30,63,0.08); border: 3px solid #0B1E3F; opacity: 0; }
+.s07-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); }
+
+/* Moving Noise Jitter & Optical Leak */
+.s07-leak-box { position: absolute; left: 6%; top: 15%; width: 28%; height: 75%; border: 2px dashed #EF4444; border-radius: 12px; opacity: 0; pointer-events: none; }
+.s07-motion-box { position: absolute; left: 36%; top: 15%; width: 28%; height: 75%; border: 2px dashed #F59E0B; border-radius: 12px; opacity: 0; pointer-events: none; }
+.s07-cold-box { position: absolute; right: 6%; top: 15%; width: 28%; height: 75%; border: 2px dashed #3B82F6; border-radius: 12px; opacity: 0; pointer-events: none; }
+
+/* HUD Badges */
+.s07-hud-header { position: absolute; left: 24px; top: 24px; background: rgba(11,30,63,0.85); backdrop-filter: blur(12px); border: 2px solid rgba(56,189,248,0.5); color: #FFFFFF; padding: 10px 20px; border-radius: 16px; font-size: 15px; font-weight: 700; letter-spacing: 1px; z-index: 15; opacity: 0; }
+.s07-motion-badge { position: absolute; left: 24px; bottom: 24px; background: rgba(245,158,11,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(245,158,11,0.35); z-index: 15; opacity: 0; }
+.s07-algo-badge { position: absolute; right: 24px; bottom: 24px; background: rgba(16,185,129,0.92); backdrop-filter: blur(8px); border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,185,129,0.35); z-index: 15; opacity: 0; }
+</style>
+<div id="root" data-composition-id="s07-challenges" data-width="1080" data-height="1920">
+  <div id="s07-ground" class="clip kit-ground" data-start="0" data-duration="16.10" data-track-index="0"></div>
+  <div id="s07-stage" class="clip" data-start="0" data-duration="16.10" data-track-index="1" style="position:absolute; inset:0; perspective:1866px; perspective-origin:50% 50%;">
+    <div id="s07-drift" class="s07-layer">
+      <div id="s07-cam" class="s07-layer">
+        <div class="kit-floor"></div>
+        <div id="s07-headline" class="s07-world s07-title" data-layout-allow-overlap>
+          <div class="kit-kicker" style="color:#F59E0B; font-size:26px; font-weight:700; letter-spacing:2px; margin-bottom:12px;">REAL-WORLD ACCURACY</div>
+          <div class="kit-label" style="font-size:52px; line-height:1.18; color:#0B1E3F; font-weight:700; white-space:normal; overflow-wrap:break-word; word-wrap:break-word;">Fit, galaw ng kamay, at lamig ng balat: Mga dahilan ng error!</div>
+        </div>
+        <div class="s07-world s07-stage-wrap">
+          <div id="s07-viewport" class="s07-viewport">
+            <img id="s07-photo" class="s07-img" src="assets/images/s07_real_world_challenges.jpg" alt="Real World Challenges">
+            
+            <div id="s07-b1" class="s07-leak-box"></div>
+            <div id="s07-b2" class="s07-motion-box"></div>
+            <div id="s07-b3" class="s07-cold-box"></div>
+
+            <div id="s07-hud" class="s07-hud-header">
+              <span>ENVIRONMENTAL &amp; BIOMETRIC SIGNAL ARTIFACTS</span>
+            </div>
+            <div id="s07-motion" class="s07-motion-badge">⚠️ MOTION NOISE &amp; OPTICAL AMBIENT LEAKS</div>
+            <div id="s07-algo" class="s07-algo-badge">🧠 ACCELEROMETER DSP ALGORITHM CORRECTION</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="s07-grain" class="clip kit-grain" data-start="0" data-duration="16.10" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s07-' + id; };
+  var D = 16.10;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('headline'), { opacity: 0, y: -20, force3D: true });
+  gsap.set($('viewport'), { opacity: 0, scale: 0.94, y: 25, force3D: true });
+  gsap.set($('photo'), { opacity: 0, scale: 1.08, force3D: true });
+  gsap.set($('b1'), { opacity: 0 });
+  gsap.set($('b2'), { opacity: 0 });
+  gsap.set($('b3'), { opacity: 0 });
+  gsap.set($('hud'), { opacity: 0, y: -15 });
+  gsap.set($('motion'), { opacity: 0, x: -20 });
+  gsap.set($('algo'), { opacity: 0, x: 20 });
+
+  // Camera Drift
+  tl.fromTo($('drift'), { scale: 1, rotationY: 0 }, { scale: 1.02, rotationY: -0.3, duration: D / 2, ease: 'sine.inOut', force3D: true }, 0);
+  tl.fromTo($('drift'), { scale: 1.02, rotationY: -0.3 }, { scale: 1, rotationY: 0, duration: D / 2, ease: 'sine.inOut', force3D: true, immediateRender: false }, D / 2);
+
+  // Headline Enter
+  tl.fromTo($('headline'), { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', force3D: true }, 0.10);
+
+  // Viewport Enter
+  tl.fromTo($('viewport'), { opacity: 0, scale: 0.94, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: 'back.out(1.4)', force3D: true }, 0.30);
+  tl.fromTo($('photo'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 0.85, ease: 'power2.out', force3D: true }, 0.40);
+  tl.fromTo($('hud'), { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(2)' }, 0.70);
+
+  // Sequential highlights for the 3 challenges
+  tl.fromTo($('b1'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.50);
+  tl.fromTo($('motion'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2)' }, 2.00);
+
+  tl.fromTo($('b2'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 4.50);
+  tl.fromTo($('b3'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.50);
+
+  // Algorithm badge on ~11.5s
+  tl.fromTo($('algo'), { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: 'back.out(2.2)' }, 11.50);
+
+  // Clean Exit before cut (D - 0.45s)
+  tl.fromTo($('headline'), { opacity: 1 }, { opacity: 0, y: -15, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+  tl.fromTo($('viewport'), { opacity: 1 }, { opacity: 0, scale: 0.95, duration: 0.35, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.45);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s07-challenges'] = tl;
+})();
+</script>
+</template>

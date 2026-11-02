@@ -1,0 +1,32 @@
+[   0.00] Paano nalalaman ng smartwatch ang tibok ng puso mo?
+[   3.86] Gamit lang ang ilaw!
+[   6.02] Look underneath your watch.
+[   7.60] Those green lights are part of a system called photoplethysmography, or PPG.
+[  13.12] Mahabang pangalan, pero simple ang idea.
+[  15.56] Your pulse changes how much light comes back from your skin.
+[  19.50] The watch shines light into your wrist.
+[  22.06] Some gets absorbed and some scatters back toward a light detector called a photodiode.
+[  27.18] It measures light intensity.
+[  28.92] not a picture of your veins.
+[  31.44] With each heartbeat, a pressure wave travels through your arteries.
+[  35.46] Blood volume in the small vessels under your skin rises and falls.
+[  39.64] Because blood absorbs green light,
+[  41.84] those changes affect the amount returning to the sensor.
+[  45.22] More blood generally means more green light absorbed,
+[  48.46] so less returns.
+[  49.96] Between pulses, the pattern reverses.
+[  52.68] Tiny changes repeated over time create a wave the watch can analyze.
+[  57.10] Hindi ibig sabihin na bawat flash ng ilaw ay isang heartbeat.
+[  62.28] The LEDs can flash much faster than your pulse.
+[  65.34] The watch takes many samples, and software looks for the repeating pulse pattern.
+[  70.16] If that pattern repeats once every second, that corresponds to 60 beats per minute.
+[  75.70] Twice every second would be 120.
+[  78.24] These are examples, not target numbers.
+[  81.00] Pero may challenge.
+[  82.40] Moving your wrist or letting the watch slide can also change the light signal.
+[  86.60] Cold skin can reduce blood flow near the surface, making the pulse harder to detect.
+[  92.42] That is why fit, movement, and the algorithm affect the estimate.
+[  97.10] And this optical pulse signal is different from an ECG, which measures electrical activity.
+[ 102.92] Different sensors, different information.
+[ 105.62] Ikaw, napansin mo na bang nagbabago ang reading kapag maluwag ang relo mo?
+[ 110.60] Follow me for more tech explained. See ya!
