@@ -1,0 +1,67 @@
+<!-- Scene starter (1080x1920, v2.0 DYK-Style "Built-for-Speed" 3-Zone Vector Format).
+     Copy to compositions/<scene_id>.html, replace every SCENE with the scene id and every DUR with its duration.
+     Zones:
+       Zone 1 (Top y: 416-612px): Brand header + Segmented Timeline (rendered by m-brand.html) + Scene Chapter Row (.dyk-chapter-row at y: 500px)
+       Zone 2 (Middle y: 650-1250px): 960x600px 2D SVG/HTML Vector Stage (.dyk-stage-window) with 3-5 rapid animated beats
+       Zone 3 (Bottom y: 1350-1500px): Centered 2-5 word punchy uppercase captions (rendered by m-captions.html) -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.SCENE-layer { position: absolute; inset: 0; will-change: transform; }
+</style>
+<div id="root" data-composition-id="SCENE" data-width="1080" data-height="1920">
+  <div id="SCENE-ground" class="clip kit-ground" data-start="0" data-duration="DUR" data-track-index="0"></div>
+  <div id="SCENE-stage" class="clip" data-start="0" data-duration="DUR" data-track-index="1" style="position:absolute; inset:0;">
+    <div id="SCENE-cam" class="SCENE-layer">
+      <!-- Zone 1: Chapter Title + Context Pill -->
+      <div id="SCENE-chap" class="dyk-chapter-row">
+        <div class="dyk-chapter-title"><b>1 ·</b> The Core Mechanism</div>
+        <div class="dyk-context-pill">STEP 1 · PHYSICS</div>
+      </div>
+
+      <!-- Zone 2: 16:9 Pure 2D Vector Stage (960x600) -->
+      <div id="SCENE-win" class="dyk-stage-window">
+        <svg viewBox="0 0 960 600" width="960" height="600" style="position:absolute; inset:0; display:block;">
+          <!-- Pure 2D SVG diagram beats go here -->
+        </svg>
+        <div id="SCENE-pill1" class="dyk-pill blue" style="position:absolute; left:40px; top:36px;">KEY COMPONENT</div>
+        <div id="SCENE-stamp" class="dyk-stamp good" style="position:absolute; right:48px; bottom:44px;">VERIFIED</div>
+      </div>
+    </div>
+  </div>
+  <div id="SCENE-grain" class="clip kit-grain" data-start="0" data-duration="DUR" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var P = 'SCENE-';
+  var $ = function (id) { return '#' + P + id; };
+  var D = DUR;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('chap'), { opacity: 0, y: -14, force3D: true });
+  gsap.set($('win'), { opacity: 0, y: 20, scale: 0.97, force3D: true });
+  gsap.set($('pill1'), { opacity: 0, y: -12, scale: 0.9, force3D: true });
+  gsap.set($('stamp'), { opacity: 0, scale: 1.5, rotation: -8, force3D: true });
+
+  // Beat 1: Chapter row + Stage window entrance
+  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true }, 0.1);
+  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power3.out', force3D: true }, 0.15);
+
+  // Beat 2: Callout pill pop
+  tl.fromTo($('pill1'), { opacity: 0, y: -12, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)', force3D: true }, 1.2);
+
+  // Beat 3: Stamp slam
+  tl.fromTo($('stamp'), { opacity: 0, scale: 1.5, rotation: -14 }, { opacity: 1, scale: 1, rotation: -6, duration: 0.35, ease: 'back.out(1.8)', force3D: true }, 2.6);
+
+  // Clean Seam Exit (D - 0.35s)
+  tl.fromTo($('chap'), { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);
+  tl.fromTo($('win'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.97, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['SCENE'] = tl;
+})();
+</script>
+</template>

@@ -1,0 +1,51 @@
+{
+  "name": "how-pasaload-changed-telecoms",
+  "version": "2.1.0",
+  "episode": "#012",
+  "kicker": "TRUE PINOY TECH STORY · DIALOGUE DRAMATISED",
+  "hyperframes": "0.8.117",
+  "gsap": "3.14.2",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "bpm": 60,
+  "beats_per_bar": 1,
+  "ground": "#F6F2EA",
+  "scenes": [
+    ["s01-hook", 14.70],
+    ["s02-wall", 31.10],
+    ["s03-channel", 39.20],
+    ["s04-sachet", 25.65],
+    ["s05-pasaload", 16.35],
+    ["s06-global", 31.95],
+    ["s07-close", 9.61]
+  ],
+  "overlays": [
+    {
+      "id": "m-brand",
+      "track": 3,
+      "z": 6
+    },
+    {
+      "id": "m-captions",
+      "track": 4,
+      "z": 7
+    }
+  ],
+  "audio": [
+    {
+      "id": "vo",
+      "src": "assets/audio/vo-master.wav",
+      "dur": 168.56,
+      "volume": 1,
+      "track": 9
+    }
+  ],
+  "bgm": null,
+  "cues": [],
+  "delivery": {
+    "title": "The ₱2 Load Trick: How Filipino Engineers Invented PasaLoad & Changed Global Telecoms",
+    "description": "Back in 1999, the cheapest prepaid scratch card in Manila cost ₱300—a full day's wage. Here is the true story of how Filipino engineers used the GSM control channel's 160-byte free space and sari-sari store sachet culture to invent Over-The-Air micro-loading and PasaLoad!",
+    "tags": ["PasaLoad", "PinoyTech", "SmartCommunications", "TelecomHistory", "TechExplanasyon", "HowItWorks", "PhilippineHistory", "SMS"]
+  }
+}

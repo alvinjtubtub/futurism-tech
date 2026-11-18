@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""build-captions.py — Generates compositions/m-captions.html from src/timing/vo-words.json.
+DYK-Style "Built-for-Speed" Centered Punchy Captions (2-5 words per block, uppercase,
+centered at x: 70-1010, y: 1350-1480, with automatic keyword/number accent highlighting).
+"""
+import json
+import re
+import sys
+from html import escape
+from pathlib import Path
+
+STOPWORDS = {
+    "ANG", "MGA", "SA", "NA", "NG", "AT", "AY", "ITO", "IYAN", "BA", "MO", "KO",
+    "KAYA", "PERO", "DAHIL", "KUNG", "KAPAG", "PARA", "MULA", "HANGGANG", "LANG",
+    "RIN", "DIN", "PA", "NANG", "MAY", "WALANG", "ISANG", "THE", "AND", "OR",
+    "OF", "TO", "IN", "ON", "FOR", "WITH", "BY", "FROM", "IS", "ARE", "WAS",
+    "WERE", "IT", "ITS", "THAT", "THIS", "AS", "AT", "BE", "SO", "BUT", "IF",
+    "HOW", "WHY", "WHAT", "WHEN", "WHERE", "WHO", "YOUR", "YOU", "WE", "OUR"
+}
+
+def highlight_phrase_words(words_list):
+    """Return HTML string with 1 key word (number or longest non-stopword) highlighted in Tech Blue."""
+    cleaned = [w["w"].strip() for w in words_list if w["w"].strip()]
+    if not cleaned:
+        return ""
+    best_idx = -1
+    # 1. Prefer words with digits/%/units
+    for idx, tok in enumerate(cleaned):
+        if re.search(r"\d", tok):
+            best_idx = idx
+            break
+    # 2. Otherwise pick longest non-stopword >= 5 chars
+    if best_idx < 0:
+        best_len = 0
+        for idx, tok in enumerate(cleaned):
+            alpha = re.sub(r"[^A-Za-z0-9]", "", tok).upper()
+            if alpha not in STOPWORDS and len(alpha) >= 5 and len(alpha) > best_len:
+                best_len = len(alpha)
+                best_idx = idx
+    parts = []
+    for idx, tok in enumerate(cleaned):
+        esc = escape(tok.upper())
+        if idx == best_idx:
+            parts.append(f'<span class="cap-hi">{esc}</span>')
+        else:
+            parts.append(esc)
+    return " ".join(parts).replace(" -", "-").replace("- ", "-")
+
+
+def chunk_words_for_speed(words, max_words=4):
+    """Split a segment's word list into rapid 2-4 word punchy DYK-style chunks."""
+    chunks = []
+    cur = []
+    for w in words:
+        tok = w.get("w", "").strip()
+        if not tok:
+            continue
+        cur.append(w)
+        ends_punct = tok.endswith((",", ".", "?", "!", ";", ":"))
+        if len(cur) >= max_words or (ends_punct and len(cur) >= 2):
+            chunks.append(cur)
+            cur = []
+    if cur:
+        if chunks and len(cur) == 1 and len(chunks[-1]) < max_words + 1:
+            chunks[-1].extend(cur)
+        else:
+            chunks.append(cur)
+    return chunks
+
+
+def generate_captions(film_dir="."):
+    film_path = Path(film_dir) / "film.json"
+    vo_words_path = Path(film_dir) / "src" / "timing" / "vo-words.json"
+    out_path = Path(film_dir) / "compositions" / "m-captions.html"
+
+    if not film_path.exists():
+        print(f"Error: {film_path} not found.")
+        sys.exit(1)
+    if not vo_words_path.exists():
+        print(f"Error: {vo_words_path} not found.")
+        sys.exit(1)
+
+    film = json.loads(film_path.read_text(encoding="utf-8"))
+    W = film.get("width", 1080)
+    H = film.get("height", 1920)
+
+    durs = [s[1] * 60 / film.get("bpm", 60) * film.get("beats_per_bar", 1) for s in film["scenes"]]
+    total_dur = round(sum(durs), 2)
+
+    segments = json.loads(vo_words_path.read_text(encoding="utf-8"))
+    if isinstance(segments, dict) and "segments" in segments:
+        segments = segments["segments"]
+
+    phrases = []
+    for seg in segments:
+        words = seg.get("words", [])
+        if not words:
+            continue
+        for chunk in chunk_words_for_speed(words, max_words=4):
+            phrases.append({
+                "start": round(chunk[0]["s"], 2),
+                "end": round(chunk[-1]["e"], 2),
+                "html": highlight_phrase_words(chunk)
+            })
+
+    # Ensure non-overlapping consecutive phrases
+    for i in range(len(phrases) - 1):
+        if phrases[i]["end"] > phrases[i + 1]["start"]:
+            phrases[i]["end"] = phrases[i + 1]["start"]
+
+    phrase_divs = []
+    tweens = []
+
+    for i, p in enumerate(phrases):
+        cid = f"cap-{i}"
+        phrase_divs.append(f'      <div id="{cid}" class="caption-phrase">{p["html"]}</div>')
+
+        start = p["start"]
+        end = p["end"]
+        if end - start < 0.24:
+            end = round(start + 0.24, 2)
+
+        fade_out_time = round(max(start + 0.12, end - 0.08), 2)
+
+        tweens.append(
+            f"  tl.fromTo('#{cid}', {{ opacity: 0, y: 12, scale: 0.96 }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.12, ease: 'power2.out', force3D: true }}, {start});"
+        )
+        tweens.append(
+            f"  tl.fromTo('#{cid}', {{ opacity: 1, y: 0, scale: 1 }}, {{ opacity: 0, y: -6, scale: 0.98, duration: 0.08, ease: 'power2.in', immediateRender: false, force3D: true }}, {fade_out_time});"
+        )
+
+    markup = f"""<!-- Generated by build-captions.py — DYK-Style Centered Punchy Subtitles -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face {{ font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }}
+#root {{ position: absolute; inset: 0; width: {W}px; height: {H}px; overflow: hidden; pointer-events: none; }}
+#m-captions-layer {{ position: absolute; inset: 0; }}
+.caption-box {{
+  position: absolute;
+  left: 70px;
+  width: 940px;
+  top: 1350px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}}
+.caption-phrase {{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #0B1E3F;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.9), 0 8px 24px rgba(11,30,63,0.12);
+  opacity: 0;
+  will-change: transform, opacity;
+  position: absolute;
+  left: 0;
+  right: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+}}
+.caption-phrase .cap-hi {{
+  color: #2563EB;
+  background: rgba(37,99,235,0.10);
+  padding: 0 10px;
+  border-radius: 10px;
+}}
+</style>
+<div id="root" data-composition-id="m-captions" data-width="{W}" data-height="{H}">
+  <div id="m-captions-layer" class="clip" data-start="0" data-duration="{total_dur}" data-track-index="1" style="position:absolute; inset:0;">
+    <div class="caption-box">
+{chr(10).join(phrase_divs)}
+    </div>
+  </div>
+</div>
+<script>
+(function () {{
+  var tl = gsap.timeline({{ paused: true }});
+{chr(10).join(tweens)}
+  window.__timelines = window.__timelines || {{}};
+  window.__timelines['m-captions'] = tl;
+}})();
+</script>
+</template>
+"""
+    out_path.write_text(markup, encoding="utf-8")
+    print(f"OK: Generated {out_path} with {len(phrases)} DYK-style punchy subtitle phrases.")
+
+if __name__ == "__main__":
+    generate_captions(sys.argv[1] if len(sys.argv) > 1 else ".")

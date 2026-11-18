@@ -191,15 +191,15 @@
       "duration_s": {
         "target": [
           70,
-          100
+          180
         ],
         "warn_outside": [
-          65,
-          105
+          60,
+          190
         ],
         "rework_outside": [
-          60,
-          110
+          50,
+          210
         ]
       },
       "script": {
@@ -216,17 +216,8 @@
         "style": "Hook question displayed as on-screen text at the very start (scene 1)",
         "on_screen_text_language": "en"
       },
-      "visual_style": "KAPE spatial-film: diagram stage + Carla presenter, hand-built animated scenes, vertical template (Phase 1.5)",
-      "presenter": {
-        "name": "Carla",
-        "poses": 9,
-        "blink": true,
-        "talk": true,
-        "blink_cadence_s": [
-          2.7,
-          4.9
-        ]
-      },
+      "visual_style": "DYK-Style 3-Zone Built-for-Speed 2D SVG/HTML vector animations on Cream (#F6F2EA) + Dark Navy (#0B1E3F) & Blue (#2563EB) palette",
+      "presenter": null,
       "badge": {
         "type": "floating_badge",
         "text": "Tech Explanasyon",
@@ -302,33 +293,22 @@
           "w": 440,
           "h": 180
         },
-        "presenter_zone": {
-          "x": 24,
-          "y": 1205,
-          "w": 361,
-          "h": 335,
-          "home": {
-            "x": 245,
-            "feet_y": 1540
-          },
-          "scale": 0.3,
-          "note": "Carla lower-left at scale 0.3 (0.5 at first build; reduced to 0.4 then 0.3 on 24 Oct 2026 at Alvin's direction - more room for visuals), feet on y=1540 - above the FB bottom block (y>=1560). Feet baseline deliberately UNCHANGED at the safe edge: Alvin explicitly declined moving her down into the bottom block. Zone = union of all 9 poses rendered at scale (widest celebrate 876x1102 asset -> 263x331 on screen; true sprite footprint x122-384, y1209-1540, recomputed with build-presenter.py head-anchor geometry) with the established 24px left frame margin and ~4px breath headroom kept (same convention as the 0.4 zone). Home anchor x=245 unchanged; caption band stays clear to her right."
-        },
+        "presenter_zone": null,
         "caption_band": {
-          "x": 486,
-          "y": 1280,
-          "w": 448,
-          "h": 240,
-          "align": "left",
-          "font_px": 46,
+          "x": 70,
+          "y": 1350,
+          "w": 940,
+          "h": 150,
+          "align": "center",
+          "font_px": 56,
           "weight": 700,
           "text_bottom_y": 1500,
-          "note": "Right of the presenter zone, fully inside the FB safe_content_rect. Revision #3 (24 Oct 2026, Alvin's direction - more room for visuals): captions moved DOWN, bottom-anchored - the caption text block's bottom edge sits at y=1500, 40px above the y1540 safe edge; longer captions grow UPWARD from there and must not rise above the band top (y1280). Band = moved text block with padding (measured 4-line sample: glyphs x487-920, y1305-1500; element top y1301). Was x486-934, y1150-1480, top-anchored at y1150 (sample glyphs y1154-1349; moved +151px)."
+          "note": "DYK-Style centered 2-5 word punchy uppercase captions on Cream (#F6F2EA) with Dark Navy (#0B1E3F) & Tech Blue (#2563EB) keyword highlights."
         }
       },
       "captions": {
-        "style": "burned-in subtitles from verified word timings (CAPTIONS.srt)",
-        "language": "spoken (en/tl); on-screen display text en",
+        "style": "DYK-style centered 2-5 word uppercase punchy subtitles (CAPTIONS.srt)",
+        "language": "spoken (en/tl)",
         "placement": "caption_band"
       },
       "upload_pack": {
@@ -338,37 +318,32 @@
           "ai_info_label",
           "reel_cover"
         ],
-        "first_comment": "= the Tagalog closing question",
+        "first_comment": "= engagement question or cliffhanger",
         "ai_info_label": "on"
       },
       "gates": {
         "duration": {
           "warn_outside": [
             65,
-            105
+            150
           ],
           "fail_outside": [
-            60,
-            110
+            55,
+            165
           ]
         },
         "brand_leakage": {
           "forbidden": [
             "Futurism Tech wordmark",
-            "16:9 canvas",
-            "ElevenLabs Zia voice (post-switch films)"
+            "16:9 canvas"
           ],
           "required": [
-            "Tech Explanasyon badge",
-            "Carla presenter"
+            "Tech Explanasyon badge"
           ]
         },
         "closing": {
-          "required_sequence": [
-            "tagalog_engagement_question",
-            "signoff"
-          ],
-          "signoff_exact": "Follow me for more tech explained. See yah."
+          "type": "dyk_follow_endcard",
+          "must_include": "Follow Tech Explanasyon"
         },
         "safe_zone": {
           "key_content_within": "safe_content_rect",

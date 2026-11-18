@@ -60,9 +60,9 @@
 .kit-tile.vs { --c: var(--ink); --c-hi: #1C3360; --c-lo: #050E22; height: 120px; padding: 0 34px; border-radius: 30px; font-size: 64px; box-shadow: 0 12px 0 var(--c-lo), 0 40px 60px -14px rgba(11,30,63,.38); }
 
 /* FILM TYPE */
-.kit-kicker { font: 700 28px/1 'Poppins', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
-.kit-label { font: 700 84px/1.04 'Poppins', sans-serif; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
-.kit-label.sm { font-size: 60px; }
+.kit-kicker { font: 700 26px/1 'Poppins', sans-serif; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-faint); white-space: normal; overflow-wrap: break-word; }
+.kit-label { font: 700 56px/1.18 'Poppins', sans-serif; letter-spacing: -.02em; color: var(--ink); white-space: normal; overflow-wrap: break-word; word-wrap: break-word; box-sizing: border-box; }
+.kit-label.sm { font-size: 46px; line-height: 1.2; }
 .kit-label .api { color: var(--api-ink); } .kit-label .wh { color: var(--wh-ink); }
 .kit-caption { font: 700 46px/1.15 'Poppins', sans-serif; color: var(--ink); text-align: center; }
 .kit-caption .api { color: var(--api-ink); } .kit-caption .wh { color: var(--wh-ink); }
@@ -176,3 +176,159 @@
 .kit-cta { display: inline-flex; align-items: center; gap: 22px; padding: 26px 48px; border-radius: 999px; background: var(--brand-accent); color: #fff;
   font: 700 64px/1 'Montserrat', sans-serif; letter-spacing: -0.01em;
   box-shadow: 0 14px 0 var(--brand-accent-dark), 0 40px 70px -14px color-mix(in srgb, var(--brand-accent-dark) 45%, transparent); }
+
+/* ================= DYK-STYLE "BUILT-FOR-SPEED" 3-ZONE VECTOR KIT (v2.0) ================= */
+.dyk-chapter-row {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10;
+}
+.dyk-chapter-title {
+  font: 700 38px/1.15 'Poppins', sans-serif;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.dyk-chapter-title b {
+  color: var(--brand-accent);
+  margin-right: 8px;
+}
+.dyk-context-pill {
+  background: var(--ink);
+  color: #FACC15;
+  padding: 10px 26px;
+  border-radius: 999px;
+  font: 700 22px/1.1 'Poppins', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px rgba(11,30,63,0.16);
+}
+.dyk-stage-window {
+  position: absolute;
+  left: 60px;
+  top: 650px;
+  width: 960px;
+  height: 600px;
+  border-radius: 28px;
+  background: #FFFFFF;
+  border: 3.5px solid var(--ink);
+  box-shadow: 0 20px 50px rgba(11,30,63,0.12), 0 4px 12px rgba(11,30,63,0.06);
+  overflow: hidden;
+}
+.dyk-pill {
+  display: inline-block;
+  padding: 8px 22px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #FFFFFF;
+  border: 2.5px solid var(--ink);
+  font: 700 22px/1.1 'Poppins', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.dyk-pill.blue { background: #2563EB; border-color: #1E40AF; color: #FFFFFF; }
+.dyk-pill.warn { background: #FEF3C7; border-color: #D97706; color: #92400E; }
+.dyk-pill.bad  { background: #FEE2E2; border-color: #DC2626; color: #991B1B; }
+.dyk-pill.good { background: #D1FAE5; border-color: #059669; color: #065F46; }
+.dyk-stamp {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 14px;
+  border: 6px solid #DC2626;
+  color: #DC2626;
+  background: rgba(255,255,255,0.95);
+  font: 700 44px/1 'Poppins', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(220,38,38,0.20);
+}
+.dyk-stamp.good {
+  border-color: #059669;
+  color: #059669;
+  box-shadow: 0 10px 24px rgba(5,150,105,0.20);
+}
+.dyk-endcard {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 660px;
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+/* Visual Storytelling Devices (v2.1) */
+.dyk-chapter-card {
+  position: absolute;
+  inset: 0;
+  background: #0B1E3F;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 30;
+}
+.dyk-chapter-card small {
+  font: 700 22px/1.2 'Poppins', sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #FACC15;
+  margin-bottom: 10px;
+}
+.dyk-chapter-card h2 {
+  font: 700 58px/1.15 'Poppins', sans-serif;
+  color: #FFFFFF;
+  margin: 0;
+}
+.dyk-split {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.dyk-split-left {
+  position: relative;
+  border-right: 3.5px solid var(--ink);
+  overflow: hidden;
+}
+.dyk-split-right {
+  position: relative;
+  overflow: hidden;
+}
+.dyk-chalkboard {
+  position: absolute;
+  left: 70px;
+  right: 70px;
+  top: 60px;
+  bottom: 60px;
+  background: #1E3A2F;
+  border: 14px solid #784B2A;
+  border-radius: 18px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.35), 0 16px 32px rgba(11,30,63,0.18);
+  color: #F8FAFC;
+}
+.dyk-speaker-pill {
+  position: absolute;
+  left: 50%;
+  top: 1296px;
+  transform: translateX(-50%);
+  padding: 6px 24px;
+  border-radius: 999px;
+  background: #0B1E3F;
+  color: #FACC15;
+  font: 700 22px/1.2 'Poppins', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(11,30,63,0.18);
+  z-index: 20;
+}

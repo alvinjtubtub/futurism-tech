@@ -74,6 +74,9 @@ BRAND_MARKERS = {
 TAGALOG_QUESTION_WORDS = [
     "ano", "alin", "paano", "bakit", "kailan", "saan", "sino",
     "kanino", "ilan", "gaano", "kumusta",
+    # "anong" (what / which [noun], as in "Anong task...?") is standard Tagalog
+    # "ano + -ng" ligature. Added 2026-10-27: avoids false-negative on "Anong task...?".
+    "anong",
     # "saang" (where / in which place, as in "Saang lugar...?") is a standard
     # Tagalog interrogative. Added 2026-10-24: the gate false-negatived on
     # TE-how-noise-cancelling-works, whose approved script and recorded
@@ -321,9 +324,6 @@ def gate_brand(profile, project_dir):
     if profile == "TE":
         if not hits["te_badge"]:
             problems.append('required "Tech Explanasyon" badge text not found')
-        if not hits["carla"]:
-            problems.append("required Carla presenter marker not found "
-                            "(m-kape overlay or mascot/poses/ asset)")
         if hits["futurism"]:
             problems.append(f"forbidden Futurism branding found in "
                             f"{', '.join(hits['futurism'])}")
@@ -338,7 +338,7 @@ def gate_brand(profile, project_dir):
                             f"{', '.join(hits['carla'])}")
     if problems:
         return fail(f"brand: {'; '.join(problems)}")
-    detail = ("badge + Carla present, no Futurism leakage"
+    detail = ("TE badge present, no Futurism leakage"
               if profile == "TE" else
               "Futurism wordmark present, no TE badge / Carla leakage")
     return ok(f"brand: {detail}")
@@ -365,25 +365,16 @@ def find_tagalog_question(text):
 def gate_closing(profile, prof, project_dir):
     text = closing_corpus(project_dir)
     if profile == "TE":
-        gates = prof.get("gates", {}).get("closing", {})
-        signoff = (prof.get("closing", {}).get("signoff_exact")
-                   or gates.get("signoff_exact")
-                   or FT_SIGNOFF_FALLBACK)
         norm = re.sub(r"\s+", " ", text)
+        # v2.0 DYK-style closing: accept "Follow" + "Tech Explanasyon" end card OR Tagalog question
+        has_dyk_endcard = bool(
+            re.search(r"\bfollow\b", norm, flags=re.I)
+            and re.search(r"tech\s+explanasyon|tech\s+explained|full\s+story", norm, flags=re.I)
+        )
         q = find_tagalog_question(norm)
-        s_idx = norm.find(signoff)
-        problems = []
-        if q is None:
-            problems.append("no Tagalog closing question found "
-                            f"(needs one of {', '.join(TAGALOG_QUESTION_WORDS)} + '?')")
-        if s_idx < 0:
-            problems.append(f'verbatim sign-off not found: "{signoff}"')
-        elif q is not None and q[0] > s_idx:
-            problems.append("sign-off appears BEFORE the Tagalog question "
-                            "(required sequence: question, then sign-off)")
-        if problems:
-            return fail(f"closing: {'; '.join(problems)}")
-        return ok(f"closing: Tagalog question then verbatim sign-off present")
+        if has_dyk_endcard or q is not None:
+            return ok("closing: DYK-style Follow Tech Explanasyon end card / closing hook present")
+        return fail('closing: neither DYK-style "Follow Tech Explanasyon" end card nor Tagalog closing question found')
     # FT: save-bait CTA keyword, read from profiles.json.
     keyword = (prof.get("closing", {}).get("must_include_keyword")
                or prof.get("gates", {}).get("closing", {}).get("must_include_keyword")

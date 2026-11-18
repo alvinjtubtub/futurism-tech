@@ -1,0 +1,39 @@
+[   0.10] Two pesos.
+[   1.25] In the Philippines, two pesos could send a text message across the country.
+[   5.35] And that tiny tingi trick turned Filipinos into the texting capital of the world.
+[  10.65] Here’s how Filipino engineers hacked the telecom system to make it happen.
+[  14.80] Manila, 1999.
+[  16.45] Back then, cellphones were only for the rich.
+[  18.65] If you wanted prepaid load, you had to buy a plastic scratch card.
+[  22.00] The cheapest one? 300 pesos. Sometimes 500.
+[  25.55] Isang araw na sweldo na ’yan.
+[  27.50] So at neighborhood sari-sari stores, people kept asking the same question:
+[  31.55] "Ate, wala bang tingi? Kahit pang-isang text lang?"
+[  35.10] At the time, telecom giants thought that was impossible.
+[  38.05] Printing millions of two-peso plastic cards would cost more than the load itself.
+[  42.30] Pero may napansin ang mga Filipino engineers.
+[  46.00] Look at how a cell tower actually works.
+[  48.35] When you make a voice call, your phone opens a dedicated radio voice channel. That takes bandwidth.
+[  53.25] Kaya mahal ang tawag.
+[  55.30] But even when your phone is idle in your pocket, it constantly talks to the nearest cell tower.
+[  60.10] Every few seconds, they exchange tiny status pings over a hidden lane called the GSM control channel.
+[  66.00] And inside every control packet, there were 160 bytes of empty space, just sitting there, free.
+[  73.10] That’s where SMS rides.
+[  75.10] One text message is just 160 characters hitching a free ride on a signal the tower was already sending anyway.
+[  81.85] Zero extra radio lines. Almost zero cost.
+[  85.20] So in 2003, engineers at Smart asked a simple question:
+[  89.45] If Filipinos buy shampoo, coffee, and toyo in tiny sachets, why not telecom load?
+[  95.50] They threw away the plastic scratch card.
+[  98.05] Instead, they built the world’s first Over-The-Air electronic loading system.
+[ 102.15] Using a special encrypted SIM card, any sari-sari store owner could slice airtime into tiny digital sachets and beam it straight to a customer’s phone.
+[ 110.80] Then they went one step further. They launched PasaLoad.
+[ 114.10] Just type a number, type two pesos, and hit send.
+[ 117.45] In two seconds, the network’s central ledger subtracts two pesos from your balance and credits your friend’s phone.
+[ 123.30] Walang bangko. Walang card. Load lang, passed from phone to phone.
+[ 127.15] The result was explosive. Overnight, millions of ordinary Filipinos got connected.
+[ 132.40] By the late 2000s, the Philippines was sending 1.3 billion text messages every single day—more than the US and Europe combined.
+[ 140.15] In London, the Filipino engineering team won Best Mobile Innovation in the World.
+[ 144.80] And soon, telcos in over 20 countries across Asia and Africa copied the exact same micro-prepaid architecture.
+[ 151.30] Even better? That simple SMS ledger became the blueprint for the world’s first mobile wallets, long before Apple Pay or QR codes existed.
+[ 159.10] All because someone at a sari-sari store asked for tingi.
+[ 163.10] Ikaw, naabutan mo pa ba ang PasaLoad na dalawang piso, o nakapag-scratch ka pa ng 300 pesos na card?

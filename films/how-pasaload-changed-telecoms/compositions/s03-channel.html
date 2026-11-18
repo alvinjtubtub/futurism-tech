@@ -1,0 +1,161 @@
+<!-- Scene s03-channel (1080x1920, dur 39.20s, global 45.80s - 85.00s). Chapter 2: The 160-Byte Secret -->
+<template>
+<link rel="stylesheet" href="assets/kit.css">
+<style>
+@font-face { font-family: 'Poppins'; font-weight: 500; src: url('assets/fonts/poppins-500.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-weight: 700; src: url('assets/fonts/poppins-700.woff2') format('woff2'); }
+#root { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Poppins', sans-serif; background: #F6F2EA; }
+.s03-layer { position: absolute; inset: 0; will-change: transform; }
+.s03-panel { position: absolute; inset: 0; }
+</style>
+<div id="root" data-composition-id="s03-channel" data-width="1080" data-height="1920">
+  <div id="s03-ground" class="clip kit-ground" data-start="0" data-duration="39.20" data-track-index="0"></div>
+  <div id="s03-stage" class="clip" data-start="0" data-duration="39.20" data-track-index="1" style="position:absolute; inset:0;">
+    <div id="s03-cam" class="s03-layer">
+
+      <!-- Zone 1: Chapter Title + Context Pill -->
+      <div id="s03-chap" class="dyk-chapter-row">
+        <div class="dyk-chapter-title"><b>2 ·</b> The 160-Byte Secret</div>
+        <div class="dyk-context-pill">GSM CONTROL CHANNEL</div>
+      </div>
+
+      <!-- Zone 2: 960x600 2D Vector Stage -->
+      <div id="s03-win" class="dyk-stage-window" style="background:#F8FAFC;">
+
+        <!-- ACT A (0.0s - 20.1s): Cell Tower Voice Call Highway vs GSM Control Channel -->
+        <div id="s03-actA" class="s03-panel">
+          <svg viewBox="0 0 960 600" width="960" height="600" style="position:absolute; inset:0;">
+            <!-- Left: Phone in Pocket -->
+            <g transform="translate(150, 320)">
+              <rect x="-70" y="-140" width="140" height="280" rx="28" fill="#1E293B" stroke="#0B1E3F" stroke-width="6"/>
+              <rect x="-52" y="-105" width="104" height="85" rx="10" fill="#93C5FD" stroke="#0B1E3F" stroke-width="4"/>
+              <text x="0" y="-56" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="18" fill="#0B1E3F">IDLE PHONE</text>
+              <text x="0" y="185" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="22" fill="#0B1E3F">YOUR PHONE</text>
+            </g>
+
+            <!-- Right: Cell Tower -->
+            <g transform="translate(810, 320)">
+              <polygon points="0,-170 -75,140 75,140" fill="none" stroke="#0B1E3F" stroke-width="8" stroke-linejoin="round"/>
+              <line x1="-38" y1="-20" x2="38" y2="-20" stroke="#0B1E3F" stroke-width="6"/>
+              <line x1="-55" y1="60" x2="55" y2="60" stroke="#0B1E3F" stroke-width="6"/>
+              <circle cx="0" cy="-180" r="22" fill="#EF4444" stroke="#0B1E3F" stroke-width="5"/>
+              <text x="0" y="185" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="22" fill="#0B1E3F">CELL TOWER</text>
+            </g>
+
+            <!-- Top Lane: Dedicated Voice Channel (2.5s - 9.4s) -->
+            <g id="s03-voice-lane">
+              <rect x="255" y="115" width="450" height="90" rx="20" fill="#FEE2E2" stroke="#DC2626" stroke-width="5"/>
+              <text x="480" y="154" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="23" fill="#991B1B">VOICE CALL = DEDICATED RADIO PIPE</text>
+              <text x="480" y="186" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="21" fill="#DC2626">HEAVY BANDWIDTH · MAHAL ANG TAWAG (₱₱₱)</text>
+            </g>
+
+            <!-- Bottom Lane: Hidden GSM Control Channel (9.5s - 20.1s) -->
+            <g id="s03-ctrl-lane">
+              <rect x="255" y="340" width="450" height="110" rx="22" fill="#DBEAFE" stroke="#2563EB" stroke-width="5" stroke-dasharray="14 8"/>
+              <text x="480" y="382" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="#1E40AF">GSM CONTROL CHANNEL</text>
+              <text x="480" y="416" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="20" fill="#2563EB">CONSTANT TINY STATUS PINGS (EVERY FEW SEC)</text>
+              <!-- Moving Ping Packet -->
+              <g id="s03-ping-dot" transform="translate(290, 320)">
+                <rect x="-50" y="-22" width="100" height="44" rx="12" fill="#FACC15" stroke="#0B1E3F" stroke-width="4"/>
+                <text x="0" y="7" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="18" fill="#0B1E3F">PING</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- ACT B (20.1s - 39.2s): Zoomed Cutaway of Control Packet + 160 Bytes Free SMS Ride -->
+        <div id="s03-actB" class="s03-panel">
+          <svg viewBox="0 0 960 600" width="960" height="600" style="position:absolute; inset:0;">
+            <rect width="960" height="600" fill="#0B1E3F"/>
+            <text x="480" y="68" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="26" fill="#93C5FD">INSIDE EVERY GSM CONTROL PACKET:</text>
+
+            <!-- Giant Packet Cutaway Truck/Box -->
+            <g transform="translate(480, 275)">
+              <rect x="-390" y="-135" width="780" height="250" rx="28" fill="#1E293B" stroke="#60A5FA" stroke-width="6"/>
+              <!-- Left compartment: Tower Status Header -->
+              <rect x="-365" y="-110" width="230" height="200" rx="18" fill="#334155" stroke="#94A3B8" stroke-width="4"/>
+              <text x="-250" y="-25" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="#E2E8F0">TOWER</text>
+              <text x="-250" y="10" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="#E2E8F0">STATUS</text>
+              <text x="-250" y="48" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="18" fill="#94A3B8">SIGNAL PING</text>
+
+              <!-- Right compartment: 160 Bytes Empty Cargo Bay -->
+              <g id="s03-empty-bay">
+                <rect x="-110" y="-110" width="475" height="200" rx="18" fill="#0F172A" stroke="#FACC15" stroke-width="5" stroke-dasharray="14 10"/>
+                <text x="128" y="-18" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="42" fill="#FACC15">160 BYTES</text>
+                <text x="128" y="34" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="26" fill="#FFFFFF">EMPTY SPACE · SITTING FREE!</text>
+              </g>
+
+              <!-- SMS Payload Block Hitching a Free Ride (27.3s) -->
+              <g id="s03-sms-block">
+                <rect x="-102" y="-102" width="459" height="184" rx="16" fill="#FACC15" stroke="#0B1E3F" stroke-width="5"/>
+                <text x="128" y="-32" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="28" fill="#0B1E3F">✉️ SMS TEXT MESSAGE</text>
+                <text x="128" y="14" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="34" fill="#1E40AF">160 CHARACTERS</text>
+                <text x="128" y="56" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="22" fill="#065F46">HITCHING A FREE RIDE ON THE SIGNAL!</text>
+              </g>
+            </g>
+
+            <!-- Bottom Summary Bar (35.8s) -->
+            <g id="s03-zero-bar" transform="translate(480, 515)">
+              <rect x="-360" y="-42" width="720" height="76" rx="38" fill="#059669" stroke="#FFFFFF" stroke-width="4"/>
+              <text x="0" y="6" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="28" fill="#FFFFFF">✔ ZERO EXTRA RADIO LINES · ALMOST ₱0 COST</text>
+            </g>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div id="s03-grain" class="clip kit-grain" data-start="0" data-duration="39.20" data-track-index="9"></div>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return '#s03-' + id; };
+  var D = 39.20;
+  var tl = gsap.timeline({ paused: true });
+
+  gsap.set($('chap'), { opacity: 0, y: -14, force3D: true });
+  gsap.set($('win'), { opacity: 0, y: 20, scale: 0.97, force3D: true });
+
+  gsap.set($('actA'), { opacity: 1 });
+  gsap.set($('voice-lane'), { opacity: 0, y: -25 });
+  gsap.set($('ctrl-lane'), { opacity: 0, y: 25 });
+  gsap.set($('ping-dot'), { opacity: 0, x: 0 });
+
+  gsap.set($('actB'), { opacity: 0 });
+  gsap.set($('empty-bay'), { opacity: 0, scale: 0.9, transformOrigin: '50% 50%' });
+  gsap.set($('sms-block'), { opacity: 0, y: -140 });
+  gsap.set($('zero-bar'), { opacity: 0, y: 30 });
+
+  // Entrance
+  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true }, 0.1);
+  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true }, 0.15);
+
+  // Beat 1: Voice Call Lane (2.5s)
+  tl.fromTo($('voice-lane'), { opacity: 0, y: -25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)' }, 2.5);
+
+  // Beat 2: GSM Control Channel + Ping travel (9.5s - 20.0s)
+  tl.fromTo($('ctrl-lane'), { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)' }, 9.5);
+  tl.fromTo($('ping-dot'), { opacity: 1, x: 0 }, { opacity: 1, x: 370, duration: 2.2, ease: 'power1.inOut' }, 11.0);
+  tl.fromTo($('ping-dot'), { opacity: 1, x: 370 }, { opacity: 1, x: 0, duration: 2.2, ease: 'power1.inOut', immediateRender: false }, 13.5);
+  tl.fromTo($('ping-dot'), { opacity: 1, x: 0 }, { opacity: 1, x: 370, duration: 2.2, ease: 'power1.inOut', immediateRender: false }, 16.0);
+
+  // Transition ACT A -> ACT B (20.1s: Inside Every Control Packet)
+  tl.fromTo($('actA'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 20.1);
+  tl.fromTo($('actB'), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 20.2);
+  tl.fromTo($('empty-bay'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.6)' }, 21.0);
+
+  // Beat 4: SMS Block drops into the 160-byte empty cargo bay (27.3s)
+  tl.fromTo($('sms-block'), { opacity: 0, y: -140 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)' }, 27.3);
+
+  // Beat 5: Zero Extra Radio Lines / Almost Zero Cost bar (35.8s)
+  tl.fromTo($('zero-bar'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' }, 35.8);
+
+  // Clean Exit at D - 0.35s
+  tl.fromTo($('chap'), { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);
+  tl.fromTo($('win'), { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.97, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['s03-channel'] = tl;
+})();
+</script>
+</template>

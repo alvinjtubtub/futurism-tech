@@ -21,6 +21,7 @@ Source of truth for topics, production stages, and delivery tracking.
 | `TE-how-smartwatch-measures-heartbeat` | TE | How Your Watch Measures Your Heartbeat with Light | `RENDERED` | 112.96s | Mastered -16.6 LUFS | PASS (fromTo scan) | Uploaded to Google Drive | `03-Completed-Videos/how-smartwatch-measures-heartbeat/` |
 | `TE-how-nfc-works` | TE | How NFC Works in Mobile Phones (Tap to Pay) | `PACKED` | 100.56s | Mastered -16.7 LUFS | PASS (fromTo scan) | Ready for cloud render | `films/how-nfc-works/` |
 | `TE-how-liquid-thermometer-works` | TE | How Traditional Liquid Thermometer Works | `PACKED` | 100.40s | Mastered -16.3 LUFS | PASS (fromTo scan) | Upload pack created & ready for cloud render | `films/how-liquid-thermometer-works/` |
+| `TE-how-pasaload-changed-telecoms` | TE | The ₱2 Load Trick: How Filipino Engineers Invented PasaLoad | `PACKED` | 168.56s | Mastered -16.0 LUFS | PASS (all 6 gates, v2.1 DYK Vector) | Dispatched to GitHub Actions Cloud Render | `03-Completed-Videos/how-pasaload-changed-telecoms/` |
 
 ---
 

@@ -96,8 +96,8 @@ if (!ov.some((o) => o.id === 'm-brand')) ov.push({ id: 'm-brand', track: 3, z: 6
 film.overlays = ov;
 fs.writeFileSync(path.join(dir, 'film.json'), JSON.stringify(film, null, 2) + '\n');
 
-// mascot + brand assets (Montserrat) + SFX + music
-cp(mascotSrc, path.join(dir, 'assets', 'mascot'));
+// mascot + brand assets (Montserrat) + SFX + music (v2.1: skip mascot copy when presenter is retired)
+if (brand.presenter && process.env.KAPE_LEGACY_MASCOT === '1') cp(mascotSrc, path.join(dir, 'assets', 'mascot'));
 cp(path.join(SKILL, 'assets', 'brand'), path.join(dir, 'assets', 'brand'));
 fs.mkdirSync(path.join(dir, 'assets', 'audio', 'sfx'), { recursive: true });
 const sfxCandidates = [
