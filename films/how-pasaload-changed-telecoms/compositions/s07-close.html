@@ -77,11 +77,11 @@
   gsap.set($('endcard'), { opacity: 0, scale: 0.94, force3D: true });
 
   // Entrance
-  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true }, 0.1);
-  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true }, 0.15);
+  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true, immediateRender: false }, 0.1);
+  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true, immediateRender: false }, 0.15);
 
   // Transition to DYK-Style Stacked End Card (4.0s -> held to end)
-  tl.fromTo($('endcard'), { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.5)', force3D: true }, 4.0);
+  tl.fromTo($('endcard'), { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.5)', force3D: true, immediateRender: false }, 4.0);
 
   window.__timelines = window.__timelines || {};
   window.__timelines['s07-close'] = tl;

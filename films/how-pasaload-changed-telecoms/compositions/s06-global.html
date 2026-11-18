@@ -26,15 +26,15 @@
         <div id="s06-actA" class="s06-panel">
           <svg viewBox="0 0 960 600" width="960" height="600" style="position:absolute; inset:0;">
             <rect width="960" height="600" fill="#0B1E3F"/>
-            <g id="s06-stat-top" transform="translate(480, 175)">
+            <g transform="translate(480, 175)"><g id="s06-stat-top">
               <rect x="-180" y="-115" width="360" height="44" rx="22" fill="#1E293B" stroke="#60A5FA" stroke-width="3"/>
               <text x="0" y="-86" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="20" fill="#93C5FD">PHILIPPINES DAILY SMS VOLUME</text>
               <text x="0" y="25" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="112" fill="#FACC15">1.3B</text>
               <text x="0" y="75" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="28" fill="#FFFFFF">TEXT MESSAGES EVERY SINGLE DAY</text>
-            </g>
+            </g></g>
 
             <!-- Comparison Bars: Philippines vs US + Europe Combined -->
-            <g id="s06-bars" transform="translate(480, 435)">
+            <g transform="translate(480, 435)"><g id="s06-bars">
               <!-- PH Bar -->
               <rect x="-360" y="-85" width="720" height="64" rx="16" fill="#2563EB" stroke="#FFFFFF" stroke-width="4"/>
               <text x="-335" y="-44" font-family="Poppins" font-weight="700" font-size="24" fill="#FFFFFF">🇵🇭 PHILIPPINES (1.3 BILLION / DAY)</text>
@@ -42,7 +42,7 @@
               <!-- US + Europe Bar -->
               <rect x="-360" y="5" width="440" height="64" rx="16" fill="#334155" stroke="#94A3B8" stroke-width="4"/>
               <text x="-335" y="46" font-family="Poppins" font-weight="700" font-size="22" fill="#CBD5E1">🇺🇸 + 🇪🇺 US &amp; EUROPE COMBINED</text>
-            </g>
+            </g></g>
           </svg>
         </div>
 
@@ -52,7 +52,7 @@
             <rect width="960" height="600" fill="#0F172A"/>
 
             <!-- Left: London Trophy Card -->
-            <g id="s06-trophy" transform="translate(245, 300)">
+            <g transform="translate(245, 300)"><g id="s06-trophy">
               <rect x="-185" y="-210" width="370" height="420" rx="26" fill="#1E293B" stroke="#FACC15" stroke-width="6"/>
               <circle cx="0" cy="-70" r="72" fill="#FEF08A" stroke="#D97706" stroke-width="5"/>
               <text x="0" y="-44" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="72">🏆</text>
@@ -60,10 +60,10 @@
               <text x="0" y="88" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="26" fill="#FFFFFF">BEST MOBILE</text>
               <text x="0" y="122" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="26" fill="#FFFFFF">INNOVATION</text>
               <text x="0" y="162" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="20" fill="#93C5FD">IN THE WORLD</text>
-            </g>
+            </g></g>
 
             <!-- Right: 2D World Globe with 20+ Countries Copying -->
-            <g id="s06-globe" transform="translate(690, 300)">
+            <g transform="translate(690, 300)"><g id="s06-globe">
               <circle r="195" fill="#1D4ED8" stroke="#60A5FA" stroke-width="6"/>
               <!-- Continents silhouettes -->
               <polygon points="-120,-80 -30,-110 20,-40 -40,80 -130,30" fill="#22C55E" opacity="0.85"/>
@@ -76,7 +76,7 @@
               <circle cx="-65" cy="35" r="11" fill="#FACC15"/>
               <rect x="-175" y="140" width="350" height="58" rx="29" fill="#FACC15" stroke="#0B1E3F" stroke-width="5"/>
               <text x="0" y="177" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="22" fill="#0B1E3F">COPIED BY 20+ COUNTRIES</text>
-            </g>
+            </g></g>
           </svg>
         </div>
 
@@ -146,22 +146,22 @@
   gsap.set($('actC'), { opacity: 0 });
 
   // Entrance
-  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true }, 0.1);
-  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true }, 0.15);
+  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true, immediateRender: false }, 0.1);
+  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true, immediateRender: false }, 0.15);
 
   // ACT A: 1.3B Counter & Comparison Bars
-  tl.fromTo($('stat-top'), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)' }, 0.5);
-  tl.fromTo($('bars'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' }, 5.4);
+  tl.fromTo($('stat-top'), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)', immediateRender: false }, 0.5);
+  tl.fromTo($('bars'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)', immediateRender: false }, 5.4);
 
   // Transition ACT A -> ACT B (London Award & 20+ Countries at 13.0s)
-  tl.fromTo($('actA'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 13.0);
-  tl.fromTo($('actB'), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 13.1);
-  tl.fromTo($('trophy'), { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)' }, 13.3);
-  tl.fromTo($('globe'), { opacity: 0, x: 45 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)' }, 17.8);
+  tl.fromTo($('actA'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut', immediateRender: false }, 13.0);
+  tl.fromTo($('actB'), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out', immediateRender: false }, 13.1);
+  tl.fromTo($('trophy'), { opacity: 0, x: -45 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)', immediateRender: false }, 13.3);
+  tl.fromTo($('globe'), { opacity: 0, x: 45 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)', immediateRender: false }, 17.8);
 
   // Transition ACT B -> ACT C (Blueprint for First Mobile Wallets at 24.2s)
-  tl.fromTo($('actB'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 24.2);
-  tl.fromTo($('actC'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 24.3);
+  tl.fromTo($('actB'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut', immediateRender: false }, 24.2);
+  tl.fromTo($('actC'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', immediateRender: false }, 24.3);
 
   // Clean Exit at D - 0.35s
   tl.fromTo($('chap'), { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);

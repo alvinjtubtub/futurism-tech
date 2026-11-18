@@ -55,10 +55,10 @@
               <text x="480" y="382" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="24" fill="#1E40AF">GSM CONTROL CHANNEL</text>
               <text x="480" y="416" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="20" fill="#2563EB">CONSTANT TINY STATUS PINGS (EVERY FEW SEC)</text>
               <!-- Moving Ping Packet -->
-              <g id="s03-ping-dot" transform="translate(290, 320)">
+              <g transform="translate(290, 320)"><g id="s03-ping-dot">
                 <rect x="-50" y="-22" width="100" height="44" rx="12" fill="#FACC15" stroke="#0B1E3F" stroke-width="4"/>
                 <text x="0" y="7" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="18" fill="#0B1E3F">PING</text>
-              </g>
+              </g></g>
             </g>
           </svg>
         </div>
@@ -95,10 +95,10 @@
             </g>
 
             <!-- Bottom Summary Bar (35.8s) -->
-            <g id="s03-zero-bar" transform="translate(480, 515)">
+            <g transform="translate(480, 515)"><g id="s03-zero-bar">
               <rect x="-360" y="-42" width="720" height="76" rx="38" fill="#059669" stroke="#FFFFFF" stroke-width="4"/>
               <text x="0" y="6" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="28" fill="#FFFFFF">✔ ZERO EXTRA RADIO LINES · ALMOST ₱0 COST</text>
-            </g>
+            </g></g>
           </svg>
         </div>
 
@@ -127,28 +127,28 @@
   gsap.set($('zero-bar'), { opacity: 0, y: 30 });
 
   // Entrance
-  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true }, 0.1);
-  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true }, 0.15);
+  tl.fromTo($('chap'), { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', force3D: true, immediateRender: false }, 0.1);
+  tl.fromTo($('win'), { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', force3D: true, immediateRender: false }, 0.15);
 
   // Beat 1: Voice Call Lane (2.5s)
-  tl.fromTo($('voice-lane'), { opacity: 0, y: -25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)' }, 2.5);
+  tl.fromTo($('voice-lane'), { opacity: 0, y: -25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)', immediateRender: false }, 2.5);
 
   // Beat 2: GSM Control Channel + Ping travel (9.5s - 20.0s)
-  tl.fromTo($('ctrl-lane'), { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)' }, 9.5);
-  tl.fromTo($('ping-dot'), { opacity: 1, x: 0 }, { opacity: 1, x: 370, duration: 2.2, ease: 'power1.inOut' }, 11.0);
+  tl.fromTo($('ctrl-lane'), { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.5)', immediateRender: false }, 9.5);
+  tl.fromTo($('ping-dot'), { opacity: 1, x: 0 }, { opacity: 1, x: 370, duration: 2.2, ease: 'power1.inOut', immediateRender: false }, 11.0);
   tl.fromTo($('ping-dot'), { opacity: 1, x: 370 }, { opacity: 1, x: 0, duration: 2.2, ease: 'power1.inOut', immediateRender: false }, 13.5);
   tl.fromTo($('ping-dot'), { opacity: 1, x: 0 }, { opacity: 1, x: 370, duration: 2.2, ease: 'power1.inOut', immediateRender: false }, 16.0);
 
   // Transition ACT A -> ACT B (20.1s: Inside Every Control Packet)
-  tl.fromTo($('actA'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut' }, 20.1);
-  tl.fromTo($('actB'), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 20.2);
-  tl.fromTo($('empty-bay'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.6)' }, 21.0);
+  tl.fromTo($('actA'), { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power2.inOut', immediateRender: false }, 20.1);
+  tl.fromTo($('actB'), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out', immediateRender: false }, 20.2);
+  tl.fromTo($('empty-bay'), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.6)', immediateRender: false }, 21.0);
 
   // Beat 4: SMS Block drops into the 160-byte empty cargo bay (27.3s)
-  tl.fromTo($('sms-block'), { opacity: 0, y: -140 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)' }, 27.3);
+  tl.fromTo($('sms-block'), { opacity: 0, y: -140 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)', immediateRender: false }, 27.3);
 
   // Beat 5: Zero Extra Radio Lines / Almost Zero Cost bar (35.8s)
-  tl.fromTo($('zero-bar'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' }, 35.8);
+  tl.fromTo($('zero-bar'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)', immediateRender: false }, 35.8);
 
   // Clean Exit at D - 0.35s
   tl.fromTo($('chap'), { opacity: 1, y: 0 }, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in', immediateRender: false, force3D: true }, D - 0.35);
